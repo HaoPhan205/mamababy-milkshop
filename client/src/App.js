@@ -1,9 +1,17 @@
-import React from "react";
 import { Route, Routes } from "react-router-dom";
+import Homepage from "./pages/Homepage/homepage";
+import SignInSide from "./pages/SignInPage/signin";
+import Header from "./components/Layouts/Header/Header";
+import Footer from "./components/Layouts/Footer/Footer";
 function App() {
   return (
     <>
-      <Routes></Routes>
+      <Header />
+      <Routes>
+        <Route path="/" element={<Homepage />} />;
+        <Route path="/login" element={<SignInSide />} />;
+      </Routes>
+      <Footer />
     </>
   );
 }
