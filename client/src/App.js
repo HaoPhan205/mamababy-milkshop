@@ -1,19 +1,20 @@
-import { Route, Routes } from "react-router-dom";
-import Homepage from "./pages/Homepage/homepage";
-import SignInSide from "./pages/SignInPage/signin";
-import Header from "./components/Layouts/Header/Header";
-import Footer from "./components/Layouts/Footer/Footer";
+import { RouterProvider } from "react-router-dom"
+import { router } from "./Routers/router"
+import { Provider } from "react-redux"
+import { persistor, store } from "./Store/reduxPersist"
+import { PersistGate } from "redux-persist/integration/react"
+
+
 function App() {
   return (
     <>
-      <Header />
-      <Routes>
-        <Route path="/" element={<Homepage />} />;
-        <Route path="/login" element={<SignInSide />} />;
-      </Routes>
-      <Footer />
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <RouterProvider router={router} />
+        </PersistGate>
+      </Provider>
     </>
-  );
+  )
 }
 
-export default App;
+export default App
