@@ -3,31 +3,6 @@ import './Footer.scss';
 import { TikTokOutlined, YoutubeOutlined, InstagramOutlined, TwitterOutlined, GooglePlusOutlined } from '@ant-design/icons';
 import { Button, Dropdown, Menu } from 'antd';
 const Footer = () => {
-  const languageMenu = (
-    <Menu>
-      <Menu.Item key="en">
-        <a href="#en">English</a>
-      </Menu.Item>
-      <Menu.Item key="es">
-        <a href="#es">Spanish</a>
-      </Menu.Item>
-      <Menu.Item key="fr">
-        <a href="#fr">French</a>
-      </Menu.Item>
-      <Menu.Item key="vn">
-        <a href="#vn">Tiếng Việt</a>
-      </Menu.Item>
-      <Menu.Item key="kr">
-        <a href="#kr">Korea</a>
-      </Menu.Item>
-      <Menu.Item key="cn">
-        <a href="#cn">China</a>
-      </Menu.Item>
-      <Menu.Item key="en">
-        <a href="#en">English</a>
-      </Menu.Item>
-    </Menu>
-  );
 
   return (
     <footer className="footer">
@@ -58,14 +33,7 @@ const Footer = () => {
         </div>
         <div className="footer-section">
           <div className="buttons">
-            <Button type="primary" danger size='large'>
-              Tech on
-            </Button>
-            <Dropdown overlay={languageMenu} trigger={['click']} className="language-dropdown">
-              <Button type="default" size='large'>
-                Language
-              </Button>
-            </Dropdown>
+           
           </div>
         </div>
       </div>

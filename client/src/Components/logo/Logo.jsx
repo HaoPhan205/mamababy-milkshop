@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../../Assets/logo-concung";
+import logo from "../../Assets/lernerra.png";
 import "./Logo.scss";
 import { Link } from "react-router-dom";
 

@@ -1,55 +1,79 @@
-
-
 .header {
-    background-color: white;
-    position: sticky;
+  background-color: white;
+  position: sticky;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  top: 0;
+  right: 0;
+  left: 0;
+  box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
+  padding: 0 40px;
+
+  &__lef {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    top: 0;
-    right: 0;
-    left: 0;
-    box-shadow: 0px 3px 6px -4px rgba(0,0,0,.12);
-
-    &__lef{
-        display: flex;
-        align-items: center;
-        gap: 20px;
-        
-
-        
-    }
-    &__search {
-        border-radius: 5px;
-        background-color: #F7F7F7; // Ensure this is the correct color code. If you meant white, use #ffffff
-        padding: 4px 50px;
-        display: flex;
-        outline: none ;
-        padding-left: 10px;
-        input {
-            border: none;
-            outline: none ;
-            background-color: inherit;
-        }
-    }
-    &__right{
-       padding: 10px;
-       display: flex;
-       gap: 25px;
-       align-items: center;
-
-       
-    }
-    
-    .my-custom-button {
-        background-color: #d32f2f; /* Màu đỏ đậm hơn */
-        border-color: #d32f2f; /* Đảm bảo viền có màu giống nền */
-        color: #fff; /* Màu chữ */
-      }
-      
-      .my-custom-button:hover {
-        background-color: #b71c1c; /* Màu đỏ đậm hơn khi hover */
-        border-color: #b71c1c; /* Màu viền khi hover */
-      }
+    gap: 20px;
   }
-  
+
+  &__search {
+    display: flex;
+    border-radius: 18px;
+    border: 2px solid #ff469e;
+    padding: 10px 20px;
+    cursor: pointer;
+    width: 400px;
+
+    input {
+      flex: 1;
+      border: none;
+      outline: none;
+      background-color: inherit;
+      width: 100%;
+      font-size: 15px;
+    }
+  }
+
+  &__right {
+    padding: 10px;
+    display: flex;
+    gap: 25px;
+    align-items: center;
+  }
+
+  .my-custom-button {
+    background-color: #ff469e;
+    border-color: #ff469e;
+    color: #fff;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, border-color 0.3s;
+
+    &:hover {
+      background-color: #ff3295;
+      border-color: #ff469e;
+    }
+  }
+
+  &__free {
+    display: flex;
+    align-items: center;
+    margin-right: 20px;
+
+    &Icon {
+      height: 24px;
+      margin-left: 10px;
+    }
+  }
+
+  &__phone {
+    text-decoration: none;
+    color: #ff469e;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
