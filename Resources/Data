@@ -1,0 +1,103 @@
+-- Country
+INSERT INTO Country (CountryID, CountryName) VALUES
+(1, 'USA'),
+(2, 'Vietnam'),
+(3, 'France'),
+(4, 'Germany'),
+(5, 'Japan');
+
+-- Company
+INSERT INTO Company (CompanyID, CompanyName, CountryID) VALUES
+(1, 'Company A', 1),
+(2, 'Company B', 2),
+(3, 'Company C', 3),
+(4, 'Company D', 4),
+(5, 'Company E', 5);
+
+-- BrandMilk
+INSERT INTO BrandMilk (BrandMilkID, BrandName, CompanyID) VALUES
+(1, 'Brand 1', 1),
+(2, 'Brand 2', 2),
+(3, 'Brand 3', 3),
+(4, 'Brand 4', 4),
+(5, 'Brand 5', 5);
+
+-- Admin
+INSERT INTO Admin (AdminID, Username, Password) VALUES
+(1, 'admin1', 'pass1'),
+(2, 'admin2', 'pass2'),
+(3, 'admin3', 'pass3'),
+(4, 'admin4', 'pass4'),
+(5, 'admin5', 'pass5');
+
+-- Customer
+INSERT INTO Customer (CustomerID, CustomerName, Email, Password) VALUES
+(1, 'Customer 1', 'customer1@example.com', 'custpass1'),
+(2, 'Customer 2', 'customer2@example.com', 'custpass2'),
+(3, 'Customer 3', 'customer3@example.com', 'custpass3'),
+(4, 'Customer 4', 'customer4@example.com', 'custpass4'),
+(5, 'Customer 5', 'customer5@example.com', 'custpass5');
+
+-- Storage
+INSERT INTO Storage (StorageID, StorageName) VALUES
+(1, 'Storage 1'),
+(2, 'Storage 2'),
+(3, 'Storage 3'),
+(4, 'Storage 4'),
+(5, 'Storage 5');
+
+-- DeliveryMan
+INSERT INTO DeliveryMan (DeliveryManID, DeliveryName, DeliveryStatus, PhoneNumber, StorageID) VALUES
+(1, 'Delivery Man 1', 'Available', '1234567890', 1),
+(2, 'Delivery Man 2', 'Available', '1234567891', 2),
+(3, 'Delivery Man 3', 'Busy', '1234567892', 3),
+(4, 'Delivery Man 4', 'Available', '1234567893', 4),
+(5, 'Delivery Man 5', 'Busy', '1234567894', 5);
+
+-- Product
+INSERT INTO Product (ProductID, ProductName, BrandMilkID, AdminID) VALUES
+(1, 'Product 1', 1, 1),
+(2, 'Product 2', 2, 2),
+(3, 'Product 3', 3, 3),
+(4, 'Product 4', 4, 4),
+(5, 'Product 5', 5, 5);
+
+-- AgeRange
+INSERT INTO AgeRange (AgeRangeID, Baby, Mama, ProductID) VALUES
+(1, '0-1 years', 'Pregnant', 1),
+(2, '1-3 years', 'Nursing', 2),
+(3, '3-5 years', 'Toddler', 3),
+(4, '5-7 years', 'Child', 4),
+(5, '7-10 years', 'Child', 5);
+
+-- ProductItem
+INSERT INTO ProductItem (ProductItemID, Benefit, Description, Image, ItemName, Price, Weight, ProductID) VALUES
+(1, 'Benefit 1', 'Description 1', 'image1.jpg', 'Item 1', 10.00, 0.5, 1),
+(2, 'Benefit 2', 'Description 2', 'image2.jpg', 'Item 2', 20.00, 1.0, 2),
+(3, 'Benefit 3', 'Description 3', 'image3.jpg', 'Item 3', 30.00, 1.5, 3),
+(4, 'Benefit 4', 'Description 4', 'image4.jpg', 'Item 4', 40.00, 2.0, 4),
+(5, 'Benefit 5', 'Description 5', 'image5.jpg', 'Item 5', 50.00, 2.5, 5);
+
+-- Order
+INSERT INTO [Order] (OrderID, AdminID, CustomerID, DeliveryManID, OrderDate, ShippingAddress, TotalAmount, StorageID) VALUES
+(1, 1, 1, 1, '2024-06-01', '123 Main St', 100.00, 1),
+(2, 2, 2, 2, '2024-06-02', '456 Elm St', 200.00, 2),
+(3, 3, 3, 3, '2024-06-03', '789 Pine St', 300.00, 3),
+(4, 4, 4, 4, '2024-06-04', '101 Maple St', 400.00, 4),
+(5, 5, 5, 5, '2024-06-05', '202 Oak St', 500.00, 5);
+
+-- Payment
+INSERT INTO Payment (PaymentID, Amount, PaymentMethod, OrderID) VALUES
+(1, 100.00, 'Credit Card', 1),
+(2, 200.00, 'PayPal', 2),
+(3, 300.00, 'Credit Card', 3),
+(4, 400.00, 'Bank Transfer', 4),
+(5, 500.00, 'Cash', 5);
+
+-- OrderDetail
+INSERT INTO OrderDetail (OrderDetailID, OrderID, ProductItemID, Quantity, Price, OrderDetailStatus) VALUES
+(1, 1, 1, 2, 20.00, 'Shipped'),
+(2, 2, 2, 3, 60.00, 'Pending'),
+(3, 3, 3, 4, 120.00, 'Delivered'),
+(4, 4, 4, 5, 200.00, 'Processing'),
+(5, 5, 5, 6, 300.00, 'Cancelled');
