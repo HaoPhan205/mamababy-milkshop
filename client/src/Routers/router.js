@@ -1,8 +1,9 @@
 import { Outlet, createBrowserRouter } from "react-router-dom";
-import Header from '../Components/Layouts/Header/Header';
-import Footer from '../Components/Layouts/Footer/Footer';
-import HomePage from '../Pages/Home/HomePage';
-import SignIn from '../Pages/SignIn/signin'
+import Header from '../Components/Layouts/header/Header';
+import Footer from '../Components/Layouts/footer/Footer';
+import SignIn from "../Pages/signIn/SignIn";
+import SignUp from "../Pages/signUp/SignUp";
+import HomePage from "../Pages/home/HomePage"
 
 export const router = createBrowserRouter  ([
     {
@@ -16,7 +17,7 @@ export const router = createBrowserRouter  ([
         ),
         children: [{
             path: "/",
-            element: <HomePage />
+            element: <HomePage/>
         },
         {
             path: "/login",
@@ -25,4 +26,12 @@ export const router = createBrowserRouter  ([
         
         ]
     },
+    {
+        path: "/sign-in",
+        element: <SignIn />,
+      },
+      {
+        path: "/sign-up",
+        element: <SignUp />,
+      },
 ]);

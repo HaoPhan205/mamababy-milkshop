@@ -1,0 +1,67 @@
+
+
+.signUp {
+  height: 100%;
+  font-family: "Gantari";
+
+  &__card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    padding-top: 2em;
+    &__detail {
+      border: none;
+      // border-radius: 10px;
+      // box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.5);
+
+      h2 {
+        display: flex;
+        justify-content: center;
+        font-family: "Gantari";
+      }
+
+      p {
+        display: flex;
+        justify-content: center;
+        font-family: "Gantari";
+        margin-bottom: 2em;
+      }
+
+      &__options {
+        line-height: 4em;
+        &__option {
+          border-radius: 20px;
+          font-family: "Gantari";
+          width: 100%;
+          height: 5.5vh;
+          font-family: "Gantari";
+          font-size: 1em;
+        }
+      }
+
+      &__input {
+        margin-top: 2em;
+
+        &__detail {
+          border-radius: 15px;
+          height: 6vh;
+          font-family: "Gantari";
+        }
+      }
+    }
+  }
+
+  &__sidePic {
+    background-image: url(../../Assets/background.png);
+    background-repeat: no-repeat;
+    background-size: 115%;
+  }
+}
+
+:where(.css-dev-only-do-not-override-3rel02).ant-checkbox-checked
+  .ant-checkbox-inner {
+  background-color: black;
+  border-color: black;
+}

@@ -1,0 +1,55 @@
+
+
+.header {
+    background-color: white;
+    position: sticky;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    top: 0;
+    right: 0;
+    left: 0;
+    box-shadow: 0px 3px 6px -4px rgba(0,0,0,.12);
+
+    &__lef{
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        
+
+        
+    }
+    &__search {
+        border-radius: 5px;
+        background-color: #F7F7F7; // Ensure this is the correct color code. If you meant white, use #ffffff
+        padding: 4px 50px;
+        display: flex;
+        outline: none ;
+        padding-left: 10px;
+        input {
+            border: none;
+            outline: none ;
+            background-color: inherit;
+        }
+    }
+    &__right{
+       padding: 10px;
+       display: flex;
+       gap: 25px;
+       align-items: center;
+
+       
+    }
+    
+    .my-custom-button {
+        background-color: #d32f2f; /* Màu đỏ đậm hơn */
+        border-color: #d32f2f; /* Đảm bảo viền có màu giống nền */
+        color: #fff; /* Màu chữ */
+      }
+      
+      .my-custom-button:hover {
+        background-color: #b71c1c; /* Màu đỏ đậm hơn khi hover */
+        border-color: #b71c1c; /* Màu viền khi hover */
+      }
+  }
+  

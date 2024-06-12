@@ -1,0 +1,14 @@
+.slide-bar-container {
+    position: fixed;
+    height: 100vh;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    overflow-y: auto;
+  }
+  .slide-bar-container::-webkit-scrollbar {
+    width: 2px;
+}
+.slide-bar-container::-webkit-scrollbar-thumb {
+    background: rgb(188, 188, 188); 
+}
