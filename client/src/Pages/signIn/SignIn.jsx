@@ -29,7 +29,9 @@ export default function SignIn() {
   return (
     <Row className="signIn">
       <Col md={12} className="signIn__card">
-        <Logo />
+        <div className="signIn__card__logo">
+          <Logo />
+        </div>
         <Card style={{ width: 500 }} className="signIn__card__detail">
           <Form
             name="normal_login"

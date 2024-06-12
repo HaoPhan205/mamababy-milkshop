@@ -1,81 +1,50 @@
 .footer {
-  position: relative;
-  bottom: 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-evenly;
+  background-color: #f8f8f8;
   width: 100%;
-  background-color: #2d2d2d;
-  color: white;
-  text-align: center;
-  padding: 15px;
-
-  .footer-top {
-    display: flex;
-    justify-content: center;
-
-    margin-bottom: 20px;
-
-    .footer-section {
-      flex: auto;
-      margin: 0 50px;
-
-      p,
-      ul {
-        margin: 0;
-      }
-
-      ul {
-        list-style: none;
-        padding: 0;
-
-        li {
-          margin-bottom: 20px;
-
-          a {
-            color: white;
-            text-decoration: none;
-
-            &:hover {
-              text-decoration: underline;
-            }
-          }
-        }
-      }
-
-      .social-media {
-        display: flex;
-        gap: 10px;
-
-        li {
-          display: inline;
-        }
-      }
-    }
+  p {
+    font-weight: bold;
   }
-  .buttons {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    button {
-      margin-bottom: 10px;
+
+  &__info {
+    justify-content: space-around;
+    &__logo {
     }
   }
 
-  .footer__bottom {
+  .footer__info2 {
+    ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    ul li {
+      text-decoration: none;
+    }
+
+    p {
+      font-weight: bold;
+    }
+  }
+  &__free {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    border-top: 2px solid #444;
-    padding-top: 10px;
+    margin-right: 20px;
 
-    .icon {
-      display: flex;
+    &Icon {
+      height: 24px;
+      margin-left: 10px;
+    }
+  }
+  &__phone {
+    text-decoration: none;
+    color: #ff469e;
 
-      flex: 0.2;
-      gap: 1px;
-
-      > * {
-        flex: 1;
-        text-align: center;
-      }
+    &:hover {
+      text-decoration: underline;
     }
   }
 }

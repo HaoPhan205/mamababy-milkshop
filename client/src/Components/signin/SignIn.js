@@ -7,7 +7,7 @@ function SignIn() {
   return (
     <div className="signIn">
       <Button variant="text">
-        <Link to="/sign-in" style={{ color: "black" }}>
+        <Link to="/sign-in">
           Đăng nhập
         </Link>
       </Button>

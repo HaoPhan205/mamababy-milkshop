@@ -1,67 +1,10 @@
 .wrapper-black {
-  &__logo {
-    height: 3.8em;
-    width: 9.5em;
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-//   @media only screen and (max-width: 2000px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 5.5em;
-//         width: 5.5em;
-//       }
-//     }
-//   }
-//   @media only screen and (max-width: 1880px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 5.5em;
-//         width: 5.5em;
-//       }
-//     }
-//   }
-//   @media only screen and (max-width: 1430px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 5em;
-//         width: 5em;
-//       }
-//     }
-//   }
-//   @media only screen and (max-width: 1302px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 5em;
-//         width: 5em;
-//       }
-//     }
-//   }
-//   @media only screen and (max-width: 1000px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 4em;
-//         width: 4em;
-//         margin-right: 1em;
-//       }
-//     }
-//   }
-
-//   @media only screen and (max-width: 480px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 4em;
-//         width: 4em;
-//         margin-right: 0em;
-//       }
-//     }
-//   }
-
-//   @media only screen and (max-width: 300px) {
-//     .wrapper-black {
-//       &__logo {
-//         height: 4em;
-//         width: 4em;
-//       }
-//     }
-//   }
+.wrapper-black__logo {
+  max-width: 100px; // Adjust this value to make the logo smaller or larger
+  height: auto; // Maintain aspect ratio
+}
