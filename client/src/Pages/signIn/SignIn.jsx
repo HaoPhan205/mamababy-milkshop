@@ -56,11 +56,11 @@ export default function SignIn() {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder="Username"
+                placeholder="Tài khoản "
               />
             </Form.Item>
             <Form.Item
-            name="password"
+              name="password"
               rules={[
                 {
                   required: true,
@@ -84,7 +84,7 @@ export default function SignIn() {
                 <Input.Password
                   className="signIn__card__detail__input__detail"
                   type="password"
-                  placeholder="Password"
+                  placeholder="Mật khẩu của bạn"
                   prefix={
                     <LockOutlined
                       style={{ marginRight: "1.5em" }}
@@ -99,8 +99,8 @@ export default function SignIn() {
             </Form.Item>
             <Form.Item>
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox style={{ fontFamily: "Gantari" }}>
-                  Remember me
+                <Checkbox style={{ fontFamily: "Gantari", color: "#ff469e" }}>
+                  Lưu tài khoản
                 </Checkbox>
               </Form.Item>
             </Form.Item>
@@ -112,26 +112,30 @@ export default function SignIn() {
                     components: {
                       Button: {
                         borderRadius: "20px",
-                        defaultBg: "#FF4F28",
+                        defaultBg: "#ff469e",
                         defaultColor: "white",
                         defaultHoverBg: "black",
                         defaultHoverBorderColor: "black",
                         defaultHoverColor: "white",
                         defaultHoverColor: "white",
-                        defaultActiveBg:"#FF4F28",
-                        activeBorderColor:"#FF4F28",
-                        defaultActiveColor:'white',
-                        defaultActiveBorderColor:'#FF4F28'
+                        defaultActiveBg: "#ff469e",
+                        activeBorderColor: "#ff469e",
+                        defaultActiveColor: "white",
+                        defaultActiveBorderColor: "#ff469e",
                       },
                     },
                   }}
                 >
                   <Button
-                  className="signIn__card__detail__options__option"
+                    className="signIn__card__detail__options__option"
                     htmlType="submit"
-                    style={{textTransform:'uppercase', fontWeight:'500', fontSize:'1.2em'}}
+                    style={{
+                      textTransform: "uppercase",
+                      fontWeight: "500",
+                      fontSize: "1.2em",
+                    }}
                   >
-                    Sign in
+                    Đăng nhập
                   </Button>
                 </ConfigProvider>
                 <ConfigProvider
@@ -145,39 +149,36 @@ export default function SignIn() {
                         defaultHoverBorderColor: "black",
                         defaultHoverColor: "white",
                         defaultHoverColor: "white",
-                        defaultActiveBg:"black",
-                        activeBorderColor:"black",
-                        defaultActiveColor:'white',
-                         defaultActiveBorderColor:'#FF4F28'
+                        defaultActiveBg: "black",
+                        activeBorderColor: "black",
+                        defaultActiveColor: "white",
+                        defaultActiveBorderColor: "#ff469e",
                       },
                     },
                   }}
                 >
-                  <Button
-                    className="signIn__card__detail__options__option"
-                    
-                  >
-                    <FcGoogle /> Sign in with Google
+                  <Button className="signIn__card__detail__options__option">
+                    <FcGoogle /> Đăng nhập với Google
                   </Button>
                 </ConfigProvider>
               </div>
             </Form.Item>
           </Form>
           <p>
-            Or&nbsp;
-            <Link to="/forgot-password" style={{ color: "#FF4F28" }}>
+            Hoặc&nbsp;
+            <Link to="/forgot-password" style={{ color: "#ff469e" }}>
               {" "}
-              Forgot Password
+              Quên mật khẩu
             </Link>
           </p>
           <Divider />
           <p>
-            Don't have an account? &nbsp;
-            <Link to="/sign-up" style={{ color: "#FF4F28" }}>
+            Bạn chưa có tài khoản? &nbsp;
+            <Link to="/sign-up" style={{ color: "#ff469e" }}>
               {" "}
-              Sign Up
+              Đăng ký
             </Link>
-          </p>  
+          </p>
         </Card>
       </Col>
       <Col className="signIn__sidePic" md={12}></Col>

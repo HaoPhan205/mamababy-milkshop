@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { MenuUnfoldOutlined } from "@ant-design/icons";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
+import { Link } from "react-router-dom";
 
 import {
   Avatar,
@@ -119,23 +120,14 @@ function Header({ collapsed, toggleCollapsed }) {
   };
   const phoneNumber = "0354019580";
 
-  // const [collapsed, setCollapsed] = useState(false);
-  // const toggleCollapsed = () => {
-  //   setCollapsed(!collapsed);
-  //   console.log(collapsed);
-  // };
-  const handleCreateCourseClick = () => {
-    navigate("/create-course"); // Navigate to the create course page
-  };
   return (
     <header className="header">
-      <div className="header__lef">
-        <div className="header__logo">
-          <Logo />
-        </div>
-        <div className="header__search">
-          <input type="text" placeholder="Ba mẹ muốn tìm mua gì hôm nay ?" />
-        </div>
+      <div className="header__logo">
+        <Logo />
+      </div>
+
+      <div className="header__search">
+        <input type="text" placeholder="Ba mẹ muốn tìm mua gì hôm nay ?" />
       </div>
       <div className="header__free">
         <p>
@@ -147,13 +139,6 @@ function Header({ collapsed, toggleCollapsed }) {
         <img src={free} alt="" className="header__freeIcon" />
       </div>
       <div className="header__right">
-        <Button
-          type="primary"
-          className="my-custom-button"
-          onClick={handleCreateCourseClick}
-        >
-          Create new Course
-        </Button>
         <Badge count={1}>
           <ShoppingCartOutlined style={{ fontSize: "1.5em" }} />
         </Badge>
@@ -165,8 +150,12 @@ function Header({ collapsed, toggleCollapsed }) {
         </Badge>
 
         {!getCurrUser() ? (
-          <div className="inout" aria-label="Authentication Options">
-            <SignIn />
+          <div className="header__signin" aria-label="Authentication Options">
+            <Button variant="text">
+              <Link to="/sign-in" style={{ color: "black" }}>
+                Đăng nhập
+              </Link>
+            </Button>
           </div>
         ) : (
           <nav className="user" aria-label="User account">

@@ -103,7 +103,7 @@ export default function SignUp() {
               />
             </Form.Item>
             <Form.Item
-             name="password"
+              name="password"
               rules={[
                 {
                   required: true,
@@ -130,7 +130,7 @@ export default function SignUp() {
               />
             </Form.Item>
             <Form.Item
-            name="password"
+              name="password"
               rules={[
                 {
                   required: true,
@@ -160,10 +160,9 @@ export default function SignUp() {
               <Form.Item valuePropName="unchecked" noStyle>
                 <Checkbox
                   style={{ fontFamily: "Gantari" }}
-                
-                  onClick={() =>setIsChecked(!isChecked)}
+                  onClick={() => setIsChecked(!isChecked)}
                 >
-                  I agree with lernerra Terms of Service and Privacy Policy
+                  Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật
                 </Checkbox>
               </Form.Item>
             </Form.Item>
@@ -175,16 +174,16 @@ export default function SignUp() {
                     components: {
                       Button: {
                         borderRadius: "20px",
-                        defaultBg: "#FF4F28",
+                        defaultBg: "#ff469e",
                         defaultColor: "white",
                         defaultHoverBg: "black",
                         defaultHoverBorderColor: "black",
                         defaultHoverColor: "white",
                         defaultHoverColor: "white",
-                        defaultActiveBg: "#FF4F28",
-                        activeBorderColor: "#FF4F28",
+                        defaultActiveBg: "#ff469e",
+                        activeBorderColor: "#ff469e",
                         defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#FF4F28",
+                        defaultActiveBorderColor: "#ff469e",
                       },
                     },
                   }}
@@ -216,7 +215,7 @@ export default function SignUp() {
                         defaultActiveBg: "black",
                         activeBorderColor: "black",
                         defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#FF4F28",
+                        defaultActiveBorderColor: "#ff469e",
                       },
                     },
                   }}
@@ -234,10 +233,10 @@ export default function SignUp() {
 
           <Divider />
           <p>
-            Already have an account? &nbsp;
-            <Link to="/sign-in" style={{ color: "#FF4F28" }}>
+            Bạn đã có tài khoản? &nbsp;
+            <Link to="/sign-in" style={{ color: "#ff469e" }}>
               {" "}
-              Sign In
+              Đăng nhập
             </Link>
           </p>
         </Card>

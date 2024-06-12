@@ -10,12 +10,6 @@
   box-shadow: 0px 3px 6px -4px rgba(0, 0, 0, 0.12);
   padding: 0 40px;
 
-  &__lef {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-  }
-
   &__search {
     display: flex;
     border-radius: 18px;
@@ -41,22 +35,6 @@
     align-items: center;
   }
 
-  .my-custom-button {
-    background-color: #ff469e;
-    border-color: #ff469e;
-    color: #fff;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s, border-color 0.3s;
-
-    &:hover {
-      background-color: #ff3295;
-      border-color: #ff469e;
-    }
-  }
-
   &__free {
     display: flex;
     align-items: center;
@@ -75,5 +53,11 @@
     &:hover {
       text-decoration: underline;
     }
+  }
+
+  &__signin {
+    background-color: #ff469e;
+    text-decoration: none;
+    color: #ff469e;
   }
 }
