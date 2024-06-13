@@ -32,6 +32,7 @@ export default function Footer() {
           <p>Email: mamababy@gmail.com</p>
         </ul>
       </div>
+
       <div className="footer__info2">
         <ul>
           <p>Về MamaBaby</p>
@@ -75,6 +76,7 @@ export default function Footer() {
           </li>
         </ul>
       </div>
+
       <div className="footer__info3">
         <ul>
           <p>Chấp Nhận Thanh Toán</p>

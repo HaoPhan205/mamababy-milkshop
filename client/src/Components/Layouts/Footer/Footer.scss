@@ -4,35 +4,69 @@
   justify-content: space-evenly;
   background-color: #f8f8f8;
   width: 100%;
+  padding: 20px;
+
   p {
     font-weight: bold;
   }
 
   &__info {
-    justify-content: space-around;
-    &__logo {
-    }
   }
 
-  .footer__info2 {
+  &__info2,
+  &__info3 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+
     ul {
       list-style-type: none;
       padding: 0;
       margin: 0;
-    }
 
-    ul li {
-      text-decoration: none;
-    }
+      li {
+        margin: 5px 0;
 
-    p {
-      font-weight: bold;
+        a {
+          text-decoration: none;
+          color: #ff469e;
+
+          &:hover {
+            color: #fd0c81;
+            text-decoration: underline;
+          }
+        }
+      }
+
+      p {
+        font-weight: bold;
+        margin-bottom: 10px;
+      }
     }
   }
+
   &__free {
     display: flex;
     align-items: center;
-    margin-right: 20px;
+    margin-top: 10px;
+    p {
+      margin: 0;
+
+      a {
+        text-decoration: none;
+        color: #ff469e;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+      img {
+        height: 24px;
+        margin-left: 10px;
+      }
+    }
 
     &Icon {
       height: 24px;

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import { Spin } from "antd";
 import { LockOutlined, UserOutlined } from "@ant-design/icons";
 import {
   Button,
@@ -17,13 +17,22 @@ import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { FaTwitter } from "react-icons/fa";
-
+import { useUsers } from "../../Hooks/useUsers";
 import "./SignIn.scss";
 import Logo from "../../Components/logo/Logo";
 
 export default function SignIn() {
-  const onFinish = (values) => {
-    console.log("Received values of form: ", values);
+  const [loading, setLoading] = useState(false);
+  const [username, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const { onLogIn } = useUsers();
+  const navigate = useNavigate();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    await onLogIn(username, password);
+    setLoading(false);
   };
 
   return (
@@ -39,7 +48,7 @@ export default function SignIn() {
             initialValues={{
               remember: true,
             }}
-            onFinish={onFinish}
+            onSubmit={handleSubmit}
           >
             <Form.Item
               name="username"
@@ -59,6 +68,8 @@ export default function SignIn() {
                   />
                 }
                 placeholder="Tài khoản "
+                value={username}
+                onChange={(e) => setPassword(e.target.value.trim())}
               />
             </Form.Item>
             <Form.Item
@@ -96,6 +107,8 @@ export default function SignIn() {
                   iconRender={(visible) =>
                     visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                   }
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value.trim())}
                 />
               </ConfigProvider>
             </Form.Item>
@@ -136,8 +149,9 @@ export default function SignIn() {
                       fontWeight: "500",
                       fontSize: "1.2em",
                     }}
+                    type="submit"
                   >
-                    Đăng nhập
+                    <Spin spinning={loading}>Đăng nhập</Spin>
                   </Button>
                 </ConfigProvider>
                 <ConfigProvider
@@ -160,7 +174,8 @@ export default function SignIn() {
                   }}
                 >
                   <Button className="signIn__card__detail__options__option">
-                    <FcGoogle /> Đăng nhập với Google
+                    <FcGoogle />{" "}
+                    <Spin spinning={loading}>Đăng nhập với Google</Spin>
                   </Button>
                 </ConfigProvider>
               </div>

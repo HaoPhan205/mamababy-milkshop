@@ -109,15 +109,30 @@ const items = [
 function Header({ collapsed, toggleCollapsed }) {
   const { token } = useToken();
   const { getCurrUser } = useUsers();
+  const [username, setName] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { onLogIn } = useUsers();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    await onLogIn(username, password);
+    setLoading(false);
+  };
+
   const contentStyle = {
     backgroundColor: token.colorBgElevated,
     borderRadius: token.borderRadiusLG,
     boxShadow: token.boxShadowSecondary,
   };
+
   const menuStyle = {
     boxShadow: "none",
   };
+
   const phoneNumber = "0354019580";
 
   return (
@@ -152,9 +167,7 @@ function Header({ collapsed, toggleCollapsed }) {
         {!getCurrUser() ? (
           <div className="header__signin" aria-label="Authentication Options">
             <Button variant="text">
-              <Link to="/sign-in" style={{ color: "black" }}>
-                Đăng nhập
-              </Link>
+              <Link to="/sign-in">Đăng nhập</Link>
             </Button>
           </div>
         ) : (

@@ -51,6 +51,7 @@
   &__phone {
     text-decoration: none;
     color: #ff469e;
+    font-weight: bold;
 
     &:hover {
       text-decoration: underline;
@@ -58,8 +59,19 @@
   }
 
   &__signin {
-    background-color: #ff469e;
-    text-decoration: none;
-    color: #ff469e;
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      color: #ff469e;
+      cursor: pointer;
+      border: 2px solid #ff469e;
+      border-radius: 18px;
+
+      &:hover {
+        color: black;
+      }
+    }
   }
 }
