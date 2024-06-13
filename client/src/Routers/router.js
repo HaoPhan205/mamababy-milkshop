@@ -4,25 +4,21 @@ import Footer from '../Components/Layouts/footer/Footer';
 import SignIn from "../Pages/signIn/SignIn";
 import SignUp from "../Pages/signUp/SignUp";
 import HomePage from "../Pages/home/HomePage"
+import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
 
 export const router = createBrowserRouter  ([
     {
         path: "/",
         element: (
-            <>
-                <Header />
-                <Outlet />
-                <Footer />
-            </>
+             <>
+        <DefaultLayout />
+      </>
         ),
         children: [{
             path: "/",
             element: <HomePage/>
         },
-        {
-            path: "/login",
-            element: <SignIn />
-        }
+       
         
         ]
     },
