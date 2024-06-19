@@ -128,7 +128,7 @@ export default function SignIn() {
                       Button: {
                         borderRadius: "20px",
                         defaultBg: "#ff469e",
-                        defaultColor: "white",
+                        defaultColor: "#ff469e",
                         defaultHoverBg: "black",
                         defaultHoverBorderColor: "black",
                         defaultHoverColor: "white",
@@ -152,30 +152,6 @@ export default function SignIn() {
                     type="submit"
                   >
                     <Spin spinning={loading}>Đăng nhập</Spin>
-                  </Button>
-                </ConfigProvider>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "white",
-                        defaultColor: "black",
-                        defaultHoverBg: "black",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "black",
-                        activeBorderColor: "black",
-                        defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#ff469e",
-                      },
-                    },
-                  }}
-                >
-                  <Button className="signIn__card__detail__options__option">
-                    <FcGoogle />{" "}
-                    <Spin spinning={loading}>Đăng nhập với Google</Spin>
                   </Button>
                 </ConfigProvider>
               </div>

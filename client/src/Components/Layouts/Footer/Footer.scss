@@ -2,9 +2,10 @@
   display: flex;
   align-items: flex-start;
   justify-content: space-evenly;
-  background-color: #f8f8f8;
+  background-color: aliceblue;
   width: 100%;
   padding: 20px;
+  z-index: 1;
 
   p {
     font-weight: bold;

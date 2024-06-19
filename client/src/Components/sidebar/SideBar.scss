@@ -1,14 +1,26 @@
 .slide-bar-container {
-    position: fixed;
-    height: 100vh;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    overflow-y: auto;
-  }
-  .slide-bar-container::-webkit-scrollbar {
-    width: 2px;
+  position: fixed;
+  height: 100vh;
+  // bottom: 0;
+  // top: 0;
+  // left: 0;
+}
+.slide-bar-container::-webkit-scrollbar {
+  width: 2px;
 }
 .slide-bar-container::-webkit-scrollbar-thumb {
-    background: rgb(188, 188, 188); 
+  background: rgb(188, 188, 188);
+}
+.menu-style {
+  font-weight: 600;
+}
+.last-item {
+  border-bottom: none;
+}
+
+.ant-menu-item .ant-avatar {
+  padding-left: 0px;
+}
+.border-bottom {
+  border-bottom: 1px solid #d9d9d9;
 }

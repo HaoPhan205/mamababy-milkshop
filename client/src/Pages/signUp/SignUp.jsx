@@ -99,7 +99,7 @@ export default function SignUp() {
                     className="site-form-item-icon"
                   />
                 }
-                placeholder="Username"
+                placeholder="Email"
               />
             </Form.Item>
             <Form.Item
@@ -117,7 +117,7 @@ export default function SignUp() {
               <Input.Password
                 className="signUp__card__detail__input__detail"
                 type="password"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -144,7 +144,7 @@ export default function SignUp() {
               <Input.Password
                 className="signUp__card__detail__input__detail"
                 type="password"
-                placeholder="Re-enter password"
+                placeholder="Nhập lại mật khẩu!"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -199,32 +199,6 @@ export default function SignUp() {
                     disabled={isChecked}
                   >
                     Sign Up
-                  </Button>
-                </ConfigProvider>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "white",
-                        defaultColor: "black",
-                        defaultHoverBg: "black",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "black",
-                        activeBorderColor: "black",
-                        defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#ff469e",
-                      },
-                    },
-                  }}
-                >
-                  <Button
-                    className="signUp__card__detail__options__option"
-                    disabled={isChecked}
-                  >
-                    <FcGoogle /> Sign up with Google
                   </Button>
                 </ConfigProvider>
               </div>

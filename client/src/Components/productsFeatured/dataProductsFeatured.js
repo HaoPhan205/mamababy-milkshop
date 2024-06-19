@@ -1,4 +1,4 @@
-const products = [
+const DataProductsFeatured = [
   {
     id: 1,
     image:
@@ -57,4 +57,18 @@ const products = [
   },
 ];
 
-export default products;
+function generateProductsData(count) {
+  const products = [];
+  for (let i = 0; i < count; i++) {
+    const base = DataProductsFeatured[i % DataProductsFeatured.length];
+    products.push({
+      ...base,
+      id: i + 1, // unique ID for each item
+    });
+  }
+  return products;
+}
+
+const Data = generateProductsData(30);
+
+export default Data;

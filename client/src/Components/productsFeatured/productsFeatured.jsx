@@ -4,7 +4,7 @@ import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
 import { Link } from "react-router-dom";
-import products from "./dataProductsFeatured";
+import DataProductsFeatured from "./dataProductsFeatured";
 
 const ProductCard = ({ product, onClick }) => (
   <div className="product-card" onClick={onClick}>
@@ -45,7 +45,7 @@ const ProductCard = ({ product, onClick }) => (
   </div>
 );
 
-const Products = () => {
+const Product = () => {
   const navigate = useNavigate();
   const carouselRef = useRef();
 
@@ -82,7 +82,7 @@ const Products = () => {
         draggable
         ref={carouselRef}
       >
-        {products.map((product) => (
+        {DataProductsFeatured.map((product) => (
           <div key={product.id} className="carousel-item">
             <ProductCard product={product} onClick={handleItemClick} />
           </div>
@@ -96,4 +96,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default Product;

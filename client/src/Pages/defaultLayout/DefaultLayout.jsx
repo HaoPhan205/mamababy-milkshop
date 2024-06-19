@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Header from "../../Components/Layouts/header/Header";
 import { Outlet } from "react-router-dom";
 import Footer from "../../Components/Layouts/footer/Footer";
-
 const { Content } = Layout;
 
 function DefaultLayout() {
@@ -18,7 +17,7 @@ function DefaultLayout() {
       <Affix offsetTop={0}>
         <Header collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
       </Affix>
-      <Layout style={{ minHeight: "100vh", overflowX: "hidden" }}>
+      <Layout style={{ minHeight: "100vh", overflowX: "hidden", zIndex: "2" }}>
         <Content style={{ padding: "1.5em", backgroundColor: "#F7F7F7" }}>
           <Outlet />
         </Content>

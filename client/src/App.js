@@ -1,11 +1,11 @@
 import React, { createContext, useState } from "react";
-import { RouterProvider } from "react-router-dom"
-import { router } from "./Routers/router"
-import { Provider } from "react-redux"
-import { persistor, store } from "./Store/reduxPersist"
-import { PersistGate } from "redux-persist/integration/react"
+import { RouterProvider } from "react-router-dom";
+import { router } from "./Routers/router";
+import { Provider } from "react-redux";
+import { persistor, store } from "./Store/reduxPersist";
+import { PersistGate } from "redux-persist/integration/react";
 import { useStorage } from "./Hooks/useStorage";
-import "./App.scss"
+import "./App.scss";
 
 export const Data = createContext(null);
 function App() {
@@ -23,7 +23,7 @@ function App() {
         </PersistGate>
       </Data.Provider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
