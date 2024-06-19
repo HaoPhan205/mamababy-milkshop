@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { Spin } from "antd";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -12,27 +12,63 @@ import {
   Form,
   Input,
   Row,
+  Spin,
 } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { FaFacebookSquare } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { FaTwitter } from "react-icons/fa";
-import { useUsers } from "../../Hooks/useUsers";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 import "./SignIn.scss";
 import Logo from "../../Components/logo/Logo";
+import {
+  login,
+  googleSignIn,
+  clearError,
+} from "../../store/action/authActions";
+import { toast } from "react-toastify";
 
 export default function SignIn() {
-  const [loading, setLoading] = useState(false);
-  const [username, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const { onLogIn } = useUsers();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const { loading, isAuthenticated, error } = useSelector(
+    (state) => state.auth
+  );
 
-    setLoading(true);
-    await onLogIn(username, password);
-    setLoading(false);
+  const validationSchema = Yup.object().shape({
+    email: Yup.string()
+      .email("Invalid email format")
+      .required("Please input your email!"),
+    password: Yup.string().required("Please input your password!"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+      remember: true,
+    },
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      dispatch(login(values));
+    },
+  });
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      toast.success("Login successful");
+      navigate("/");
+    }
+  }, [isAuthenticated, navigate]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+      dispatch(clearError());
+    }
+  }, [error, dispatch]);
+
+  const handleGoogleSignIn = () => {
+    dispatch(googleSignIn());
   };
 
   return (
@@ -48,73 +84,71 @@ export default function SignIn() {
             initialValues={{
               remember: true,
             }}
-            onSubmit={handleSubmit}
+            onFinish={formik.handleSubmit}
           >
             <Form.Item
-              name="username"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Username!",
-                },
-              ]}
+              name="email"
+              help={
+                formik.touched.email && formik.errors.email
+                  ? formik.errors.email
+                  : ""
+              }
+              validateStatus={
+                formik.touched.email && formik.errors.email ? "error" : ""
+              }
             >
               <Input
                 className="signIn__card__detail__input__detail"
                 prefix={
-                  <UserOutlined
+                  <MailOutlined
                     style={{ marginRight: "1.5em" }}
                     className="site-form-item-icon"
                   />
                 }
-                placeholder="Tài khoản "
-                value={username}
-                onChange={(e) => setPassword(e.target.value.trim())}
+                placeholder="Email"
+                name="email"
+                value={formik.values.email}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
               />
             </Form.Item>
             <Form.Item
               name="password"
-              rules={[
-                {
-                  required: true,
-                  message: "Please input your Password!",
-                  style: {
-                    fontFamily: "Gantari",
-                  },
-                },
-              ]}
+              help={
+                formik.touched.password && formik.errors.password
+                  ? formik.errors.password
+                  : ""
+              }
+              validateStatus={
+                formik.touched.password && formik.errors.password ? "error" : ""
+              }
             >
-              <ConfigProvider
-                theme={{
-                  components: {
-                    Input: {
-                      hoverBorderColor: "none",
-                      activeBorderColor: "none",
-                    },
-                  },
-                }}
-              >
-                <Input.Password
-                  className="signIn__card__detail__input__detail"
-                  type="password"
-                  placeholder="Mật khẩu của bạn"
-                  prefix={
-                    <LockOutlined
-                      style={{ marginRight: "1.5em" }}
-                      className="site-form-item-icon"
-                    />
-                  }
-                  iconRender={(visible) =>
-                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                  }
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value.trim())}
-                />
-              </ConfigProvider>
+              <Input.Password
+                className="signIn__card__detail__input__detail"
+                placeholder="Mật khẩu"
+                prefix={
+                  <LockOutlined
+                    style={{ marginRight: "1.5em" }}
+                    className="site-form-item-icon"
+                  />
+                }
+                iconRender={(visible) =>
+                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                }
+                name="password"
+                value={formik.values.password}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
             </Form.Item>
             <Form.Item>
               <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox style={{ fontFamily: "Gantari", color: "#ff469e" }}>
+                <Checkbox
+                  style={{ fontFamily: "Gantari" }}
+                  name="remember"
+                  checked={formik.values.remember}
+                  onChange={formik.handleChange}
+                >
                   Lưu tài khoản
                 </Checkbox>
               </Form.Item>
@@ -128,10 +162,9 @@ export default function SignIn() {
                       Button: {
                         borderRadius: "20px",
                         defaultBg: "#ff469e",
-                        defaultColor: "#ff469e",
+                        defaultColor: "white",
                         defaultHoverBg: "black",
                         defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
                         defaultHoverColor: "white",
                         defaultActiveBg: "#ff469e",
                         activeBorderColor: "#ff469e",
@@ -145,13 +178,42 @@ export default function SignIn() {
                     className="signIn__card__detail__options__option"
                     htmlType="submit"
                     style={{
+                      fontWeight: "500",
+                      fontSize: "1.2em",
                       textTransform: "uppercase",
+                    }}
+                    loading={loading}
+                  >
+                    <Spin spinning={loading}>Đăng nhập</Spin>
+                  </Button>
+                </ConfigProvider>
+                <ConfigProvider
+                  theme={{
+                    components: {
+                      Button: {
+                        borderRadius: "20px",
+                        defaultBg: "white",
+                        defaultColor: "white",
+                        defaultHoverBg: "black",
+                        defaultHoverBorderColor: "black",
+                        defaultHoverColor: "white",
+                        defaultActiveBg: "black",
+                        activeBorderColor: "black",
+                        defaultActiveColor: "white",
+                        defaultActiveBorderColor: "#FF4F28",
+                      },
+                    },
+                  }}
+                >
+                  <Button
+                    className="signIn__card__detail__options__option"
+                    onClick={handleGoogleSignIn}
+                    style={{
                       fontWeight: "500",
                       fontSize: "1.2em",
                     }}
-                    type="submit"
                   >
-                    <Spin spinning={loading}>Đăng nhập</Spin>
+                    <FcGoogle /> Đăng nhập với Google
                   </Button>
                 </ConfigProvider>
               </div>

@@ -1,31 +1,25 @@
 import "./Header.scss";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
 import { Link } from "react-router-dom";
-
-import { Badge, Button } from "antd";
-import React, { useState } from "react";
-
-import { SignOut } from "../../signout/SignOut";
-import { useUsers } from "../../../Hooks/useUsers";
+import { Avatar, Badge, Button, Dropdown, Space, theme } from "antd";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../../store/action/authActions";
+const { useToken } = theme;
 
 function Header({ collapsed, toggleCollapsed }) {
-  const { getCurrUser } = useUsers();
-  const [username, setName] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { token } = useToken();
   const navigate = useNavigate();
-  const { onLogIn } = useUsers();
+  const dispatch = useDispatch();
+  const { email, role, photoURL } = useSelector((state) => state.auth);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    setLoading(true);
-    await onLogIn(username, password);
-    setLoading(false);
+  const contentStyle = {
+    backgroundColor: token.colorBgElevated,
+    borderRadius: token.borderRadiusLG,
+    boxShadow: token.boxShadowSecondary,
   };
 
   const menuStyle = {
@@ -33,6 +27,46 @@ function Header({ collapsed, toggleCollapsed }) {
   };
 
   const phoneNumber = "0354019580";
+
+  const handleLogout = async () => {
+    await dispatch(logout());
+    navigate("/sign-in");
+  };
+
+  const handleShoppingCart = () => {
+    navigate("/shoppingCart");
+  };
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <a
+          href={
+            role === "instructor" ? "/admin-dashboard" : "/student-dashboard"
+          }
+        >
+          Dashboard
+        </a>
+      ),
+    },
+    {
+      key: "2",
+      label: <a href="/memberships">Paid Memberships</a>,
+    },
+    {
+      key: "3",
+      label: <a href="/settings">Setting</a>,
+    },
+    {
+      key: "4",
+      label: <a href="/feedback">Send Feedback</a>,
+    },
+    {
+      key: "5",
+      label: <a onClick={handleLogout}>Sign Out</a>,
+    },
+  ];
 
   return (
     <header className="header">
@@ -54,26 +88,67 @@ function Header({ collapsed, toggleCollapsed }) {
       </div>
       <div className="header__right">
         <Badge count={1}>
-          <ShoppingCartOutlined style={{ fontSize: "2em" }} />
+          <ShoppingCartOutlined
+            style={{ fontSize: "2em" }}
+            onClick={handleShoppingCart}
+          />
         </Badge>
-
-        {!getCurrUser() ? (
-          <div className="header__signin" aria-label="Authentication Options">
-            <Button variant="text">
-              <Link to="/sign-in">Đăng nhập</Link>
-            </Button>
-          </div>
-        ) : (
-          <nav className="user" aria-label="User account">
-            <span
-              className="welcome"
-              aria-label={`Logged in as ${getCurrUser().username}`}
+        <div className="header__signin" aria-label="Authentication Options">
+          {email ? (
+            <Dropdown
+              menu={{
+                items,
+              }}
+              dropdownRender={(menu) => (
+                <div style={contentStyle}>
+                  <Space
+                    style={{
+                      padding: 8,
+                      margin: "1em",
+                      borderBottom: "1px solid gray",
+                    }}
+                  >
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "1em",
+                      }}
+                    >
+                      <Avatar
+                        src={photoURL || ""}
+                        icon={<UserOutlined />}
+                        style={{ width: "2.5em", height: "2.5em" }}
+                      />
+                      <div>
+                        <h5>{email}</h5>
+                      </div>
+                    </div>
+                  </Space>
+                  {React.cloneElement(menu, {
+                    style: menuStyle,
+                  })}
+                </div>
+              )}
             >
-              <div>[{getCurrUser().username}]</div>
-              <SignOut />
-            </span>
-          </nav>
-        )}
+              <a onClick={(e) => e.preventDefault()}>
+                <Space>
+                  <Avatar src={photoURL || ""} icon={<UserOutlined />} />
+                </Space>
+              </a>
+            </Dropdown>
+          ) : (
+            <Button
+              className="header__signin"
+              type="primary"
+              danger
+              style={{ background: "#ff469e" }}
+              onClick={() => navigate("/sign-in")}
+            >
+              Đăng nhập
+            </Button>
+          )}
+        </div>
       </div>
     </header>
   );

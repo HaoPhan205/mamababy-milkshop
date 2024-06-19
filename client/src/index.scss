@@ -7,3 +7,10 @@ body {
   box-sizing: border-box;
 }
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600&display=swap");
+
+*::-webkit-scrollbar {
+  width: 5px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgb(188, 188, 188);
+}
