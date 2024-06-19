@@ -11,7 +11,10 @@ const { Content, Sider } = Layout;
 const HomePage = () => {
   return (
     <Layout className="layout">
-      <Sider className="sider" style={{ background: "#fff", minHeight: "1vh" }}>
+      <Sider
+        className="layout__sider"
+        style={{ background: "#fff", minHeight: "1vh" }}
+      >
         <SideBar />
       </Sider>
       <Layout className="inner-layout">

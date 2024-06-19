@@ -4,7 +4,8 @@ import SignUp from "../Pages/signUp/SignUp";
 import HomePage from "../Pages/home/HomePage";
 import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
 import PublicRoute from "./PublicRoute";
-
+import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
+import ProductDetailPage from "../Pages/courseDetailPage/CourseDetailPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -17,6 +18,14 @@ export const router = createBrowserRouter([
       {
         path: "/",
         element: <HomePage />,
+      },
+      {
+        path: "/product-detail/:courseId",
+        element: <ProductDetailPage />,
+      },
+      {
+        path: "/shoppingCart",
+        element: <ShoppingCart />,
       },
     ],
   },

@@ -43,12 +43,6 @@ function SideBar({ collapsed }) {
       key: "2",
       icon: <ShoppingOutlined />,
       label: <Link to="/livestream">Cửa hàng</Link>,
-    },
-
-    {
-      key: "sub1",
-      label: "Categories",
-      icon: <BiCategoryAlt />,
       children: [
         { key: "5", label: "Development" },
         { key: "6", label: "Business" },
@@ -57,7 +51,11 @@ function SideBar({ collapsed }) {
         { key: "9", label: "Office Productivity" },
       ],
     },
-
+    {
+      key: "3",
+      label: <Link to="/don-hang-cua-ban">Đơn hàng của bạn</Link>,
+      icon: <BiCategoryAlt />,
+    },
     {
       key: "22",
       icon: <IoMdAddCircleOutline />,

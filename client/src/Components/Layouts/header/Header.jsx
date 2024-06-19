@@ -3,7 +3,6 @@ import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
-import { Link } from "react-router-dom";
 import { Avatar, Badge, Button, Dropdown, Space, theme } from "antd";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -52,19 +51,15 @@ function Header({ collapsed, toggleCollapsed }) {
     },
     {
       key: "2",
-      label: <a href="/memberships">Paid Memberships</a>,
+      label: <a href="/memberships">Thông tin tài khoản</a>,
     },
     {
       key: "3",
-      label: <a href="/settings">Setting</a>,
+      label: <a href="/settings">Đơn mua</a>,
     },
     {
       key: "4",
-      label: <a href="/feedback">Send Feedback</a>,
-    },
-    {
-      key: "5",
-      label: <a onClick={handleLogout}>Sign Out</a>,
+      label: <a onClick={handleLogout}>Đăng xuất</a>,
     },
   ];
 

@@ -1,0 +1,72 @@
+/* src/components/courseDetail/InstructorInfo.scss */
+
+.course-instructor-section {
+  padding: 20px;
+  border-radius: 8px;
+
+  .course-instructor {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    .instructor-info {
+      display: flex;
+      align-items: center;
+      margin-right: 20px;
+
+      .name-subscribe {
+        display: flex;
+        flex-direction: column;
+        margin-left: 10px;
+
+        .subscribe {
+          border-color: #e74c3c;
+          background-color: #e74c3c; 
+        }
+        .unsubscribe {
+          background-color: #1890ff;  
+          border-color: #1890ff;
+        }
+      }
+    }
+    .instructor-stats {
+      display: flex;
+      justify-content: flex-end;
+      .stat-item {
+        display: flex;
+        align-items: center;
+        margin-right: 20px;
+        border: 0.8px solid #efefef; 
+        font-family: 'Roboto', sans-serif; // replace $font-stack with actual font stack
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        padding: 8px 15px;
+        text-align: center;
+
+        svg {
+          margin-right: 5px;
+        }
+      }
+    }
+  } .course-tabs {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    .ant-btn-link {
+      color: black;  // Text color set to black
+      font-weight: normal;
+      margin-right: 20px;
+      cursor: pointer;
+
+      &.active-tab {
+        font-weight: bold;  // Active tab text is bold
+      }
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

@@ -1,0 +1,43 @@
+.Cartlist {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    img {
+      margin-right: 20px;
+    }
+  
+    .text {
+      .cart__name {
+        font-size: 18px;
+        font-weight: bold;
+      }
+  
+      .cart__categories {
+        font-size: 14px;
+        color: gray;
+      }
+  
+      .cart__buy {
+        display: flex;
+        align-items: center;
+        margin-top: 5px;
+        
+        span {
+          margin-right: 5px;
+        }
+  
+        .price {
+          font-size: 16px;
+          color: green; // Add styling for the price
+        }
+      }
+    }
+    .close__button {
+        position: absolute; /* Định vị tuyệt đối để đặt nút ở góc */
+        top: 5px; 
+        right: 10px; 
+        font-size: 20px;
+        cursor: pointer;
+      }
+  }
+  
