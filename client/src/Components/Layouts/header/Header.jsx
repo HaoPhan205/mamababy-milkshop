@@ -1,10 +1,14 @@
 import "./Header.scss";
-import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  ShoppingCartOutlined,
+  UserOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
 import { Avatar, Badge, Button, Dropdown, Space, theme } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../../store/action/authActions";
 const { useToken } = theme;
@@ -14,6 +18,8 @@ function Header({ collapsed, toggleCollapsed }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { email, role, photoURL } = useSelector((state) => state.auth);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchRedirect, setSearchRedirect] = useState(false);
 
   const contentStyle = {
     backgroundColor: token.colorBgElevated,
@@ -27,6 +33,13 @@ function Header({ collapsed, toggleCollapsed }) {
 
   const phoneNumber = "0354019580";
 
+  useEffect(() => {
+    if (searchRedirect) {
+      navigate(`/shopping?search=${searchTerm}`);
+      setSearchRedirect(false);
+    }
+  }, [searchRedirect, searchTerm, navigate]);
+
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/sign-in");
@@ -36,22 +49,22 @@ function Header({ collapsed, toggleCollapsed }) {
     navigate("/shoppingCart");
   };
 
+  const handleSearch = () => {
+    setSearchRedirect(true);
+  };
+
   const items = [
     {
       key: "1",
       label: (
-        <a
-          href={
-            role === "instructor" ? "/admin-dashboard" : "/student-dashboard"
-          }
-        >
+        <a href={role === "guess" ? "/admin-dashboard" : "/user-dashboard"}>
           Dashboard
         </a>
       ),
     },
     {
       key: "2",
-      label: <a href="/memberships">Thông tin tài khoản</a>,
+      label: <a href="/thongtin">Thông tin tài khoản</a>,
     },
     {
       key: "3",
@@ -59,7 +72,19 @@ function Header({ collapsed, toggleCollapsed }) {
     },
     {
       key: "4",
-      label: <a onClick={handleLogout}>Đăng xuất</a>,
+      label: (
+        <button
+          onClick={handleLogout}
+          style={{
+            all: "unset",
+            cursor: "pointer",
+            color: "blue",
+            textDecoration: "underline",
+          }}
+        >
+          Đăng xuất
+        </button>
+      ),
     },
   ];
 
@@ -70,7 +95,19 @@ function Header({ collapsed, toggleCollapsed }) {
       </div>
 
       <div className="header__search">
-        <input type="text" placeholder="Ba mẹ muốn tìm mua gì hôm nay ?" />
+        <input
+          type="text"
+          placeholder="Ba mẹ muốn tìm mua gì hôm nay ?"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          onPressEnter={handleSearch}
+          addonAfter={
+            <SearchOutlined
+              onClick={handleSearch}
+              style={{ cursor: "pointer" }}
+            />
+          }
+        />
       </div>
       <div className="header__free">
         <p>
@@ -126,11 +163,23 @@ function Header({ collapsed, toggleCollapsed }) {
                 </div>
               )}
             >
-              <a onClick={(e) => e.preventDefault()}>
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                }}
+                style={{
+                  background: "none",
+                  color: "inherit",
+                  border: "none",
+                  padding: 0,
+                  font: "inherit",
+                  cursor: "pointer",
+                }}
+              >
                 <Space>
                   <Avatar src={photoURL || ""} icon={<UserOutlined />} />
                 </Space>
-              </a>
+              </button>
             </Dropdown>
           ) : (
             <Button

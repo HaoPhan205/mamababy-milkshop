@@ -3,32 +3,18 @@ import React, { useState } from "react";
 import { ConfigProvider, Menu, theme } from "antd";
 import { AiOutlineHome } from "react-icons/ai";
 import { BiCategoryAlt, BiMessageAltError } from "react-icons/bi";
-import {
-  FaRegCheckCircle,
-  FaRegCreditCard,
-  FaRegQuestionCircle,
-  FaRegStar,
-} from "react-icons/fa";
-import { IoMdAddCircleOutline, IoMdNotificationsOutline } from "react-icons/io";
-import { IoNewspaperOutline, IoSettingsOutline } from "react-icons/io5";
+import { FaRegQuestionCircle } from "react-icons/fa";
+import { IoMdAddCircleOutline } from "react-icons/io";
+import { IoSettingsOutline } from "react-icons/io5";
 import { LuFlag } from "react-icons/lu";
 import "./SideBar.scss";
 import { Link } from "react-router-dom";
-import { GiBlackBook } from "react-icons/gi";
-import { TiMessages } from "react-icons/ti";
-import { GrCertificate } from "react-icons/gr";
-import {
-  MdOutlineAddCircleOutline,
-  MdOutlineAttachMoney,
-  MdOutlineLibraryBooks,
-  MdPayments,
-} from "react-icons/md";
-import { TbDeviceAnalytics } from "react-icons/tb";
+
 import { ShoppingOutlined } from "@ant-design/icons";
 
 function SideBar({ collapsed }) {
   const {
-    token: { colorBgContainer, borderRadiusLG },
+    token: { colorBgContainer },
   } = theme.useToken();
 
   const [selectedKey, setSelectedKey] = useState("1");
@@ -42,14 +28,7 @@ function SideBar({ collapsed }) {
     {
       key: "2",
       icon: <ShoppingOutlined />,
-      label: <Link to="/livestream">Cửa hàng</Link>,
-      children: [
-        { key: "5", label: "Development" },
-        { key: "6", label: "Business" },
-        { key: "7", label: "Finance & Accounting" },
-        { key: "8", label: "IT & Software" },
-        { key: "9", label: "Office Productivity" },
-      ],
+      label: <Link to="/shopping">Cửa hàng</Link>,
     },
     {
       key: "3",
@@ -91,41 +70,6 @@ function SideBar({ collapsed }) {
       label: "Dashboard",
     },
     {
-      key: "2",
-      icon: <GiBlackBook />,
-      label: "Purchased Courses",
-    },
-    {
-      key: "3",
-      icon: <TiMessages />,
-      label: "Messages",
-    },
-    {
-      key: "4",
-      icon: <IoMdNotificationsOutline />,
-      label: "Notifications",
-    },
-    {
-      key: "5",
-      icon: <GrCertificate />,
-      label: "My Certificates",
-    },
-    {
-      key: "6",
-      icon: <FaRegStar />,
-      label: "Reviews",
-    },
-    {
-      key: "7",
-      icon: <FaRegCreditCard />,
-      label: "Credits",
-    },
-    {
-      key: "8",
-      icon: <MdOutlineLibraryBooks />,
-      label: "Statements",
-    },
-    {
       key: "9",
       icon: <IoSettingsOutline />,
       label: "Setting",
@@ -144,39 +88,6 @@ function SideBar({ collapsed }) {
       key: "12",
       icon: <BiMessageAltError />,
       label: "Send Feedback",
-    },
-  ];
-
-  const instructionItem = [
-    {
-      key: "1",
-      icon: <BiCategoryAlt />,
-      label: "Dashboard",
-    },
-    {
-      key: "2",
-      icon: <GiBlackBook />,
-      label: "Courses",
-    },
-    {
-      key: "3",
-      icon: <TbDeviceAnalytics />,
-      label: "Analysics",
-    },
-    {
-      key: "4",
-      icon: <MdOutlineAddCircleOutline />,
-      label: <Link to="create-course">Create Course</Link>,
-    },
-    {
-      key: "5",
-      icon: <TiMessages />,
-      label: "Messages",
-    },
-    {
-      key: "6",
-      icon: <IoMdNotificationsOutline />,
-      label: "Notifications",
     },
   ];
 
@@ -200,10 +111,11 @@ function SideBar({ collapsed }) {
           components: {
             Menu: {
               itemColor: "black",
-              itemSelectedColor: "#ed2a26",
-              itemSelectedBg: "#FFECEC",
+              itemSelectedColor: "white",
+              itemSelectedBg: "#fc88c0  ",
               iconSize: 20,
-              itemHoverBg: "#FFECEC",
+              itemHoverBg: "#fc88c0",
+              itemHoverColor: "white",
             },
           },
         }}

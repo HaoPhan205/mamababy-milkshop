@@ -1,9 +1,9 @@
-import { Affix, Layout } from "antd";
+import { Layout } from "antd";
 import React, { useState } from "react";
 import Header from "../../Components/Layouts/header/Header";
 import { Outlet } from "react-router-dom";
 import Footer from "../../Components/Layouts/footer/Footer";
-const { Content } = Layout;
+import SideBar from "../../Components/sidebar/SideBar";
 
 function DefaultLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -14,14 +14,21 @@ function DefaultLayout() {
 
   return (
     <>
-      <Affix offsetTop={0}>
-        <Header collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
-      </Affix>
-      <Layout style={{ minHeight: "100vh", overflowX: "hidden", zIndex: "2" }}>
-        <Content style={{ padding: "1.5em", backgroundColor: "#F7F7F7" }}>
-          <Outlet />
-        </Content>
-        <Footer />
+      <Header collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
+
+      <Layout style={{ overflowX: "hidden" }}>
+        <SideBar style={{ maxHeight: "100vh" }} collapsed={collapsed} />
+        <Layout style={{ maxHeight: "100vh", overflowY: "auto" }}>
+          <Layout
+            style={{
+              backgroundColor: "#F7F7F7",
+              overflowX: "hidden",
+            }}
+          >
+            <Outlet />
+            <Footer />
+          </Layout>
+        </Layout>
       </Layout>
     </>
   );

@@ -18,7 +18,7 @@ function ShoppingCart() {
           }}
           to="/"
         >
-          Home
+          Trang chủ
         </Link>
         <h>/</h>
         <Link
@@ -26,7 +26,7 @@ function ShoppingCart() {
             color: "black",
           }}
         >
-          Shopping Cart
+          Giỏ hàng
         </Link>
       </div>
       <Row className="cart__list" gutter={16}>

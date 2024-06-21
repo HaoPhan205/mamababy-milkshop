@@ -1,11 +1,9 @@
 .product-card {
-  position: relative;
   width: 100%;
 }
 
 .product-card .ant-card {
   border-radius: 10px;
-  overflow: hidden;
 }
 
 .product-card .ant-card-cover img {
@@ -64,7 +62,6 @@
 .products-container {
   position: relative;
   padding: 0 60px;
-  z-index: 3;
 }
 
 .carousel__button {
