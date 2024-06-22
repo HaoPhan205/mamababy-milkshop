@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { persistStore, persistReducer } from "redux-persist";
 import storage from "redux-persist/lib/storage";
 import { combineReducers } from "redux";
-import adminReducer from "./reduxReducer/adminReducer";
+
 import authReducer from "./reduxReducer/authReducer";
 
 const rootPersistConfig = {
@@ -17,7 +17,6 @@ const authPersistConfig = {
 };
 
 const rootReducer = combineReducers({
-  admin: adminReducer,
   auth: persistReducer(authPersistConfig, authReducer),
 });
 
