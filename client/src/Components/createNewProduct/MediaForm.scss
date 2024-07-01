@@ -1,0 +1,63 @@
+.media-form {
+    .upload-section, .thumbnail-section {
+      margin-bottom: 24px;
+  
+      .ant-upload-drag {
+        padding: 20px;
+        border: 1px dashed #d9d9d9;
+        border-radius: 4px;
+        background-color: #fafafa;
+        cursor: pointer;
+        transition: border-color 0.3s;
+        text-align: center;
+  
+        &:hover {
+          border-color: #ff4500;
+        }
+  
+        .ant-upload-drag-icon {
+          color: #ff4500; // Change icon color to orange
+        }
+  
+        
+      }
+  
+      .video-preview, .thumbnail-preview {
+        margin-top: 20px;
+      }
+  
+      img {
+        display: block;
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+        border-radius: 4px;
+      }
+    }
+  
+    .media-tabs .ant-tabs-nav .ant-tabs-tab {
+      color: #ff4500;
+    }
+  
+    .media-tabs .ant-tabs-nav .ant-tabs-tab-active {
+      color: #ff4500;
+    }
+  
+    .upload-button {
+      background-color: #ff4500;
+      border-color: #ff4500;
+      color: #fff;
+  
+      &:hover {
+        background-color: darken(#ff4500, 10%);
+        border-color: darken(#ff4500, 10%);
+      }
+    }
+  
+    .file-format {
+      margin-top: 8px;
+      color: #888;
+      font-size: 12px;
+    }
+  }
+  

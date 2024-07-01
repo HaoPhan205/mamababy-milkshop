@@ -1,0 +1,56 @@
+.curriculum-form {
+  .curriculum-header {
+    margin-bottom: 16px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .curriculum-item {
+    padding: 12px;
+    border-bottom: 1px solid #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .anticon {
+      margin-right: 8px;
+    }
+
+    .curriculum-item-icons {
+      display: flex;
+      align-items: center;
+
+      .anticon {
+        margin-left: 8px;
+        cursor: pointer;
+      }
+    }
+  }
+
+  .curriculum-footer {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+
+    .ant-btn {
+      width: 30%;
+      background-color: #ff4500;
+      color: #fff;
+      border: none;
+
+      &:hover {
+        background-color: #ff6347;
+      }
+    }
+  }
+}
+
+.error {
+  color: red;
+}

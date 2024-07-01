@@ -5,8 +5,9 @@ import HomePage from "../Pages/home/HomePage";
 import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
 import PublicRoute from "./PublicRoute";
 import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
-import ProductDetailPage from "../Pages/courseDetailPage/CourseDetailPage";
+import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
+import CreateNewProduct from "../Pages/Staff/createProductPage/CreateProductsPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -31,6 +32,10 @@ export const router = createBrowserRouter([
       {
         path: "/cua-hang",
         element: <Shopping />,
+      },
+      {
+        path: "/tao-san-pham",
+        element: <CreateNewProduct />,
       },
     ],
   },

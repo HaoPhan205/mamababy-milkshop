@@ -1,0 +1,62 @@
+.create-new-course {
+  display: flex;
+  justify-content: center; 
+  align-items: center; 
+  padding-top: 40px;
+
+  .create-course-container {
+    max-width: 100%;
+    width: 100%;
+    padding: 0 100px; 
+  }
+
+  .create-course-title {
+    text-align: center;
+    margin-bottom: 16px;
+    font-size: 24px;
+    font-weight: 500;
+  }
+
+  .ant-steps {
+    margin-bottom: 16px;
+  }
+
+  .custom-steps .ant-steps-item-process .ant-steps-item-icon,
+  .custom-steps .ant-steps-item-finish .ant-steps-item-icon {
+    background-color: #ff4500;
+    border-color: #ff4500;
+  }
+
+  .custom-steps .ant-steps-item-finish .ant-steps-item-icon > .ant-steps-icon,
+  .custom-steps .ant-steps-item-process .ant-steps-item-icon > .ant-steps-icon {
+    color: #fff;
+  }
+
+  .custom-steps .ant-steps-item-finish .ant-steps-item-content > .ant-steps-item-title::after {
+    background-color: #ff4500;
+  }
+
+  .steps-content {
+    padding: 16px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .steps-action {
+    margin-top: 16px;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .custom-next-button {
+    background-color: #ff4500;
+    border-color: #ff4500;
+    color: #fff;
+
+    &:hover {
+      background-color: darken(#ff4500, 10%);
+      border-color: darken(#ff4500, 10%);
+    }
+  }
+}

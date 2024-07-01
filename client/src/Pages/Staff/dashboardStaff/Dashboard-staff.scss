@@ -1,0 +1,92 @@
+.dashboard {
+    padding: 20px;
+    
+    .create-course-btn {
+        margin: 20px 0;
+    }
+
+    .ant-card {
+        margin-bottom: 20px;
+    }
+
+    .ant-card-meta-title {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+    .ant-card-meta-description {
+        font-size: 14px;
+    }
+    .course-creation-container {
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        padding: 10px;
+        border:1px solid #eeeeee;
+        border-radius: 5px;
+        background-color: #fff;
+      }
+      
+      .icon {
+        font-size: 24px;
+        margin-right: 10px;
+      }
+      
+      .text {
+        flex-grow: 1;
+        font-size: 16px;
+      }
+      
+      .create-course-button {
+        background-color: #f44336;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+      }
+      
+      .create-course-button:hover {
+        background-color: #000000;
+      }
+      .button{
+        background-color: #ffffff;
+        margin-top: 20px;
+        display: contents;
+        
+      }
+      .course-stats {
+        font-size: 12px;
+      }
+      
+      .course-stats p {
+        margin: 4px 0;
+      }
+      
+      .course-links {
+        margin-top: 20px;
+        
+        
+      }
+      
+      
+      .course-link h5 {
+        margin: 5px;
+        
+      }
+      .newlearn{
+        color: #080000;
+        margin-top: 10px;
+      }
+      .styled-box {
+        display: inline-block;
+        padding: 4px 8px;
+        background-color: #ffc107;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 4px;
+        margin-top: 16px;
+        text-align: center;
+      }
+      
+}
