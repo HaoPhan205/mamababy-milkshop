@@ -1,24 +1,18 @@
 import React from "react";
 import { TiShoppingCart } from "react-icons/ti";
 import { PiPlayFill } from "react-icons/pi";
-import "./CourseCard.scss";
+import "./ProductCard.scss";
 import { Typography } from "antd";
 
-function CourseCard() {
+function ProductCard({ product, onClick }) {
   return (
     <div className="container">
-      <div className="card">
+      <div className="card" onClick={onClick}>
         <div className="course-card-image">
           <img
             src="https://blog.coursify.me/wp-content/uploads/2018/08/plan-your-online-course.jpg"
             alt="img"
           />
-          <div
-            className="course-duration-badge"
-            style={{ bottom: "18px", right: "15px" }}
-          >
-            25 hourse
-          </div>
           <div className="courses-rating" style={{ left: "10px", top: "20px" }}>
             <Typography className="star" style={{ marginTop: "-3px" }}>
               ★
@@ -34,9 +28,9 @@ function CourseCard() {
         </div>
 
         <div className="content">
-          <p className="views-times">109k views · 15 days ago </p>
-          <h3>Complete Python Bootcamp: Go to hero in Python 3</h3>
-          <p className="course-category">Web Development | Python</p>
+          <p className="views-times">Thương hiệu: {product.brandName} </p>
+          <h3>{product.itemName}</h3>
+          <p className="course-category">{product.description}</p>
           <div className="course-info">
             <p className="course-instructor">
               By <span>John Doe</span>
@@ -45,7 +39,7 @@ function CourseCard() {
               <span>
                 <TiShoppingCart size={23} />
               </span>
-              <p>$10</p>
+              <p>{product.price}</p>
             </div>
           </div>
         </div>
@@ -54,4 +48,4 @@ function CourseCard() {
   );
 }
 
-export default CourseCard;
+export default ProductCard;

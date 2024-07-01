@@ -4,7 +4,9 @@
   "private": true,
   "engines": {
     "node": "20.15.0"
+    
   },
+  "proxy": "https://babymamamilkstore1.azurewebsites.net",
   "dependencies": {
     "14": "^1.0.1",
     "20": "^1.0.0",
@@ -22,10 +24,11 @@
     "@vercel/speed-insights": "^1.0.12",
     "antd": "^5.18.0",
     "assert": "^2.1.0",
-    "axios": "^1.6.8",
+    "axios": "^1.7.2",
     "bootstrap": "^5.3.2",
     "browserify-zlib": "^0.2.0",
     "buffer": "^6.0.3",
+    "dotenv": "^16.4.5",
     "express": "^4.17.1",
     "firebase": "^10.12.2",
     "formik": "^2.4.6",

@@ -6,6 +6,7 @@ import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
 import PublicRoute from "./PublicRoute";
 import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
 import ProductDetailPage from "../Pages/courseDetailPage/CourseDetailPage";
+import Shopping from "../Pages/searchResult/SearchResultPage";
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -27,10 +28,10 @@ export const router = createBrowserRouter([
         path: "/shoppingCart",
         element: <ShoppingCart />,
       },
-      // {
-      //   path: "/shopping",
-      //   element: </>,
-      // },
+      {
+        path: "/cua-hang",
+        element: <Shopping />,
+      },
     ],
   },
   {

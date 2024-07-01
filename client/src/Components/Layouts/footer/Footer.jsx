@@ -76,12 +76,6 @@ export default function Footer() {
           </li>
         </ul>
       </div>
-
-      <div className="footer__info3">
-        <ul>
-          <p>Chấp Nhận Thanh Toán</p>
-        </ul>
-      </div>
     </div>
   );
 }

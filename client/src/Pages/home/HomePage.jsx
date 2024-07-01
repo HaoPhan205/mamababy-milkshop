@@ -1,11 +1,9 @@
 import React from "react";
-import { Col, Layout, Row } from "antd";
+import { Col, Row } from "antd";
 import SlideIndex from "../../Components/SlideIndex/SlideIndex";
 import Product from "../../Components/productsFeatured/productsFeatured";
 import Products from "../../Components/products/products";
 import "./HomePage.scss";
-
-const { Content } = Layout;
 
 const HomePage = () => {
   return (

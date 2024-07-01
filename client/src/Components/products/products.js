@@ -1,16 +1,14 @@
-import React, { useRef } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import "./products.scss";
+import { Card, Badge, Carousel, Typography } from "antd";
+import { useNavigate } from "react-router-dom";
+import api from "../../config/axios";
 
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
-import { Card, Badge, Carousel, Typography } from "antd";
-import axios from "axios";
-import { Link } from "react-router-dom";
-import DataProductsFeatured from "../productsFeatured/dataProductsFeatured";
-import { useNavigate } from "react-router-dom";
 
 const ProductCard = ({ product, onClick }) => (
-  <div className="product-card" onClick={onClick}>
+  <div className="product-card" onClick={() => onClick(product.productItemId)}>
     <Badge.Ribbon
       text="BESTSELLER"
       color="gold"
@@ -20,7 +18,7 @@ const ProductCard = ({ product, onClick }) => (
         hoverable
         cover={
           <div className="product-card-image">
-            <img alt={product.title} src={product.image} />
+            <img alt={product.itemName} src={product.image} />
             <div className="product-duration-badge">{product.duration}</div>
             <div className="products-rating">
               <Typography className="star">★</Typography> {product.rating}
@@ -33,26 +31,65 @@ const ProductCard = ({ product, onClick }) => (
             <span>{product.views}</span> • <span>{product.date}</span>
           </div>
           <Card.Meta
-            title={product.title}
+            title={product.itemName}
             description={
               <div className="products-category">{product.category}</div>
             }
           />
           <div className="products-info">
-            <div className="product-instructor">By {product.instructor}</div>
-            <div className="product-price">{product.price}</div>
+            <div className="product-instructor">By {product.brandName}</div>
+            <div className="product-price">${product.price.toFixed(2)}</div>
+          </div>
+          <div className="product-benefits">
+            <div>{product.benefit}</div>
+            <div>{product.description}</div>
+          </div>
+          <div className="product-company">
+            <div>Brand: {product.brandName}</div>
+            <div>Country: {product.countryName}</div>
+            <div>Company: {product.companyName}</div>
           </div>
         </div>
       </Card>
     </Badge.Ribbon>
   </div>
 );
+
 const Products = () => {
   const carouselRef = useRef();
   const navigate = useNavigate();
-  const handleItemClick = () => {
-    navigate("/product-detail");
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get("/api/productitems");
+
+        setProducts(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleItemClick = (productItemId) => {
+    navigate(`/productitems/${productItemId}`);
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
+
   return (
     <div className="products">
       <div className="products__title">
@@ -69,8 +106,8 @@ const Products = () => {
         draggable
         ref={carouselRef}
       >
-        {DataProductsFeatured.map((product) => (
-          <div key={product.id} className="carousel-item">
+        {products.map((product) => (
+          <div key={product.productItemId} className="carousel-item">
             <ProductCard product={product} onClick={handleItemClick} />
           </div>
         ))}
@@ -78,4 +115,5 @@ const Products = () => {
     </div>
   );
 };
+
 export default Products;

@@ -2,11 +2,8 @@ import Sider from "antd/es/layout/Sider";
 import React, { useState } from "react";
 import { ConfigProvider, Menu, theme } from "antd";
 import { AiOutlineHome } from "react-icons/ai";
-import { BiCategoryAlt, BiMessageAltError } from "react-icons/bi";
-import { FaRegQuestionCircle } from "react-icons/fa";
-import { IoMdAddCircleOutline } from "react-icons/io";
+import { BiCategoryAlt } from "react-icons/bi";
 import { IoSettingsOutline } from "react-icons/io5";
-import { LuFlag } from "react-icons/lu";
 import "./SideBar.scss";
 import { Link } from "react-router-dom";
 
@@ -28,66 +25,18 @@ function SideBar({ collapsed }) {
     {
       key: "2",
       icon: <ShoppingOutlined />,
-      label: <Link to="/shopping">Cửa hàng</Link>,
+      label: <Link to="/cua-hang">Cửa hàng</Link>,
     },
     {
       key: "3",
       label: <Link to="/don-hang-cua-ban">Đơn hàng của bạn</Link>,
       icon: <BiCategoryAlt />,
-    },
-    {
-      key: "22",
-      icon: <IoMdAddCircleOutline />,
-      label: "Browse Instructors",
       className: "border-bottom",
     },
     {
       key: "23",
       icon: <IoSettingsOutline />,
       label: "Setting",
-    },
-    {
-      key: "24",
-      icon: <FaRegQuestionCircle />,
-      label: "Help",
-    },
-    {
-      key: "25",
-      icon: <LuFlag />,
-      label: "Report History",
-    },
-    {
-      key: "26",
-      icon: <BiMessageAltError />,
-      label: "Send Feedback",
-    },
-  ];
-
-  const studentItem = [
-    {
-      key: "1",
-      icon: <BiCategoryAlt />,
-      label: "Dashboard",
-    },
-    {
-      key: "9",
-      icon: <IoSettingsOutline />,
-      label: "Setting",
-    },
-    {
-      key: "10",
-      icon: <FaRegQuestionCircle />,
-      label: "Help",
-    },
-    {
-      key: "11",
-      icon: <LuFlag />,
-      label: "Report History",
-    },
-    {
-      key: "12",
-      icon: <BiMessageAltError />,
-      label: "Send Feedback",
     },
   ];
 

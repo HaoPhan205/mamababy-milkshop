@@ -51,7 +51,7 @@ export const register = createAsyncThunk(
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await api.post("/api/auth/register", credentials);
-      notifySuccess("Registration successful"); // Gọi notifySuccess từ hook
+      notifySuccess("Registration successful");
       return response.data;
     } catch (error) {
       if (error.response && error.response.status === 400) {
