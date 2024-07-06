@@ -77,7 +77,7 @@ const Product = () => {
       <Carousel
         dots={false}
         slidesToScroll={1}
-        slidesToShow={4}
+        slidesToShow={3}
         infinite={true}
         draggable
         ref={carouselRef}

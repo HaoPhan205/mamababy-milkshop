@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/product-detail/:courseId",
+        path: "/chi-tiet-san-pham/:productID",
         element: <ProductDetailPage />,
       },
       {
@@ -34,7 +34,19 @@ export const router = createBrowserRouter([
         element: <Shopping />,
       },
       {
-        path: "/tao-san-pham",
+        path: "/quan-li-san-pham",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/quan-li-giao-hang",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/dashboard-admin",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/dashboard-staff",
         element: <CreateNewProduct />,
       },
     ],

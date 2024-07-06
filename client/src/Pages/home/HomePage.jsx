@@ -11,7 +11,9 @@ const HomePage = () => {
       <Col span={24}>
         <SlideIndex />
       </Col>
-
+      <Col span={24}>
+        <Product />
+      </Col>
       <Col span={24}>
         <Products />
       </Col>
