@@ -1,0 +1,32 @@
+.order-summary {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    max-width: 500px;
+    margin-top: 11px;
+    
+    .line {
+      border-bottom: 1px solid #eee;
+      margin: 25px 0;
+    }
+  
+    .item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+  
+    .total {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-weight: bold;
+    }
+  
+    .secure-checkout {
+      text-align: center;
+      margin-top: 20px;
+    }
+  }
+  

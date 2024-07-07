@@ -8,6 +8,8 @@ import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
 import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
 import CreateNewProduct from "../Pages/Staff/createProductPage/CreateProductsPage";
+import PaymentForm from "../Components/vnpay/PaymentForm";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -49,8 +51,13 @@ export const router = createBrowserRouter([
         path: "/dashboard-staff",
         element: <CreateNewProduct />,
       },
+      {
+        path: "/payment",
+        element: <PaymentForm />,
+      },
     ],
   },
+
   {
     path: "/sign-in",
     element: (
