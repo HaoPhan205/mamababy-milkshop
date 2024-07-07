@@ -1,9 +1,14 @@
 .product-card {
   width: 100%;
+  
+ 
 }
 
 .product-card .ant-card {
   border-radius: 10px;
+  border: 2px solid #ff469e;
+ margin: 0 5px;
+
 }
 
 .product-card .ant-card-cover img {
@@ -17,6 +22,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  border: 1px solid #ff469e;
+  border-radius: 10px;
 }
 
 .product-duration-badge {
@@ -32,25 +39,6 @@
 
 .product-meta {
   text-align: left;
-}
-
-.products-rating {
-  display: flex;
-  position: absolute;
-  width: fit-content;
-  font-size: 14px;
-  font-weight: 500;
-  background-color: #fdcc0d;
-  color: white;
-  padding: 3px 15px;
-  border-radius: 3px;
-  top: 5px;
-}
-
-.products-rating .star {
-  margin-right: 7px;
-  font-size: 14px;
-  color: white;
 }
 
 .product-details {
@@ -117,9 +105,10 @@
 }
 
 .product-price {
-  font-size: 18px;
+  font-size: 20px;
   color: #333;
   font-weight: bold;
+  padding: 10px 0;
 }
 
 .product-instructor {

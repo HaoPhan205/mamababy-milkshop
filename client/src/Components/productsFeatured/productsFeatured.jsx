@@ -1,56 +1,62 @@
-import React, { useRef } from "react";
-import { Card, Badge, Carousel, Button, Typography } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import React, { useEffect, useRef, useState } from "react";
+import { Card, Badge, Carousel, Button } from "antd";
+import { LeftOutlined, RightOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
 import { Link } from "react-router-dom";
-import DataProductsFeatured from "./dataProductsFeatured";
+import api from "../../config/axios";
 
-const ProductCard = ({ product, onClick }) => (
-  <div className="product-card" onClick={onClick}>
-    <Badge.Ribbon
-      text="BESTSELLER"
-      color="gold"
-      style={{ display: product.bestseller ? "block" : "none" }}
-    >
-      <Card
-        hoverable
-        cover={
-          <div className="product-card-image">
-            <img alt={product.title} src={product.image} />
-            <div className="product-duration-badge">{product.duration}</div>
-            <div className="products-rating">
-              <Typography className="star">★</Typography> {product.rating}
-            </div>
-          </div>
-        }
-      >
-        <div className="product-meta">
-          <div className="product-details">
-            <span>{product.views}</span> • <span>{product.date}</span>
-          </div>
-          <Card.Meta
-            title={product.title}
-            description={
-              <div className="products-category">{product.category}</div>
-            }
-          />
-          <div className="products-info">
-            <div className="product-instructor">By {product.instructor}</div>
-            <div className="product-price">{product.price}</div>
-          </div>
+const ProductCard = ({ product, onClick, onAddToCart }) => (
+  <div className="product-card">
+    <Card
+      hoverable
+      cover={
+        <div className="product-card-image" onClick={onClick}>
+          <img alt={product.itemName} src={product.image1} />
         </div>
-      </Card>
-    </Badge.Ribbon>
+      }
+    >
+      <div className="product-meta">
+        <Card.Meta title={product.itemName} />
+        <div className="product-price">{product.price} VNĐ</div>
+      </div>
+      <div className="products-info">
+        <div>Đã bán {product.soldQuantity}</div>
+        <ShoppingCartOutlined onClick={onAddToCart} style={{ fontSize: '20px', color: '#ff469e' }} />
+      </div>
+    </Card>
   </div>
 );
 
 const Product = () => {
   const navigate = useNavigate();
   const carouselRef = useRef();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const handleItemClick = () => {
-    navigate("/product-detail");
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await api.get("/api/productitems/topsold");
+        setProducts(response.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleItemClick = (productId) => {
+    navigate(`/product-detail/${productId}`);
+  };
+
+  const handleAddToCart = (productId) => {
+    // Implement the logic for adding the product to the cart
+    console.log("Product added to cart:", productId);
   };
 
   const handlePrev = () => {
@@ -60,6 +66,14 @@ const Product = () => {
   const handleNext = () => {
     carouselRef.current.next();
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div className="products-container">
@@ -77,14 +91,18 @@ const Product = () => {
       <Carousel
         dots={false}
         slidesToScroll={1}
-        slidesToShow={3}
+        slidesToShow={5}
         infinite={true}
         draggable
         ref={carouselRef}
       >
-        {DataProductsFeatured.map((product) => (
-          <div key={product.id} className="carousel-item">
-            <ProductCard product={product} onClick={handleItemClick} />
+        {products.map((product) => (
+          <div key={product.productItemId} className="carousel-item">
+            <ProductCard
+              product={product}
+              onClick={() => handleItemClick(product.productItemId)}
+              onAddToCart={() => handleAddToCart(product.productItemId)}
+            />
           </div>
         ))}
       </Carousel>

@@ -3,16 +3,47 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 25px;
+    font-size: 20px;
+    margin-bottom: 10px;
+
     img {
       width: 30px;
       height: auto;
     }
+
     h3 {
       color: #ff469e;
     }
   }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); // 5 products per row
+    gap: 10px;
+    padding: 0 10px;
+  }
+
   &__card {
-    padding: 10px;
+    padding: 5px;
+  }
+
+  &__see-all {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+
+    button {
+      padding: 10px 20px;
+      background-color: #ff469e;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+
+      &:hover {
+        background-color: #e0408e;
+      }
+    }
   }
 }

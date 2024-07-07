@@ -78,20 +78,20 @@ const SearchResultPage = () => {
 
         setFilterOptions({
           BrandMilk: brandMilkRes.data.data.map((item) => ({
-            label: item.name,
-            value: item.id,
+            label: item.companyID,
+            value: item.brandName,
           })),
           Company: companyRes.data.data.map((item) => ({
-            label: item.name,
-            value: item.id,
+            label: item.countryID,
+            value: item.companyName,
           })),
           Country: countryRes.data.data.map((item) => ({
-            label: item.name,
-            value: item.id,
+            label: item.countryId,
+            value: item.countryName,
           })),
           AgeRange: ageRangeRes.data.data.map((item) => ({
-            label: item.range,
-            value: item.id,
+            label: item.productItemID,
+            value: item.productItemID,
           })),
         });
       } catch (err) {

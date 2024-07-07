@@ -1,62 +1,35 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import "./products.scss";
-import { Card, Badge, Carousel, Typography } from "antd";
+import { Card, Row, Col } from "antd";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
-
+import {ShoppingCartOutlined } from "@ant-design/icons";
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
 
-const ProductCard = ({ product, onClick }) => (
-  <div className="product-card" onClick={() => onClick(product.productItemId)}>
-    <Badge.Ribbon
-      text="BESTSELLER"
-      color="gold"
-      style={{ display: product.bestseller ? "block" : "none" }}
-    >
-      <Card
-        hoverable
-        cover={
-          <div className="product-card-image">
-            <img alt={product.itemName} src={product.image} />
-            <div className="product-duration-badge">{product.duration}</div>
-            <div className="products-rating">
-              <Typography className="star">★</Typography> {product.rating}
-            </div>
-          </div>
-        }
-      >
-        <div className="product-meta">
-          <div className="product-details">
-            <span>{product.views}</span> • <span>{product.date}</span>
-          </div>
-          <Card.Meta
-            title={product.itemName}
-            description={
-              <div className="products-category">{product.category}</div>
-            }
-          />
-          <div className="products-info">
-            <div className="product-instructor">By {product.brandName}</div>
-            <div className="product-price">${product.price.toFixed(2)}</div>
-          </div>
-          <div className="product-benefits">
-            <div>{product.benefit}</div>
-            <div>{product.description}</div>
-          </div>
-          <div className="product-company">
-            <div>Brand: {product.brandName}</div>
-            <div>Country: {product.countryName}</div>
-            <div>Company: {product.companyName}</div>
-          </div>
+const ProductCard = ({ product, onClick, onAddToCart }) => (
+  <div className="product-card">
+    <Card
+      hoverable
+      cover={
+        <div className="product-card-image" onClick={onClick}>
+          <img alt={product.itemName} src={product.image1} />
         </div>
-      </Card>
-    </Badge.Ribbon>
+      }
+    >
+      <div className="product-meta">
+        <Card.Meta title={product.itemName} />
+        <div className="product-price">{product.price} VNĐ</div>
+      </div>
+      <div className="products-info">
+        <div>Đã bán {product.soldQuantity}</div>
+        <ShoppingCartOutlined onClick={onAddToCart} style={{ fontSize: '20px', color: '#ff469e' }} />
+      </div>
+    </Card>
   </div>
 );
 
-const Products = () => {
-  const carouselRef = useRef();
+const Products = ({productItemId}) => {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -82,6 +55,11 @@ const Products = () => {
     navigate(`/productitems/${productItemId}`);
   };
 
+  const handleAddToCart = (productId) => {
+    console.log("Product added to cart:", productId);
+  };
+
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -98,20 +76,17 @@ const Products = () => {
         <img src={icon2} alt="" className="icon2" />
       </div>
 
-      <Carousel
-        dots={false}
-        slidesToScroll={1}
-        slidesToShow={4}
-        infinite={true}
-        draggable
-        ref={carouselRef}
-      >
+      <Row gutter={[16, 16]}>
         {products.map((product) => (
-          <div key={product.productItemId} className="carousel-item">
-            <ProductCard product={product} onClick={handleItemClick} />
-          </div>
+          <Col key={product.productItemId} xs={24} sm={12} md={4} lg={4}>
+            <ProductCard
+              product={product}
+              onClick={() => handleItemClick(product.productItemId)}
+              onAddToCart={() => handleAddToCart(product.productItemId)}
+            />
+          </Col>
         ))}
-      </Carousel>
+      </Row>
     </div>
   );
 };
