@@ -24,7 +24,7 @@ import {
   login,
   googleSignIn,
   clearError,
-} from "../../store/action/authActions";
+} from "../../Store/action/authActions";
 import { toast } from "react-toastify";
 
 export default function SignIn() {

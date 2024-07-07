@@ -10,7 +10,7 @@ import free from "../../../Assets/free-call.png";
 import { Avatar, Badge, Button, Dropdown, Space, theme } from "antd";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../../store/action/authActions";
+import { logout } from "../../../Store/action/authActions";
 const { useToken } = theme;
 
 function Header({ collapsed, toggleCollapsed }) {

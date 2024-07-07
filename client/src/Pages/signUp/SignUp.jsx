@@ -22,7 +22,7 @@ import {
   register,
   resetRegisterSuccess,
   clearError,
-} from "../../store/action/authActions";
+} from "../../Store/action/authActions";
 import * as Yup from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { FcGoogle } from "react-icons/fc";

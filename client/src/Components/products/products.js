@@ -39,7 +39,6 @@ const Products = ({productItemId}) => {
     const fetchProducts = async () => {
       try {
         const response = await api.get("/api/productitems");
-
         setProducts(response.data);
       } catch (err) {
         setError(err);

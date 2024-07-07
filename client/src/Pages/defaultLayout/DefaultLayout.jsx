@@ -1,8 +1,8 @@
 import { Layout } from "antd";
 import React, { useState } from "react";
-import Header from "../../Components/Layouts/header/Header";
+import Header from "../../Components/Layouts/Header/Header";
 import { Outlet } from "react-router-dom";
-import Footer from "../../Components/Layouts/footer/Footer";
+import Footer from "../../Components/Layouts/Footer/Footer";
 import SideBar from "../../Components/sidebar/SideBar";
 
 function DefaultLayout() {
