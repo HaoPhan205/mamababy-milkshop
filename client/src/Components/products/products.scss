@@ -25,6 +25,46 @@
 
   &__card {
     padding: 5px;
+
+    .product-card-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px; // Adjust as needed
+      overflow: hidden;
+      background: #f8f8f8; // Add a background color if desired
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // Ensure the image covers the entire container
+      }
+    }
+
+    .product-meta {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+
+      .ant-card-meta-title {
+        white-space: normal; // Allow the title to wrap
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+
+    .product-price {
+      margin-top: 10px;
+      font-weight: bold;
+    }
+
+    .products-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+    }
   }
 
   &__see-all {
@@ -46,4 +86,11 @@
       }
     }
   }
+}
+
+.see-more {
+  display: flex;
+  justify-content: center;
+  padding-top: 20px;
+  border-radius: 10px;
 }

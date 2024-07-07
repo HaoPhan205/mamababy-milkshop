@@ -22,7 +22,7 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "/chi-tiet-san-pham/:productID",
+        path: "/chi-tiet-san-pham/:productItemId",
         element: <ProductDetailPage />,
       },
       {

@@ -1,4 +1,3 @@
-// src/components/courseDetail/CourseAdditionalInfo.js
 import { List, Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../config/axios";
@@ -14,7 +13,7 @@ const ProductDetail = ({ productItemId }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await api.get(`/productitems/${productItemId}`);
+        const response = await api.get(`/api/productitems/${productItemId}`);
         setProduct(response.data.data);
       } catch (err) {
         setError(err);
@@ -34,12 +33,16 @@ const ProductDetail = ({ productItemId }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  if (!product) {
+    return <div>No product data available</div>;
+  }
+
   return (
-    <div className="course-additional-info">
+    <div className="product-additional-info">
       <div className="requirements">
-        <Title level={2}>Requirements</Title>
+        <Title level={2}>Thông tin sản phẩm</Title>
         <List
-          dataSource={product.requirement.split(",")}
+          dataSource={product.requirement ? product.requirement.split(",") : []}
           renderItem={(item) => (
             <List.Item>
               <Typography.Text>{item.trim()}</Typography.Text>
@@ -50,18 +53,20 @@ const ProductDetail = ({ productItemId }) => {
       <div className="description">
         <Title level={2}>Description</Title>
         <Paragraph>
-          {product.description.split("\n").map((text, index) => (
-            <span key={index}>
-              {text}
-              <br />
-            </span>
-          ))}
+          {product.description
+            ? product.description.split("\n").map((text, index) => (
+                <span key={index}>
+                  {text}
+                  <br />
+                </span>
+              ))
+            : "No description available"}
         </Paragraph>
       </div>
       <div className="target-audience">
         <Title level={2}>Who this course is for</Title>
         <List
-          dataSource={product.targetAudience.split(",")}
+          dataSource={product.targetAudience ? product.targetAudience.split(",") : []}
           renderItem={(item) => (
             <List.Item>
               <Typography.Text>{item.trim()}</Typography.Text>
@@ -72,7 +77,7 @@ const ProductDetail = ({ productItemId }) => {
       <div className="learn-what">
         <Title level={2}>What you'll learn</Title>
         <List
-          dataSource={product.learnWhat.split(",")}
+          dataSource={product.learnWhat ? product.learnWhat.split(",") : []}
           renderItem={(item) => (
             <List.Item>
               <Typography.Text>{item.trim()}</Typography.Text>

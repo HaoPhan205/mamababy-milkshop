@@ -1,12 +1,14 @@
-import { Button, Card, Col, Row, Typography } from "antd";
 import React, { useEffect, useState } from "react";
-import { FaFlag, FaRegHeart } from "react-icons/fa";
+import { Button, Card, Col, Row, Typography } from "antd";
+import Slider from "react-slick";
 import api from "../../config/axios";
 import "./ProductInfo.scss";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const { Title, Paragraph, Text } = Typography;
+const { Title, Paragraph } = Typography;
 
-const ProductInfo = ({ productId }) => {
+const ProductInfo = ({ productItemId }) => {
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,9 +16,11 @@ const ProductInfo = ({ productId }) => {
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const response = await api.get(`/productitems/${productId}`);
+        const response = await api.get(`/api/productitems/${productItemId}`);
+        console.log(response.data.data);  // Log the response data
         setProduct(response.data.data);
       } catch (err) {
+        console.error(err);  // Log the error
         setError(err);
       } finally {
         setLoading(false);
@@ -24,7 +28,7 @@ const ProductInfo = ({ productId }) => {
     };
 
     fetchProduct();
-  }, [productId]);
+  }, [productItemId]);
 
   if (loading) {
     return <div>Loading...</div>;
@@ -34,40 +38,45 @@ const ProductInfo = ({ productId }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
+
   return (
     <Card className="product-detail">
       <Row gutter={[16, 16]} className="product-header">
         <Col xs={24} md={8} className="product-media">
-          <div className="product-image">
-            <img
-              src="https://datatrained.com/dt-finance/wp-content/uploads/2023/04/Professional-Courses.jpg"
-              alt={product.productTitle}
-            />
-
-            <Button className="preview-button">Preview this course</Button>
-            <div className="product-label">BESTSELLER</div>
-          </div>
-          <div className="social-actions">
-            <Button className="save" icon={<FaRegHeart />}>
-              Save
-            </Button>
-            <Button className="report-abuse" icon={<FaFlag />}>
-              Report abuse
-            </Button>
-          </div>
+          {product && (
+            <Slider {...settings}>
+              {product.image1 && (
+                <div>
+                  <img src={product.image1} alt={product.itemName} />
+                </div>
+              )}
+              {product.image2 && (
+                <div>
+                  <img src={product.image2} alt={product.itemName} />
+                </div>
+              )}
+              {product.image3 && (
+                <div>
+                  <img src={product.image3} alt={product.itemName} />
+                </div>
+              )}
+            </Slider>
+          )}
         </Col>
         <Col xs={24} md={16} className="product-info">
-          <Title level={1}>{product.productTitle}</Title>
-          <Paragraph style={{ color: "white" }}>
-            {product.description}
-          </Paragraph>
-          <div className="product-rating">
-            <div className="rating">
-              <Text className="star">★</Text> {product.averageRating}
-            </div>
-            <div>({product.totalReview} ratings)</div>
-          </div>
-          <div className="product-stats"></div>
+          <Title level={1} className="product-title">
+            {product?.itemName}
+          </Title>
+          <Paragraph style={{ color: "white" }}>{product?.benefit}</Paragraph>
+          <div className="product-stats">Còn {product?.stockQuantity} sản phẩm</div>
+          <div className="product-stats">Số lượng</div>
           <div className="product-actions">
             <Button type="primary" className="add-to-cart">
               Thêm vào giỏ hàng
@@ -76,6 +85,7 @@ const ProductInfo = ({ productId }) => {
               Mua ngay
             </Button>
           </div>
+          <div className="guarantee">Đã bán {product?.soldQuantity}</div>
         </Col>
       </Row>
     </Card>
@@ -83,3 +93,4 @@ const ProductInfo = ({ productId }) => {
 };
 
 export default ProductInfo;
+  
