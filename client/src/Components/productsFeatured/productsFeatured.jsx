@@ -50,8 +50,8 @@ const Product = () => {
     fetchProducts();
   }, []);
 
-  const handleItemClick = (productId) => {
-    navigate(`/product-detail/${productId}`);
+  const handleItemClick = (productItemId) => {
+    navigate(`/chi-tiet-san-pham/${productItemId}`);
   };
 
   const handleAddToCart = (productId) => {

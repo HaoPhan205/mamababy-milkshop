@@ -11,20 +11,20 @@
       height: auto;
     }
 
-    h3 {
+    h1 {
       color: #ff469e;
     }
   }
 
   &__grid {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);  
+    grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-    padding: 0 10px;
+
   }
 
   &__card {
-    padding: 5px;
+
 
     .product-card-image {
       display: flex;
@@ -57,6 +57,7 @@
     .product-price {
       margin-top: 10px;
       font-weight: bold;
+
     }
 
     .products-info {
@@ -93,4 +94,9 @@
   justify-content: center;
   padding-top: 20px;
   border-radius: 10px;
+}
+
+:where(.css-dev-only-do-not-override-m4timi).ant-btn-primary {
+  background-color: #ff469e;
+  border-radius: 20px;
 }

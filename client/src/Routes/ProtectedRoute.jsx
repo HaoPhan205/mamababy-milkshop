@@ -1,20 +1,23 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+// src/components/ProtectedRoute.js
+import React from "react";
+import { Route, Redirect } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
-const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { isAuthenticated, role } = useSelector(state => state.auth);
+const ProtectedRoute = ({ component: Component, role, ...rest }) => {
+  const { user } = useAuth();
 
-  if (!isAuthenticated) {
-    return <Navigate to="/sign-in" replace />;  
-  }
-
-  if (!allowedRoles.includes(role)) {
-    return <Navigate to="/unauthorized" replace />;
-  }
-
-  return children;
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        user && user.role === role ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/" />
+        )
+      }
+    />
+  );
 };
 
-export default React.memo(ProtectedRoute);
-
+export default ProtectedRoute;

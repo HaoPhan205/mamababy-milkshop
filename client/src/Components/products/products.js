@@ -7,27 +7,7 @@ import { ShoppingCartOutlined } from "@ant-design/icons";
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
 
-const ProductCard = ({ product, onClick, onAddToCart }) => (
-  <div className="product-card products__card">
-    <Card
-      hoverable
-      cover={
-        <div className="product-card-image" onClick={onClick}>
-          <img alt={product.itemName} src={product.image1} />
-        </div>
-      }
-    >
-      <div className="product-meta">
-        <Card.Meta title={product.itemName} />
-        <div className="product-price">{product.price} VNĐ</div>
-      </div>
-      <div className="products-info">
-        <div>Đã bán {product.soldQuantity}</div>
-        <ShoppingCartOutlined onClick={onAddToCart} style={{ fontSize: '20px', color: '#ff469e' }} />
-      </div>
-    </Card>
-  </div>
-);
+import ProductCard from "../../Components/productCard/ProductCard"
 
 const Products = ({ productItemId }) => {
   const navigate = useNavigate();
@@ -74,7 +54,7 @@ const Products = ({ productItemId }) => {
     <div className="products">
       <div className="products__title">
         <img src={icon1} alt="" className="icon1" />
-        <h3 style={{ padding: "20px" }}>Dành cho bạn</h3>
+        <h1 style={{ padding: "20px" }}>Dành cho bạn</h1>
         <img src={icon2} alt="" className="icon2" />
       </div>
 
@@ -92,7 +72,7 @@ const Products = ({ productItemId }) => {
 
       <div className="see-more">
         <Button type="primary" onClick={handleSeeMore}>
-          Xem Thêm
+          Thăm cửa hàng
         </Button>
       </div>
     </div>

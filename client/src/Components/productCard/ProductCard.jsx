@@ -1,50 +1,29 @@
 import React from "react";
-import { TiShoppingCart } from "react-icons/ti";
-import { PiPlayFill } from "react-icons/pi";
 import "./ProductCard.scss";
-import { Typography } from "antd";
+import { Card, Typography } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 
-function ProductCard({ product, onClick }) {
+function ProductCard({ product, onClick, onAddToCart }) {
   return (
-    <div className="container">
-      <div className="card" onClick={onClick}>
-        <div className="course-card-image">
-          <img
-            src="https://blog.coursify.me/wp-content/uploads/2018/08/plan-your-online-course.jpg"
-            alt="img"
-          />
-          <div className="courses-rating" style={{ left: "10px", top: "20px" }}>
-            <Typography className="star" style={{ marginTop: "-3px" }}>
-              ★
-            </Typography>{" "}
-            5.0
-          </div>
-          <span className="play-effect">
-            <PiPlayFill
-              size={60}
-              style={{ position: "absolute", top: "40%", left: "42%" }}
-            />
-          </span>
+    <div className="product-card">
+    <Card
+      hoverable
+      cover={
+        <div className="product-card-image" onClick={onClick}>
+          <img alt={product.itemName} src={product.image1} />
         </div>
-
-        <div className="content">
-          <p className="views-times">Thương hiệu: {product.brandName} </p>
-          <h3>{product.itemName}</h3>
-          <p className="course-category">{product.description}</p>
-          <div className="course-info">
-            <p className="course-instructor">
-              By <span>John Doe</span>
-            </p>
-            <div className="course-price">
-              <span>
-                <TiShoppingCart size={23} />
-              </span>
-              <p>{product.price}</p>
-            </div>
-          </div>
-        </div>
+      }
+    >
+      <div className="product-meta">
+        <Card.Meta title={product.itemName} />
+        <div className="product-price">{product.price} VNĐ</div>
       </div>
-    </div>
+      <div className="products-info">
+        <div>Đã bán {product.soldQuantity}</div>
+        <ShoppingCartOutlined onClick={onAddToCart} style={{ fontSize: '20px', color: '#ff469e' }} />
+      </div>
+    </Card>
+  </div>
   );
 }
 

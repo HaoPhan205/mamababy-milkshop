@@ -17,14 +17,21 @@
   object-fit: cover;
 }
 
-.product-card-image {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid #ff469e;
-  border-radius: 10px;
-}
+ .product-card-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 200px; // Adjust as needed
+      overflow: hidden;
+      border-radius: 10px;  
+      border: 1px solid #ff469e; // Add a background color if desired
+
+      img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; // Ensure the image covers the entire container
+      }
+    }
 
 .product-duration-badge {
   position: absolute;
@@ -105,13 +112,13 @@
 }
 
 .product-price {
-  font-size: 20px;
-  color: #333;
+  font-size: 17px;
+  color: #ff469e;
   font-weight: bold;
   padding: 10px 0;
 }
 
-.product-instructor {
-  display: flex;
-  align-items: center;
+:where(.css-dev-only-do-not-override-m4timi).ant-card .ant-card-meta-title {
+  font-weight: bold;
+  font-size: 17px;
 }

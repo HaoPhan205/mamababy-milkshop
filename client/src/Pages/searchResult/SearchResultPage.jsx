@@ -58,7 +58,7 @@ const SearchResultPage = () => {
     const fetchProducts = async () => {
       try {
         const response = await api.get("/api/productitems");
-        setLsProducts(response.data.data);
+        setLsProducts(response.data.data || []);
       } catch (err) {
         setError(err);
       } finally {
@@ -76,23 +76,62 @@ const SearchResultPage = () => {
             api.get("/api/age-ranges"),
           ]);
 
+        const brandMilkData = brandMilkRes.data.data || [];
+        const companyData = companyRes.data.data || [];
+        const countryData = countryRes.data.data || [];
+        const ageRangeData = ageRangeRes.data.data || [];
+
+        const companyMap = companyData.reduce((map, company) => {
+          map[company.companyID] = company;
+          return map;
+        }, {});
+
+        const countryMap = countryData.reduce((map, country) => {
+          map[country.countryId] = {
+            ...country,
+            companies: []
+          };
+          return map;
+        }, {});
+
+        brandMilkData.forEach((brand) => {
+          const company = companyMap[brand.companyID];
+          if (company) {
+            company.brands = company.brands || [];
+            company.brands.push({
+              label: brand.brandName,
+              value: brand.brandName
+            });
+          }
+        });
+
+        companyData.forEach((company) => {
+          const country = countryMap[company.countryID];
+          if (country) {
+            country.companies.push({
+              label: company.companyName,
+              value: company.companyName,
+              children: company.brands || []
+            });
+          }
+        });
+
+        const countryOptions = Object.values(countryMap).map((country) => ({
+          label: country.countryName,
+          value: country.countryId,
+          children: country.companies
+        }));
+
+        const ageRangeOptions = ageRangeData.map((item) => ({
+          label: item.baby || item.mama,
+          value: item.productItemID,
+        }));
+
         setFilterOptions({
-          BrandMilk: brandMilkRes.data.data.map((item) => ({
-            label: item.companyID,
-            value: item.brandName,
-          })),
-          Company: companyRes.data.data.map((item) => ({
-            label: item.countryID,
-            value: item.companyName,
-          })),
-          Country: countryRes.data.data.map((item) => ({
-            label: item.countryId,
-            value: item.countryName,
-          })),
-          AgeRange: ageRangeRes.data.data.map((item) => ({
-            label: item.productItemID,
-            value: item.productItemID,
-          })),
+          BrandMilk: countryOptions,
+          Company: [],
+          Country: [],
+          AgeRange: ageRangeOptions,
         });
       } catch (err) {
         setError(err);
@@ -104,11 +143,13 @@ const SearchResultPage = () => {
   }, []);
 
   useEffect(() => {
-    const filteredProducts = lsProducts.filter((product) =>
-      product.productTitle.toLowerCase().includes(searchTerm.toLowerCase())
-    );
-    const sorted = sort(filteredProducts, sortOption);
-    setSortedProducts(sorted);
+    if (Array.isArray(lsProducts)) {
+      const filteredProducts = lsProducts.filter((product) =>
+        product.productTitle.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const sorted = sort(filteredProducts, sortOption);
+      setSortedProducts(sorted);
+    }
   }, [lsProducts, searchTerm, sortOption]);
 
   const sort = (products, sortOption) => {
@@ -129,6 +170,14 @@ const SearchResultPage = () => {
         return products; // Most Relevant or default
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  }
 
   return (
     <div>
