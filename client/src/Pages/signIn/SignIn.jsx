@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import {
@@ -18,12 +18,13 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./SignIn.scss";
 import Logo from "../../Components/logo/Logo";
-import { useAuth } from "../../context/AuthContext";
+import { useUsers } from "../../Services/Hooks/useUsers";
 import { toast } from "react-toastify";
 
 export default function SignIn() {
-  const { login, loading, isAuthenticated, error, clearError } = useAuth();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const { onLogIn } = useUsers();
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -40,23 +41,19 @@ export default function SignIn() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      await login(values.email, values.password, "customer"); // assuming customer login here
+      setLoading(true);
+      await onLogIn(values.email, values.password);
+      setLoading(false);
     },
   });
 
   useEffect(() => {
-    if (isAuthenticated) {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
       toast.success("Login successful");
       navigate("/");
     }
-  }, [isAuthenticated, navigate]);
-
-  useEffect(() => {
-    if (error) {
-      toast.error(error);
-      clearError();
-    }
-  }, [error, clearError]);
+  }, [navigate]);
 
   return (
     <Row className="signIn">
@@ -112,7 +109,7 @@ export default function SignIn() {
             >
               <Input.Password
                 className="signIn__card__detail__input__detail"
-                placeholder="Mật khẩu"
+                placeholder="Password"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -128,7 +125,7 @@ export default function SignIn() {
                 onBlur={formik.handleBlur}
               />
             </Form.Item>
-            <Form.Item>
+            {/* <Form.Item>
               <Form.Item name="remember" valuePropName="checked" noStyle>
                 <Checkbox
                   style={{ fontFamily: "Gantari" }}
@@ -136,10 +133,10 @@ export default function SignIn() {
                   checked={formik.values.remember}
                   onChange={formik.handleChange}
                 >
-                  Lưu tài khoản
+                  Remember me
                 </Checkbox>
               </Form.Item>
-            </Form.Item>
+            </Form.Item> */}
 
             <Form.Item>
               <div className="signIn__card__detail__options">
@@ -171,25 +168,23 @@ export default function SignIn() {
                     }}
                     loading={loading}
                   >
-                    <Spin spinning={loading}>Đăng nhập</Spin>
+                    <Spin spinning={loading}>Login</Spin>
                   </Button>
                 </ConfigProvider>
               </div>
             </Form.Item>
           </Form>
           <p>
-            Hoặc&nbsp;
+            Or&nbsp;
             <Link to="/forgot-password" style={{ color: "#ff469e" }}>
-              {" "}
-              Quên mật khẩu
+              Forgot password
             </Link>
           </p>
           <Divider />
           <p>
-            Bạn chưa có tài khoản? &nbsp;
+            Don't have an account?&nbsp;
             <Link to="/sign-up" style={{ color: "#ff469e" }}>
-              {" "}
-              Đăng ký
+              Sign Up
             </Link>
           </p>
         </Card>

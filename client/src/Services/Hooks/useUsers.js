@@ -1,13 +1,14 @@
 /** @format */
 
 import { useContext } from "react";
-import axios from "axios";
+import api from "../../config/axios";
 import { message } from "antd";
 import { Data } from "../../App";
 import { useNavigate } from "react-router-dom";
 import { useStorage } from "./useStorage";
 
-const endPoint = "https://65eb419b43ce164189339311.mockapi.io/users";
+// Update the endpoint to the new API endpoint for customers
+const endPoint = "/api/customers";
 
 export const useUsers = () => {
   const { setUser, user } = useContext(Data);
@@ -16,7 +17,7 @@ export const useUsers = () => {
 
   const lookUpUserByUserName = async (username) => {
     let lookedUpUser = null;
-    await axios
+    await api
       .get(`${endPoint}?username=${username}`)
       .then((res) => {
         const data = res.data;
@@ -45,7 +46,7 @@ export const useUsers = () => {
     if (isExisted) {
       message.error("Username này đã tồn tại");
     } else {
-      await axios.post(endPoint, user).then((res) => {
+      await api.post(endPoint, user).then((res) => {
         setUser(user);
         saveToStorage("user", user);
         message.success("Tạo tài khoản thành công");
@@ -85,12 +86,12 @@ export const useUsers = () => {
   };
 
   const getAllUsers = (setData, setLoading) => {
-    setLoading(true)
-    
-    axios.get(endPoint)
+    setLoading(true);
+    api
+      .get(endPoint)
       .then((res) => setData(res.data))
-      .catch(err => console.log(err))
-      .finally(() => setLoading(false))
+      .catch((err) => console.log(err))
+      .finally(() => setLoading(false));
   };
 
   return { onSignup, getCurrUser, onLogOut, onLogIn, getAllUsers };

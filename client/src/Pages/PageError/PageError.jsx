@@ -1,8 +1,8 @@
-import { Button, Result } from 'antd';
-import React from 'react';
-import { Link } from 'react-router-dom';
+import { Button, Result } from "antd";
+import React from "react";
+import { Link } from "react-router-dom";
 
-const App = () => (
+const PageError = () => (
   <Result
     status="404"
     title="404"
@@ -15,4 +15,4 @@ const App = () => (
   />
 );
 
-export default App;
+export default PageError;

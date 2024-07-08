@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/router";
 import { ToastContainer } from "react-toastify";
@@ -6,13 +6,16 @@ import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import { AuthProvider } from "./context/AuthContext";
 
-function App() {
+export const Data = createContext();
+
+const App = () => {
+  const [user, setUser] = useState(null);
   return (
-    <AuthProvider>
+    <Data.Provider value={{ user, setUser }}>
       <RouterProvider router={router} />
       <ToastContainer />
-    </AuthProvider>
+    </Data.Provider>
   );
-}
+};
 
 export default App;

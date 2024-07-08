@@ -9,6 +9,9 @@ import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
 import CreateNewProduct from "../Pages/Staff/createProductPage/CreateProductsPage";
 import PaymentForm from "../Components/vnpay/PaymentForm";
+import AdminPage from "../Pages/Admin/admin";
+import Donhang from "../Pages/donhang/donhang";
+import PageError from "../Pages/PageError/PageError";
 
 export const router = createBrowserRouter([
   {
@@ -36,24 +39,33 @@ export const router = createBrowserRouter([
         element: <Shopping />,
       },
       {
-        path: "/quan-li-san-pham",
-        element: <CreateNewProduct />,
+        path: "//don-hang-cua-ban",
+        element: <Donhang />,
+      },
+
+      {
+        path: "/chinh-sach-bao-mat",
+        element: <PageError />,
       },
       {
-        path: "/quan-li-giao-hang",
-        element: <CreateNewProduct />,
+        path: "/dieu-khoan-chung",
+        element: <PageError />,
       },
       {
-        path: "/dashboard-admin",
-        element: <CreateNewProduct />,
+        path: "/chinh-sach-giao-hang",
+        element: <PageError />,
       },
       {
-        path: "/dashboard-staff",
-        element: <CreateNewProduct />,
+        path: "/chinh-sach-thanh-toan",
+        element: <PageError />,
       },
       {
-        path: "/payment",
-        element: <PaymentForm />,
+        path: "/chinh-sach-bao-hanh",
+        element: <PageError />,
+      },
+      {
+        path: "/chinh-sach-doi-tra-hang",
+        element: <PageError />,
       },
     ],
   },
@@ -73,5 +85,27 @@ export const router = createBrowserRouter([
         <SignUp />
       </PublicRoute>
     ),
+  },
+  {
+    path: "/adminPage",
+    element: <AdminPage />,
+    children: [
+      {
+        path: "/adminPage/quan-li-san-pham",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/adminPage/quan-li-giao-hang",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/adminPage/dashboard-admin",
+        element: <CreateNewProduct />,
+      },
+      {
+        path: "/adminPage/dashboard-staff",
+        element: <CreateNewProduct />,
+      },
+    ],
   },
 ]);
