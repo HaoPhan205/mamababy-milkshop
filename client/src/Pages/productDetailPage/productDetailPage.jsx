@@ -1,7 +1,6 @@
 import { Col, Row, Tabs } from "antd";
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
-import ProductContent from "../../Components/productDetail/ProductContent";
 import ProductDetail from "../../Components/productDetail/ProductDetail";
 import ProductInfo from "../../Components/productDetail/ProductInfo";
 import Reviews from "../../Components/productDetail/Reviews";
@@ -35,14 +34,14 @@ const ProductDetailPage = () => {
           </div>
         </TabPane>
       </Tabs>
-      <Row gutter={[16, 16]} justify="center">
-      <Col span={24}>
-        <Product />
-      </Col>
-      <Col span={24}>
-        <Products />
-      </Col>
-    </Row>
+      <Row gutter={[16, 16]} justify="center" style={{ background: "white" }}>
+        <Col span={24}>
+          <Product />
+        </Col>
+        <Col span={24}>
+          <Products />
+        </Col>
+      </Row>
     </>
   );
 };

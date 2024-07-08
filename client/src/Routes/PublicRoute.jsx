@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { Navigate } from 'react-router-dom';
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 const PublicRoute = ({ children, redirectTo }) => {
-  const { token } = useSelector((state) => state.auth);
+  const { token } = useAuth();
 
   if (token) {
     return <Navigate to={redirectTo} replace />;

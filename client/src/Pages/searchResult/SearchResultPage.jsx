@@ -1,11 +1,18 @@
+import {
+  Breadcrumb,
+  Checkbox,
+  ConfigProvider,
+  Dropdown,
+  Rate,
+  Space,
+} from "antd";
 import React, { useEffect, useState } from "react";
-import "./SearchResultPage.scss";
-import { Breadcrumb, ConfigProvider, Dropdown, Space } from "antd";
+import { FaMinus, FaPlus, FaRegStar } from "react-icons/fa";
 import { IoMdArrowDropdown } from "react-icons/io";
-import FilterComponent from "../../Components/filterComponent/FilterComponent";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import ProductCard from "../../Components/productCard/ProductCard";
 import api from "../../config/axios";
-import { Link, useNavigate } from "react-router-dom";
+import "./SearchResultPage.scss";
 
 const sortOptions = [
   { label: "Most Relevant", key: "0" },
@@ -18,26 +25,128 @@ const sortOptions = [
 
 const SearchResultPage = () => {
   const [activeFilters, setActiveFilters] = useState({
-    BrandMilk: false,
-    Company: false,
-    Country: false,
-    AgeRange: false,
+    Topic: false,
+    Level: false,
+    Language: false,
+    Price: false,
+    Features: false,
+    Rating: false,
+    Duration: false,
+    Caption: false,
   });
-  const [filterOptions, setFilterOptions] = useState({
-    BrandMilk: [],
-    Company: [],
-    Country: [],
-    AgeRange: [],
-  });
-
-  const [lsProducts, setLsProducts] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState({});
+  const [lsCourses, setLsCourses] = useState([]);
+  const [lsCourseByCat, setLsCourseByCat] = useState([]);
+  const [lsCategory, setLsCategory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [sortedProducts, setSortedProducts] = useState([]);
+  const [sortedCourses, setSortedCourses] = useState([]);
   const nav = useNavigate();
-  const query = new URLSearchParams(window.location.search);
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
   const searchTerm = query.get("search") || "";
   const [sortOption, setSortOption] = useState("0");
+  const initialCategory = query.get("category") || "";
+
+  const filterOptions = {
+    Category: lsCategory.map((category) => ({
+      label: category.categoryName,
+      value: category.categoryName,
+    })),
+    Level: [
+      { label: "All Levels", value: "All Levels" },
+      { label: "Beginner", value: "Beginner" },
+      { label: "Intermediate", value: "Intermediate" },
+      { label: "Expert", value: "Expert" },
+    ],
+    Language: [
+      { label: "English", value: "English" },
+      { label: "Español", value: "Español" },
+      { label: "Português", value: "Português" },
+      { label: "日本語", value: "日本語" },
+      { label: "Deutsch", value: "Deutsch" },
+      { label: "Türkçe", value: "Türkçe" },
+      { label: "हिन्दी", value: "हिन्दी" },
+      { label: "Italiano", value: "Italiano" },
+      { label: "Polski", value: "Polski" },
+      { label: "한국어", value: "한국어" },
+      { label: "Tiếng Việt", value: "Tiếng Việt" },
+    ],
+    Price: [
+      { label: "Paid", value: "Paid" },
+      { label: "Free", value: "Free" },
+    ],
+    Features: [
+      { label: "Captions", value: "Captions" },
+      { label: "Quizzes", value: "Quizzes" },
+      { label: "Coding Exercises", value: "Coding Exercises" },
+      { label: "Practice Tests", value: "Practice Tests" },
+    ],
+    Rating: [
+      {
+        label: (
+          <>
+            <Rate
+              disabled
+              character={<FaRegStar />}
+              defaultValue={5}
+              className="rate-style"
+            />{" "}
+            5.0 & up
+          </>
+        ),
+        value: "5",
+      },
+      {
+        label: (
+          <>
+            <Rate
+              disabled
+              character={<FaRegStar />}
+              defaultValue={4}
+              className="rate-style"
+            />{" "}
+            4.0 & up
+          </>
+        ),
+        value: "4",
+      },
+      {
+        label: (
+          <>
+            <Rate
+              disabled
+              character={<FaRegStar />}
+              defaultValue={3}
+              className="rate-style"
+            />{" "}
+            3.0 & up
+          </>
+        ),
+        value: "3",
+      },
+      {
+        label: (
+          <>
+            <Rate
+              disabled
+              character={<FaRegStar />}
+              defaultValue={2}
+              className="rate-style"
+            />{" "}
+            2.0 & up
+          </>
+        ),
+        value: "2",
+      },
+    ],
+    Duration: [
+      { label: "0-2 Hours", value: "0-2 Hours" },
+      { label: "3-6 Hours", value: "3-6 Hours" },
+      { label: "7-18 Hours", value: "7-18 Hours" },
+      { label: "19+ Hours", value: "19+ Hours" },
+    ],
+  };
 
   const handleActiveFilter = (filterName) => {
     setActiveFilters((prevFilters) => ({
@@ -50,15 +159,23 @@ const SearchResultPage = () => {
     setSortOption(key);
   };
 
-  const handleItemClick = (productItemId) => {
-    nav(`/productitems/${productItemId}`);
+  const handleItemClick = (courseId) => {
+    nav(`/course-detail/${courseId}`);
+  };
+
+  const capitalizeWords = (str) => {
+    return str
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
   };
 
   useEffect(() => {
-    const fetchProducts = async () => {
+    const fetchCourses = async () => {
       try {
         const response = await api.get("/api/productitems");
-        setLsProducts(response.data.data || []);
+        setLsCourses(response.data.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -66,118 +183,151 @@ const SearchResultPage = () => {
       }
     };
 
-    const fetchFilters = async () => {
+    const fetchCoursesByNameCategory = async () => {
       try {
-        const [brandMilkRes, companyRes, countryRes, ageRangeRes] =
-          await Promise.all([
-            api.get("/api/brandmilks"),
-            api.get("/api/companies"),
-            api.get("/api/countries"),
-            api.get("/api/age-ranges"),
-          ]);
-
-        const brandMilkData = brandMilkRes.data.data || [];
-        const companyData = companyRes.data.data || [];
-        const countryData = countryRes.data.data || [];
-        const ageRangeData = ageRangeRes.data.data || [];
-
-        const companyMap = companyData.reduce((map, company) => {
-          map[company.companyID] = company;
-          return map;
-        }, {});
-
-        const countryMap = countryData.reduce((map, country) => {
-          map[country.countryId] = {
-            ...country,
-            companies: []
-          };
-          return map;
-        }, {});
-
-        brandMilkData.forEach((brand) => {
-          const company = companyMap[brand.companyID];
-          if (company) {
-            company.brands = company.brands || [];
-            company.brands.push({
-              label: brand.brandName,
-              value: brand.brandName
-            });
-          }
-        });
-
-        companyData.forEach((company) => {
-          const country = countryMap[company.countryID];
-          if (country) {
-            country.companies.push({
-              label: company.companyName,
-              value: company.companyName,
-              children: company.brands || []
-            });
-          }
-        });
-
-        const countryOptions = Object.values(countryMap).map((country) => ({
-          label: country.countryName,
-          value: country.countryId,
-          children: country.companies
-        }));
-
-        const ageRangeOptions = ageRangeData.map((item) => ({
-          label: item.baby || item.mama,
-          value: item.productItemID,
-        }));
-
-        setFilterOptions({
-          BrandMilk: countryOptions,
-          Company: [],
-          Country: [],
-          AgeRange: ageRangeOptions,
-        });
+        const formattedSearchTerm = capitalizeWords(searchTerm);
+        const response = await api.get(
+          `/course/category/courses-by-name/${formattedSearchTerm}`
+        );
+        setLsCourseByCat(response.data.data);
       } catch (err) {
         setError(err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    fetchProducts();
-    fetchFilters();
-  }, []);
+    const fetchCategory = async () => {
+      try {
+        const response = await api.get("/course/category");
+        setLsCategory(response.data.data);
+      } catch (err) {
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCourses();
+    fetchCoursesByNameCategory();
+    fetchCategory();
+  }, [searchTerm]);
 
   useEffect(() => {
-    if (Array.isArray(lsProducts)) {
-      const filteredProducts = lsProducts.filter((product) =>
-        product.productTitle.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      const sorted = sort(filteredProducts, sortOption);
-      setSortedProducts(sorted);
+    if (initialCategory) {
+      setSelectedFilters((prevFilters) => ({
+        ...prevFilters,
+        Category: [initialCategory],
+      }));
     }
-  }, [lsProducts, searchTerm, sortOption]);
+  }, [initialCategory]);
 
-  const sort = (products, sortOption) => {
+  const filteredByCategory = (courses, selectedCategory) => {
+    if (!selectedCategory || selectedCategory.length === 0) return courses;
+    return courses.filter((course) =>
+      selectedCategory.includes(course.category.categoryName)
+    );
+  };
+
+  const filteredByLanguage = (courses, selectedLanguage) => {
+    if (!selectedLanguage || selectedLanguage.length === 0) return courses;
+    return courses.filter((course) =>
+      selectedLanguage.includes(course.language)
+    );
+  };
+
+  const filteredByRating = (courses, selectedRatings) => {
+    if (!selectedRatings || selectedRatings.length === 0) return courses;
+    const minRating = Math.min(...selectedRatings);
+    return courses.filter((course) => course.averageRating >= minRating);
+  };
+
+  const filteredByPrice = (courses, selectedPrice) => {
+    if (!selectedPrice || selectedPrice.length === 0) return courses;
+    return courses.filter((course) => {
+      if (selectedPrice.includes("Paid")) {
+        return course.coursePrice > 0;
+      }
+      if (selectedPrice.includes("Free")) {
+        return course.coursePrice === 0;
+      }
+      return true;
+    });
+  };
+
+  useEffect(() => {
+    const mergeAndDeduplicate = (list1, list2) => {
+      const combined = [...list1, ...list2];
+      const uniqueCourses = Array.from(
+        new Map(combined.map((course) => [course.courseId, course])).values()
+      );
+      return uniqueCourses;
+    };
+
+    if (lsCourses.length > 0 && lsCourseByCat.length > 0) {
+      const filteredCourses = lsCourses.filter((course) =>
+        course.courseTitle.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      const combinedCourses = mergeAndDeduplicate(
+        filteredCourses,
+        lsCourseByCat
+      );
+      let filteredCoursesByCategory = filteredByCategory(
+        combinedCourses,
+        selectedFilters.Category
+      );
+      let filteredCoursesByLanguage = filteredByLanguage(
+        filteredCoursesByCategory,
+        selectedFilters.Language
+      );
+      let filteredCoursesByPrice = filteredByPrice(
+        filteredCoursesByLanguage,
+        selectedFilters.Price
+      );
+      let filteredCoursesByRating = filteredByRating(
+        filteredCoursesByPrice,
+        selectedFilters.Rating
+      );
+
+      const sorted = sort(filteredCoursesByRating, sortOption);
+      setSortedCourses(sorted);
+    }
+  }, [
+    lsCourses,
+    lsCourseByCat,
+    searchTerm,
+    sortOption,
+    selectedFilters.Category,
+    selectedFilters.Language,
+    selectedFilters.Price,
+    selectedFilters.Rating,
+  ]);
+
+  const sort = (courses, sortOption) => {
     switch (sortOption) {
       case "1":
-        return [...products].sort((a, b) => b.reviews - a.reviews); // Most Reviewed
+        return [...courses].sort((a, b) => b.reviews - a.reviews); // Most Reviewed
       case "2":
-        return [...products].sort((a, b) => b.averageRating - a.averageRating); // Highest Rated
+        return [...courses].sort((a, b) => b.averageRating - a.averageRating); // Highest Rated
       case "3":
-        return [...products].sort(
+        return [...courses].sort(
           (a, b) => new Date(b.creationDate) - new Date(a.creationDate)
         ); // Newest
       case "4":
-        return [...products].sort((a, b) => a.price - b.price); // Lowest Price
+        return [...courses].sort((a, b) => a.coursePrice - b.coursePrice); // Lowest Price
       case "5":
-        return [...products].sort((a, b) => b.price - a.price); // Highest Price
+        return [...courses].sort((a, b) => b.coursePrice - a.coursePrice); // Highest Price
       default:
-        return products; // Most Relevant or default
+        return courses; // Most Relevant or default
     }
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  const handleFilterChange = (title, selectedValues) => {
+    setSelectedFilters((prevFilters) => ({
+      ...prevFilters,
+      [title]: selectedValues,
+    }));
+  };
 
   return (
     <div>
@@ -190,19 +340,19 @@ const SearchResultPage = () => {
           }}
           items={[
             {
-              title: <Link to={"/"}>Trang chủ</Link>,
+              title: <Link to={"/"}>Home</Link>,
             },
             {
-              title: "Cửa hàng",
+              title: "Search Results",
             },
           ]}
         />
-        <h1 style={{ fontWeight: "500", marginTop: "1em" }}>Cửa hàng</h1>
+        <h1 style={{ fontWeight: "500", marginTop: "1em" }}>Search Results</h1>
       </div>
       <div className="container search-result">
         <div className="filters">
           <div className="filter-title">
-            <h3>Bộ lọc tìm kiếm</h3>
+            <h3>Filters</h3>
             <ConfigProvider theme={{ token: { marginXS: 4 } }}>
               <Dropdown
                 menu={{
@@ -226,19 +376,65 @@ const SearchResultPage = () => {
               options={options}
               activeFilter={activeFilters[filterName]}
               handleActiveFilter={() => handleActiveFilter(filterName)}
+              onChange={handleFilterChange}
+              selectedFilters={selectedFilters[filterName]}
             />
           ))}
         </div>
         <div className="search-result-item">
-          <h2>{sortedProducts.length} Sản phẩm</h2>
-          {sortedProducts.map((product, index) => (
+          <h2>{sortedCourses.length} Results</h2>
+          {sortedCourses.map((course, index) => (
             <ProductCard
               key={index}
-              product={product}
-              onClick={() => handleItemClick(product.productId)}
+              course={course}
+              onClick={() => handleItemClick(course.courseId)}
             />
           ))}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const FilterComponent = ({
+  title,
+  options,
+  activeFilter,
+  handleActiveFilter,
+  onChange,
+  selectedFilters,
+}) => {
+  const handleCheckboxChange = (checkedValues) => {
+    onChange(title, checkedValues);
+  };
+
+  return (
+    <div className="filter">
+      <div className="filter-items">
+        <div className="item-filter">
+          <h3 className="filter-name">{title}</h3>
+          <button className="filter-btn" onClick={handleActiveFilter}>
+            {activeFilter ? <FaMinus /> : <FaPlus />}
+          </button>
+        </div>
+      </div>
+      <div className={`item-checkbox ${activeFilter ? "active" : ""}`}>
+        <ConfigProvider
+          theme={{
+            token: {
+              borderRadiusSM: 10,
+              paddingXS: 15,
+              fontSize: 18,
+            },
+          }}
+        >
+          <Checkbox.Group
+            options={options}
+            onChange={handleCheckboxChange}
+            className="checkbox-group"
+            value={selectedFilters}
+          />
+        </ConfigProvider>
       </div>
     </div>
   );

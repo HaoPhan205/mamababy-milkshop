@@ -48,3 +48,46 @@
 .rate-style {
   margin-right: 10px;
 }
+
+//
+.item-filter {
+  display: flex;
+  justify-content: space-between;
+  // margin: .3rem 0;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  font-weight: 600;
+
+  .filter-name {
+    font-size: 1.2rem;
+  }
+  .filter-btn {
+    cursor: pointer;
+    padding-right: 0.2rem;
+    background: none;
+    border: none;
+  }
+}
+.item-checkbox {
+  max-height: 0;
+  overflow: hidden;
+  // padding-bottom: .8rem;
+  transition: max-height 0.5s ease-out;
+}
+
+.item-checkbox.active {
+  max-height: 500px; /* Điều chỉnh giá trị này tùy thuộc vào chiều cao thực tế của nội dung */
+  transition: max-height 0.5s ease-in;
+}
+.filter {
+  border-bottom: 1px #c8c8c8 solid;
+}
+
+.checkbox-group {
+  flex-direction: column;
+  padding: 0 0.5rem;
+  padding-bottom: 12px;
+}
+input {
+  border-radius: 50%;
+}

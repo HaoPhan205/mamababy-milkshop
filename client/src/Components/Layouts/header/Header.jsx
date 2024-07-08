@@ -7,41 +7,26 @@ import {
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
-import { Avatar, Badge, Button, Dropdown, Space, theme } from "antd";
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { logout } from "../../../Store/action/authActions";
-const { useToken } = theme;
+import { Avatar, Badge, Button, Dropdown, Space } from "antd";
+import React, { useState } from "react";
 
 function Header({ collapsed, toggleCollapsed }) {
-  const { token } = useToken();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const { email, role, photoURL } = useSelector((state) => state.auth);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchRedirect, setSearchRedirect] = useState(false);
 
   const contentStyle = {
-    backgroundColor: token.colorBgElevated,
-    borderRadius: token.borderRadiusLG,
-    boxShadow: token.boxShadowSecondary,
+    // Define your content style if needed
   };
 
   const menuStyle = {
-    boxShadow: "none",
+    // Define your menu style if needed
   };
 
   const phoneNumber = "0354019580";
 
-  useEffect(() => {
-    if (searchRedirect) {
-      navigate(`/shopping?search=${searchTerm}`);
-      setSearchRedirect(false);
-    }
-  }, [searchRedirect, searchTerm, navigate]);
-
   const handleLogout = async () => {
-    await dispatch(logout());
+    // Implement your logout logic here
     navigate("/sign-in");
   };
 
@@ -56,11 +41,7 @@ function Header({ collapsed, toggleCollapsed }) {
   const items = [
     {
       key: "1",
-      label: (
-        <a href={role === "guess" ? "/admin-dashboard" : "/user-dashboard"}>
-          Dashboard
-        </a>
-      ),
+      label: <a href="/user-dashboard">Dashboard</a>,
     },
     {
       key: "2",
@@ -126,7 +107,9 @@ function Header({ collapsed, toggleCollapsed }) {
           />
         </Badge>
         <div className="header__signin" aria-label="Authentication Options">
-          {email ? (
+          {/* Example of conditional rendering based on authentication */}
+          {/* Replace with your authentication logic */}
+          {false ? (
             <Dropdown
               menu={{
                 items,
@@ -148,12 +131,12 @@ function Header({ collapsed, toggleCollapsed }) {
                       }}
                     >
                       <Avatar
-                        src={photoURL || ""}
+                        src=""
                         icon={<UserOutlined />}
                         style={{ width: "2.5em", height: "2.5em" }}
                       />
                       <div>
-                        <h5>{email}</h5>
+                        <h5>{""}</h5>
                       </div>
                     </div>
                   </Space>
@@ -177,7 +160,7 @@ function Header({ collapsed, toggleCollapsed }) {
                 }}
               >
                 <Space>
-                  <Avatar src={photoURL || ""} icon={<UserOutlined />} />
+                  <Avatar src={""} icon={<UserOutlined />} />
                 </Space>
               </button>
             </Dropdown>

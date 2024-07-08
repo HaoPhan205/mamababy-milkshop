@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { googleSignIn, login, logout, register } from "../action/authActions";
+import { login, logout, register } from "../action/authActions";
 
 const initialState = {
   token: localStorage.getItem("token") || null,
@@ -38,22 +38,6 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
       })
       .addCase(login.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
-      })
-      .addCase(googleSignIn.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
-      .addCase(googleSignIn.fulfilled, (state, action) => {
-        state.loading = false;
-        state.token = action.payload.token;
-        state.email = action.payload.email;
-        state.role = action.payload.role;
-        state.photoURL = action.payload.photoURL;
-        state.isAuthenticated = true;
-      })
-      .addCase(googleSignIn.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       })

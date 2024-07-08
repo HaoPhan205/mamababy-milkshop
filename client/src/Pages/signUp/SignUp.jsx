@@ -1,7 +1,9 @@
-import React, { useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-
-import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import {
+  EyeInvisibleOutlined,
+  EyeTwoTone,
+  LockOutlined,
+  MailOutlined,
+} from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -14,28 +16,21 @@ import {
   Row,
   Typography,
 } from "antd";
-import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import "./SignUp.scss";
 import { useFormik } from "formik";
-import Logo from "../../Components/logo/Logo";
-import {
-  register,
-  resetRegisterSuccess,
-  clearError,
-} from "../../Store/action/authActions";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
-import { useDispatch, useSelector } from "react-redux";
-import { FcGoogle } from "react-icons/fc";
+import Logo from "../../Components/logo/Logo";
+import api from "../../config/axios";
+import useNotification from "../../hook/useNotification";
+import "./SignUp.scss";
 
 const { Text } = Typography;
 
 const validationSchema = Yup.object().shape({
-  firstname: Yup.string()
-    .matches(/^[\p{L}\s]+$/u, "First name must contain only letters and spaces")
-    .required("Please input your first name!"),
-  lastname: Yup.string()
-    .matches(/^[\p{L}\s]+$/u, "Last name must contain only letters and spaces")
-    .required("Please input your last name!"),
+  fullName: Yup.string()
+    .matches(/^[\p{L}\s]+$/u, "Full name must contain only letters and spaces")
+    .required("Please input your full name!"),
   email: Yup.string()
     .email("Invalid email format")
     .required("Please input your email!"),
@@ -59,35 +54,42 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function SignUp() {
-  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, registerSuccess } = useSelector((state) => state.auth);
-
-  useEffect(() => {
-    if (registerSuccess) {
-      navigate("/sign-in");
-      dispatch(resetRegisterSuccess());
-    }
-  }, [registerSuccess, navigate, dispatch]);
-
-  useEffect(() => {
-    return () => {
-      dispatch(clearError());
-    };
-  }, [dispatch]);
+  const { alertSuccess, alertFail } = useNotification();
 
   const formik = useFormik({
     initialValues: {
-      firstname: "",
-      lastname: "",
+      fullName: "",
       email: "",
       password: "",
       confirmPassword: "",
       agree: false,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      dispatch(register(values));
+    onSubmit: async (values) => {
+      try {
+        const response = await api.post("/api/customers", {
+          email: values.email,
+          password: values.password,
+          name: values.fullName,
+        });
+        const { data } = response.data;
+        alertSuccess(
+          "Registration successful. Please check your email for verification."
+        );
+        navigate("/sign-in");
+      } catch (error) {
+        if (error.response) {
+          const { status, data } = error.response;
+          if (status === 400 && data?.error?.code === "MSG 2") {
+            alertFail("Email already exists");
+            return;
+          }
+          alertFail(data?.error?.message?.[0] || "Registration failed");
+        } else {
+          alertFail("Registration failed");
+        }
+      }
     },
   });
 
@@ -97,65 +99,31 @@ export default function SignUp() {
         <Logo />
         <Card style={{ width: 500 }} className="signUp__card__detail">
           <Form
-            name="normal_login"
-            className="login-form signUp__card__detail__input"
+            name="normal_signup"
+            className="signup-form signUp__card__detail__input"
             initialValues={{ remember: true }}
             onFinish={formik.handleSubmit}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                width: "100%",
-              }}
+            <Form.Item
+              name="fullName"
+              help={
+                formik.touched.fullName && formik.errors.fullName
+                  ? formik.errors.fullName
+                  : ""
+              }
+              validateStatus={
+                formik.touched.fullName && formik.errors.fullName ? "error" : ""
+              }
             >
-              <Form.Item
-                name="firstname"
-                help={
-                  formik.touched.firstname && formik.errors.firstname
-                    ? formik.errors.firstname
-                    : ""
-                }
-                validateStatus={
-                  formik.touched.firstname && formik.errors.firstname
-                    ? "error"
-                    : ""
-                }
-                style={{ width: "49%" }}
-              >
-                <Input
-                  className="signUp__card__detail__input__detail"
-                  placeholder="Tên"
-                  name="firstname"
-                  value={formik.values.firstname}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </Form.Item>
-              <Form.Item
-                name="lastname"
-                help={
-                  formik.touched.lastname && formik.errors.lastname
-                    ? formik.errors.lastname
-                    : ""
-                }
-                validateStatus={
-                  formik.touched.lastname && formik.errors.lastname
-                    ? "error"
-                    : ""
-                }
-                style={{ width: "49%" }}
-              >
-                <Input
-                  className="signUp__card__detail__input__detail"
-                  placeholder="Họ"
-                  name="lastname"
-                  value={formik.values.lastname}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                />
-              </Form.Item>
-            </div>
+              <Input
+                className="signUp__card__detail__input__detail"
+                placeholder="Tên của bạn  "
+                name="fullName"
+                value={formik.values.fullName}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+              />
+            </Form.Item>
             <Form.Item
               name="email"
               help={
@@ -195,7 +163,7 @@ export default function SignUp() {
             >
               <Input.Password
                 className="signUp__card__detail__input__detail"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -226,8 +194,7 @@ export default function SignUp() {
             >
               <Input.Password
                 className="signUp__card__detail__input__detail"
-                type="password"
-                placeholder="Nhập lại mật khẩu!"
+                placeholder="Nhập lại mật khẩu"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -244,21 +211,18 @@ export default function SignUp() {
               />
             </Form.Item>
             <Form.Item>
-              <Form.Item valuePropName="unchecked" noStyle>
-                <Checkbox
-                  style={{ fontFamily: "Gantari" }}
-                  name="agree"
-                  checked={formik.values.agree}
-                  onChange={formik.handleChange}
-                >
-                  Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật
-                </Checkbox>
-                {formik.touched.agree && formik.errors.agree ? (
-                  <Text type="danger">{formik.errors.agree}</Text>
-                ) : null}
-              </Form.Item>
+              <Checkbox
+                style={{ fontFamily: "Gantari" }}
+                name="agree"
+                checked={formik.values.agree}
+                onChange={formik.handleChange}
+              >
+                Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật
+              </Checkbox>
+              {formik.touched.agree && formik.errors.agree ? (
+                <Text type="danger">{formik.errors.agree}</Text>
+              ) : null}
             </Form.Item>
-
             <Form.Item>
               <div className="signUp__card__detail__options">
                 <ConfigProvider
@@ -268,13 +232,12 @@ export default function SignUp() {
                         borderRadius: "20px",
                         defaultBg: "#ff469e",
                         defaultColor: "white",
-                        defaultHoverBg: "black",
+                        defaultHoverBg: "#ff469e",
                         defaultHoverBorderColor: "black",
                         defaultHoverColor: "white",
                         defaultActiveBg: "#ff469e",
                         activeBorderColor: "#ff469e",
                         defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#ff469e",
                       },
                     },
                   }}
@@ -286,44 +249,18 @@ export default function SignUp() {
                       textTransform: "uppercase",
                       fontWeight: "500",
                       fontSize: "1.2em",
+                      defaultActiveBg: "#ff469e",
+                      defaultBg: "#ff469e",
                     }}
-                    loading={loading}
+                    loading={formik.isSubmitting}
                     disabled={!formik.values.agree}
                   >
                     Đăng ký
                   </Button>
                 </ConfigProvider>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "white",
-                        defaultColor: "black",
-                        defaultHoverBg: "black",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "black",
-                        activeBorderColor: "black",
-                        defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#FF4F28",
-                      },
-                    },
-                  }}
-                >
-                  <Button
-                    className="signUp__card__detail__options__option"
-                    style={{
-                      fontSize: "1.2em",
-                    }}
-                  >
-                    <FcGoogle /> Đăng ký với Google
-                  </Button>
-                </ConfigProvider>
               </div>
             </Form.Item>
           </Form>
-
           <Divider />
           <p>
             Bạn đã có tài khoản? &nbsp;

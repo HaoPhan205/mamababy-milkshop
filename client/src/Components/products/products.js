@@ -1,19 +1,21 @@
 import React, { useState, useEffect } from "react";
 import "./products.scss";
-import { Card, Row, Col, Button } from "antd";
+import { Row, Col, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
 
-import ProductCard from "../../Components/productCard/ProductCard"
+import ProductCard from "../../Components/productCard/ProductCard";
 
-const Products = ({ productItemId }) => {
+const Products = ({ user }) => {
+  // Ensure user prop is used here
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -35,7 +37,12 @@ const Products = ({ productItemId }) => {
   };
 
   const handleAddToCart = (productId) => {
+    if (!user) {
+      navigate("/sign-in");
+      return;
+    }
     console.log("Product added to cart:", productId);
+    // Here you would also add the product to the cart, e.g., by updating state or making an API call
   };
 
   const handleSeeMore = () => {

@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import {
@@ -15,24 +14,16 @@ import {
   Spin,
 } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
-import { FcGoogle } from "react-icons/fc";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./SignIn.scss";
 import Logo from "../../Components/logo/Logo";
-import {
-  login,
-  googleSignIn,
-  clearError,
-} from "../../Store/action/authActions";
+import { useAuth } from "../../context/AuthContext";
 import { toast } from "react-toastify";
 
 export default function SignIn() {
-  const dispatch = useDispatch();
+  const { login, loading, isAuthenticated, error, clearError } = useAuth();
   const navigate = useNavigate();
-  const { loading, isAuthenticated, error } = useSelector(
-    (state) => state.auth
-  );
 
   const validationSchema = Yup.object().shape({
     email: Yup.string()
@@ -48,8 +39,8 @@ export default function SignIn() {
       remember: true,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      dispatch(login(values));
+    onSubmit: async (values) => {
+      await login(values.email, values.password, "customer"); // assuming customer login here
     },
   });
 
@@ -63,13 +54,9 @@ export default function SignIn() {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      dispatch(clearError());
+      clearError();
     }
-  }, [error, dispatch]);
-
-  const handleGoogleSignIn = () => {
-    dispatch(googleSignIn());
-  };
+  }, [error, clearError]);
 
   return (
     <Row className="signIn">
@@ -185,35 +172,6 @@ export default function SignIn() {
                     loading={loading}
                   >
                     <Spin spinning={loading}>Đăng nhập</Spin>
-                  </Button>
-                </ConfigProvider>
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "white",
-                        defaultColor: "white",
-                        defaultHoverBg: "black",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "black",
-                        activeBorderColor: "black",
-                        defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#FF4F28",
-                      },
-                    },
-                  }}
-                >
-                  <Button
-                    className="signIn__card__detail__options__option"
-                    onClick={handleGoogleSignIn}
-                    style={{
-                      fontWeight: "500",
-                      fontSize: "1.2em",
-                    }}
-                  >
-                    <FcGoogle /> Đăng nhập với Google
                   </Button>
                 </ConfigProvider>
               </div>

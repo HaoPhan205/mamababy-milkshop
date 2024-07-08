@@ -1,11 +1,13 @@
-import { List, Typography } from "antd";
+import { Typography } from "antd";
 import React, { useEffect, useState } from "react";
 import api from "../../config/axios";
 import "./ProductDetail.scss";
+import { useParams } from "react-router-dom";
 
 const { Title, Paragraph } = Typography;
 
-const ProductDetail = ({ productItemId }) => {
+const ProductDetail = () => {
+  const { productItemId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -14,7 +16,7 @@ const ProductDetail = ({ productItemId }) => {
     const fetchProduct = async () => {
       try {
         const response = await api.get(`/api/productitems/${productItemId}`);
-        setProduct(response.data.data);
+        setProduct(response.data); // Assuming response.data contains the product details
       } catch (err) {
         setError(err);
       } finally {
@@ -41,49 +43,19 @@ const ProductDetail = ({ productItemId }) => {
     <div className="product-additional-info">
       <div className="requirements">
         <Title level={2}>Thông tin sản phẩm</Title>
-        <List
-          dataSource={product.requirement ? product.requirement.split(",") : []}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text>{item.trim()}</Typography.Text>
-            </List.Item>
-          )}
-        />
+        <Paragraph style={{ color: "black" }}>{product?.description}</Paragraph>
       </div>
       <div className="description">
-        <Title level={2}>Description</Title>
-        <Paragraph>
-          {product.description
-            ? product.description.split("\n").map((text, index) => (
-                <span key={index}>
-                  {text}
-                  <br />
-                </span>
-              ))
-            : "No description available"}
-        </Paragraph>
+        <Title level={2}>Thương hiệu: </Title>
+        <Paragraph style={{ color: "black" }}>{product?.brandName}</Paragraph>
       </div>
-      <div className="target-audience">
-        <Title level={2}>Who this course is for</Title>
-        <List
-          dataSource={product.targetAudience ? product.targetAudience.split(",") : []}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text>{item.trim()}</Typography.Text>
-            </List.Item>
-          )}
-        />
+      <div className="description">
+        <Title level={2}>Công ty sản xuất: </Title>
+        <Paragraph style={{ color: "black" }}>{product?.companyName}</Paragraph>
       </div>
-      <div className="learn-what">
-        <Title level={2}>What you'll learn</Title>
-        <List
-          dataSource={product.learnWhat ? product.learnWhat.split(",") : []}
-          renderItem={(item) => (
-            <List.Item>
-              <Typography.Text>{item.trim()}</Typography.Text>
-            </List.Item>
-          )}
-        />
+      <div className="description">
+        <Title level={2}>Quốc gia: </Title>
+        <Paragraph style={{ color: "black" }}>{product?.countryName}</Paragraph>
       </div>
     </div>
   );

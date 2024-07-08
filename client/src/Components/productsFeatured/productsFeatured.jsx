@@ -1,32 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Card, Badge, Carousel, Button } from "antd";
-import { LeftOutlined, RightOutlined, ShoppingCartOutlined } from "@ant-design/icons";
+import {
+  LeftOutlined,
+  RightOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
 import { Link } from "react-router-dom";
 import api from "../../config/axios";
 
-const ProductCard = ({ product, onClick, onAddToCart }) => (
-  <div className="product-card">
-    <Card
-      hoverable
-      cover={
-        <div className="product-card-image" onClick={onClick}>
-          <img alt={product.itemName} src={product.image1} />
-        </div>
-      }
-    >
-      <div className="product-meta">
-        <Card.Meta title={product.itemName} />
-        <div className="product-price">{product.price} VNĐ</div>
-      </div>
-      <div className="products-info">
-        <div>Đã bán {product.soldQuantity}</div>
-        <ShoppingCartOutlined onClick={onAddToCart} style={{ fontSize: '20px', color: '#ff469e' }} />
-      </div>
-    </Card>
-  </div>
-);
+import ProductCard from "../productCard/ProductCard";
 
 const Product = () => {
   const navigate = useNavigate();
