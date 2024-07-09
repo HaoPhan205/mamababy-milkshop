@@ -1,59 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import {
-  Button,
-  Card,
-  Checkbox,
-  Col,
-  ConfigProvider,
-  Divider,
-  Form,
-  Input,
-  Row,
-  Spin,
-} from "antd";
+import { Button, Card, Form, Input, Row, Col, Spin, Divider } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./SignIn.scss";
 import Logo from "../../Components/logo/Logo";
 import { useUsers } from "../../Services/Hooks/useUsers";
-import { toast } from "react-toastify";
 
-export default function SignIn() {
+const SignIn = () => {
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
   const { onLogIn } = useUsers();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const validationSchema = Yup.object().shape({
-    email: Yup.string()
-      .email("Invalid email format")
-      .required("Please input your email!"),
-    password: Yup.string().required("Please input your password!"),
-  });
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-      remember: true,
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      setLoading(true);
-      await onLogIn(values.email, values.password);
-      setLoading(false);
-    },
-  });
-
-  useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      toast.success("Login successful");
-      navigate("/");
-    }
-  }, [navigate]);
+    setLoading(true);
+    await onLogIn(email, password);
+    setLoading(false);
+  };
 
   return (
     <Row className="signIn">
@@ -68,19 +36,9 @@ export default function SignIn() {
             initialValues={{
               remember: true,
             }}
-            onFinish={formik.handleSubmit}
+            onSubmit={handleSubmit}
           >
-            <Form.Item
-              name="email"
-              help={
-                formik.touched.email && formik.errors.email
-                  ? formik.errors.email
-                  : ""
-              }
-              validateStatus={
-                formik.touched.email && formik.errors.email ? "error" : ""
-              }
-            >
+            <Form.Item name="email">
               <Input
                 className="signIn__card__detail__input__detail"
                 prefix={
@@ -91,25 +49,14 @@ export default function SignIn() {
                 }
                 placeholder="Email"
                 name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                value={email}
+                onChange={(e) => setEmail(e.target.value.trim())}
               />
             </Form.Item>
-            <Form.Item
-              name="password"
-              help={
-                formik.touched.password && formik.errors.password
-                  ? formik.errors.password
-                  : ""
-              }
-              validateStatus={
-                formik.touched.password && formik.errors.password ? "error" : ""
-              }
-            >
+            <Form.Item name="password">
               <Input.Password
                 className="signIn__card__detail__input__detail"
-                placeholder="Password"
+                placeholder="Mật khẩu"
                 prefix={
                   <LockOutlined
                     style={{ marginRight: "1.5em" }}
@@ -120,71 +67,30 @@ export default function SignIn() {
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
                 name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
+                value={password}
+                onChange={(e) => setPassword(e.target.value.trim())}
               />
             </Form.Item>
-            {/* <Form.Item>
-              <Form.Item name="remember" valuePropName="checked" noStyle>
-                <Checkbox
-                  style={{ fontFamily: "Gantari" }}
-                  name="remember"
-                  checked={formik.values.remember}
-                  onChange={formik.handleChange}
-                >
-                  Remember me
-                </Checkbox>
-              </Form.Item>
-            </Form.Item> */}
 
             <Form.Item>
-              <div className="signIn__card__detail__options">
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "#ff469e",
-                        defaultColor: "white",
-                        defaultHoverBg: "black",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "#ff469e",
-                        activeBorderColor: "#ff469e",
-                        defaultActiveColor: "white",
-                        defaultActiveBorderColor: "#ff469e",
-                      },
-                    },
-                  }}
-                >
-                  <Button
-                    className="signIn__card__detail__options__option"
-                    htmlType="submit"
-                    style={{
-                      fontWeight: "500",
-                      fontSize: "1.2em",
-                      textTransform: "uppercase",
-                    }}
-                    loading={loading}
-                  >
-                    <Spin spinning={loading}>Login</Spin>
-                  </Button>
-                </ConfigProvider>
-              </div>
+              <Button
+                className="signIn__card__detail__options__option"
+                htmlType="submit"
+                style={{
+                  fontWeight: "500",
+                  fontSize: "1.2em",
+                  textTransform: "uppercase",
+                }}
+              >
+                <Spin spinning={loading}>Đăng nhập</Spin>
+              </Button>
             </Form.Item>
           </Form>
-          <p>
-            Or&nbsp;
-            <Link to="/forgot-password" style={{ color: "#ff469e" }}>
-              Forgot password
-            </Link>
-          </p>
           <Divider />
           <p>
-            Don't have an account?&nbsp;
+            Bạn chưa có tài khoản?&nbsp;
             <Link to="/sign-up" style={{ color: "#ff469e" }}>
-              Sign Up
+              Đăng ký
             </Link>
           </p>
         </Card>
@@ -192,4 +98,6 @@ export default function SignIn() {
       <Col className="signIn__sidePic" md={12}></Col>
     </Row>
   );
-}
+};
+
+export default SignIn;

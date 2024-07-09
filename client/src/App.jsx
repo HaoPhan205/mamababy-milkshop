@@ -4,18 +4,22 @@ import { router } from "./Routes/router";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
-import { AuthProvider } from "./context/AuthContext";
+import { useStorage } from "./Services/Hooks/useStorage";
 
-export const Data = createContext();
+export const Data = createContext(null);
+function App() {
+  const { getFromStorage } = useStorage();
+  const [user, setUser] = useState(
+    getFromStorage("user") ? getFromStorage("user") : null
+  );
+  console.log(user);
 
-const App = () => {
-  const [user, setUser] = useState(null);
   return (
     <Data.Provider value={{ user, setUser }}>
       <RouterProvider router={router} />
-      <ToastContainer />
+      {/* <ToastContainer /> */}
     </Data.Provider>
   );
-};
+}
 
 export default App;

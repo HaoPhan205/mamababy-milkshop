@@ -17,12 +17,11 @@ import {
   Typography,
 } from "antd";
 import { useFormik } from "formik";
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 import Logo from "../../Components/logo/Logo";
-import api from "../../config/axios";
-import useNotification from "../../hook/useNotification";
+import { useUsers } from "../../Services/Hooks/useUsers";
 import "./SignUp.scss";
 
 const { Text } = Typography;
@@ -55,7 +54,8 @@ const validationSchema = Yup.object().shape({
 
 export default function SignUp() {
   const navigate = useNavigate();
-  const { alertSuccess, alertFail } = useNotification();
+  const [loading, setLoading] = useState(false);
+  const { onSignup } = useUsers();
 
   const formik = useFormik({
     initialValues: {
@@ -67,29 +67,9 @@ export default function SignUp() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      try {
-        const response = await api.post("/api/customers", {
-          email: values.email,
-          password: values.password,
-          name: values.fullName,
-        });
-        const { data } = response.data;
-        alertSuccess(
-          "Registration successful. Please check your email for verification."
-        );
-        navigate("/sign-in");
-      } catch (error) {
-        if (error.response) {
-          const { status, data } = error.response;
-          if (status === 400 && data?.error?.code === "MSG 2") {
-            alertFail("Email already exists");
-            return;
-          }
-          alertFail(data?.error?.message?.[0] || "Registration failed");
-        } else {
-          alertFail("Registration failed");
-        }
-      }
+      setLoading(true);
+      await onSignup(values.fullName, values.email, values.password);
+      setLoading(false);
     },
   });
 
@@ -117,7 +97,7 @@ export default function SignUp() {
             >
               <Input
                 className="signUp__card__detail__input__detail"
-                placeholder="Tên của bạn  "
+                placeholder="Tên của bạn"
                 name="fullName"
                 value={formik.values.fullName}
                 onChange={formik.handleChange}

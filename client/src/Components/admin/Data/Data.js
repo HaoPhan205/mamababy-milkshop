@@ -22,29 +22,34 @@ export const SidebarData = [
   {
     icon: UilEstate,
     heading: "Dashboard",
+    path: "/adminPage",
   },
   {
     icon: UilClipboardAlt,
-    heading: "Orders",
+    heading: "Quản lý nhân viên",
+    path: "/adminPage/quan-li-nhan-vien",
   },
   {
     icon: UilUsersAlt,
-    heading: "Customers",
+    heading: "Quản lý đơn hàng",
+    path: "/adminPage/quan-li-don-hang",
   },
   {
     icon: UilPackage,
-    heading: 'Products'
+    heading: "Quản lý sản phẩm",
+    path: "/adminPage/quan-li-san-pham",
   },
   {
     icon: UilChart,
-    heading: 'Analytics'
+    heading: "Doanh thu cửa hàng",
+    path: "/adminPage/doanh-thu-cua-hang",
   },
 ];
 
 // Analytics Cards Data
 export const cardsData = [
   {
-    title: "Sales",
+    title: "Danh thu tháng",
     color: {
       backGround: "linear-gradient(180deg, #bb67ff 0%, #c484f3 100%)",
       boxShadow: "0px 10px 20px 0px #e0c6f5",
@@ -60,7 +65,7 @@ export const cardsData = [
     ],
   },
   {
-    title: "Revenue",
+    title: "Danh thu tuần",
     color: {
       backGround: "linear-gradient(180deg, #FF919D 0%, #FC929D 100%)",
       boxShadow: "0px 10px 20px 0px #FDC0C7",
@@ -76,7 +81,7 @@ export const cardsData = [
     ],
   },
   {
-    title: "Expenses",
+    title: "Doanh thu ngày",
     color: {
       backGround:
         "linear-gradient(rgb(248, 212, 154) -146.42%, rgb(255 202 113) -46.42%)",

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 import "./Sidebar.css";
-import Logo from "./imgs/logo.png";
+import Logo from "../../Assets/LOGO.png";
 import { UilSignOutAlt, UilBars } from "@iconscout/react-unicons";
 import { SidebarData } from "./Data/Data";
 import { motion, AnimatePresence } from "framer-motion";
@@ -18,7 +19,6 @@ const Sidebar = () => {
     },
   };
 
-  console.log(window.innerWidth);
   return (
     <>
       <div
@@ -33,7 +33,6 @@ const Sidebar = () => {
           <motion.div
             className="sidebar"
             variants={sidebarVariants}
-            initial={{ left: "-60%" }}
             animate={window.innerWidth <= 768 ? `${expanded}` : ""}
             exit={{ left: "-60%" }}
             layout
@@ -42,23 +41,24 @@ const Sidebar = () => {
             <div className="logo">
               <img src={Logo} alt="logo" />
               <span>
-                Sh<span>o</span>ps
+                Shop<span> Sữa</span>
               </span>
             </div>
 
             <div className="menu">
               {SidebarData.map((item, index) => {
                 return (
-                  <div
-                    className={
-                      selected === index ? "menuItem active" : "menuItem"
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      isActive ? "menuItem active" : "menuItem"
                     }
                     key={index}
                     onClick={() => setSelected(index)}
                   >
                     <item.icon />
                     <span>{item.heading}</span>
-                  </div>
+                  </NavLink>
                 );
               })}
               {/* signoutIcon */}

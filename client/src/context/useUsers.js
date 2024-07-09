@@ -13,17 +13,14 @@ export const useUsers = () => {
   const { saveToStorage, removeFromStorage } = useStorage();
   const navigate = useNavigate();
 
-  // Function to lookup a user by email
   const lookUpUserByEmail = async (email) => {
     let lookedUpUser = null;
     await api
       .get(`${customerByEmailEndPoint}?email=${email}`)
       .then((res) => {
         const data = res.data;
-        if (data.length > 0) {
-          if (data[0].email === email) {
-            lookedUpUser = data[0];
-          }
+        if (data && data.email === email) {
+          lookedUpUser = data;
         }
       })
       .catch((err) => console.log(err));
@@ -31,40 +28,46 @@ export const useUsers = () => {
     return lookedUpUser;
   };
 
-  // Function to handle user signup
   const onSignup = async (customerName, email, password) => {
+    const newUser = {
+      customerName,
+      email,
+      password,
+    };
+
     const isExisted = await lookUpUserByEmail(email);
 
     if (isExisted) {
       message.error("Email này đã tồn tại");
     } else {
-      // Create a new user if email does not exist
-      const newUser = { customerName, email, password };
-      const response = await api.post(customersEndPoint, newUser);
-      const createdUser = response.data;
-      setUser(createdUser);
-      saveToStorage("user", createdUser);
-      message.success("Tạo tài khoản thành công");
-      navigate("/");
+      await api
+        .post(customersEndPoint, newUser)
+        .then((res) => {
+          setUser(res.data);
+          saveToStorage("user", res.data);
+          message.success("Tạo tài khoản thành công");
+          navigate("/");
+        })
+        .catch((err) => {
+          message.error("Đã xảy ra lỗi khi tạo tài khoản");
+          console.log(err);
+        });
     }
   };
 
-  // Function to handle user logout
   const onLogOut = () => {
+    message.success("Đã đăng xuất khỏi tài khoản");
     setUser(null);
     removeFromStorage("user");
-    message.success("Đã đăng xuất khỏi tài khoản");
     navigate("/");
   };
 
-  // Function to handle user login
   const onLogIn = async (email, password) => {
     const lookedUpUser = await lookUpUserByEmail(email);
     if (lookedUpUser) {
-      const checkEmail = lookedUpUser.email === email;
       const checkPassword = lookedUpUser.password === password;
 
-      if (checkEmail && checkPassword) {
+      if (checkPassword) {
         setUser(lookedUpUser);
         saveToStorage("user", lookedUpUser);
         message.success("Đăng nhập thành công");
@@ -73,25 +76,20 @@ export const useUsers = () => {
         message.error("Password không hợp lệ");
       }
     } else {
-      message.error("Username hoặc password không hợp lệ");
+      message.error("Email không tồn tại");
     }
   };
 
-  // Function to get current user
   const getCurrUser = () => {
     return user;
   };
 
-  // Function to get all users (not typically used in frontend, consider security implications)
   const getAllUsers = (setData, setLoading) => {
     setLoading(true);
     api
       .get(customersEndPoint)
       .then((res) => setData(res.data))
-      .catch((err) => {
-        console.error("Error fetching users:", err);
-        message.error("Error fetching user data");
-      })
+      .catch((err) => console.log(err))
       .finally(() => setLoading(false));
   };
 

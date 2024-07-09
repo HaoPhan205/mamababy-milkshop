@@ -12,6 +12,8 @@ import PaymentForm from "../Components/vnpay/PaymentForm";
 import AdminPage from "../Pages/Admin/admin";
 import Donhang from "../Pages/donhang/donhang";
 import PageError from "../Pages/PageError/PageError";
+import AdminDashboard from "../Pages/Admin/DashboardAdmin/AdminDashboard";
+import LayoutAdmin from "../Pages/Admin/layoutAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -47,6 +49,11 @@ export const router = createBrowserRouter([
         path: "/chinh-sach-bao-mat",
         element: <PageError />,
       },
+
+      {
+        path: "/gioi-thieu",
+        element: <PageError />,
+      },
       {
         path: "/dieu-khoan-chung",
         element: <PageError />,
@@ -72,38 +79,38 @@ export const router = createBrowserRouter([
 
   {
     path: "/sign-in",
-    element: (
-      <PublicRoute redirectTo="/">
-        <SignIn />
-      </PublicRoute>
-    ),
+    element: <SignIn />,
   },
   {
     path: "/sign-up",
-    element: (
-      <PublicRoute redirectTo="/">
-        <SignUp />
-      </PublicRoute>
-    ),
+    element: <SignUp />,
   },
   {
     path: "/adminPage",
-    element: <AdminPage />,
+    element: (
+      <>
+        <LayoutAdmin />
+      </>
+    ),
     children: [
       {
+        path: "/adminPage",
+        element: <AdminPage />,
+      },
+      {
         path: "/adminPage/quan-li-san-pham",
+        element: <AdminDashboard />,
+      },
+      {
+        path: "/adminPage/quan-li-don-hang",
         element: <CreateNewProduct />,
       },
       {
-        path: "/adminPage/quan-li-giao-hang",
+        path: "/adminPage/quan-li-nhan-vien",
         element: <CreateNewProduct />,
       },
       {
-        path: "/adminPage/dashboard-admin",
-        element: <CreateNewProduct />,
-      },
-      {
-        path: "/adminPage/dashboard-staff",
+        path: "/adminPage/doanh-thu-cua-hang",
         element: <CreateNewProduct />,
       },
     ],
