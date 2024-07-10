@@ -1,26 +1,105 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
-import { Button, Card, Form, Input, Row, Col, Spin, Divider } from "antd";
+import {
+  Button,
+  Card,
+  Form,
+  Input,
+  Row,
+  Col,
+  Divider,
+  message,
+  Modal,
+} from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
+import Logo from "../../Components/logo/Logo";
+import { useUsers } from "../../Services/Hooks/useUsers";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import "./SignIn.scss";
-import Logo from "../../Components/logo/Logo";
-import { useUsers } from "../../Services/Hooks/useUsers";
+import { useForm } from "antd/es/form/Form";
+import api from "../../config/axios";
+import Cookies from "js-cookie";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
+  const [showLoginModal, setShowLoginModal] = useState(false);
   const { onLogIn } = useUsers();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+  const [form] = useForm();
+  const [modalForm] = useForm(); // Form trong modal
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: "",
+    },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Địa chỉ email không hợp lệ")
+        .required("Vui lòng nhập email"),
+      password: Yup.string().required("Vui lòng nhập mật khẩu"),
+    }),
+    onSubmit: async (values) => {
+      setLoading(true);
+      try {
+        await onLogIn(values.email, values.password);
+        // Đăng nhập thành công
 
+        navigate("/");
+      } catch (error) {
+        // Xử lý lỗi
+        console.error("Error logging in:", error);
+        if (error.response && error.response.data) {
+          message.error(error.response.data.message || "Đăng nhập thất bại");
+        } else {
+          message.error("Đăng nhập thất bại");
+        }
+      } finally {
+        setLoading(false);
+      }
+    },
+  });
+
+  const handleShowLoginModal = () => {
+    setShowLoginModal(true);
+  };
+
+  const handleCloseLoginModal = () => {
+    setShowLoginModal(false);
+  };
+
+  const loginAdmin = async (values) => {
     setLoading(true);
-    await onLogIn(email, password);
-    setLoading(false);
+    try {
+      const response = await api.post("/api/auth/loginadmin", {
+        username: values.email,
+        password: values.password,
+      });
+
+      const { token, role } = response.data;
+
+      // Lưu token vào cookie với thời gian sống là 1 ngày (hoặc thời gian phù hợp)
+      Cookies.set("token", token, { expires: 1 });
+
+      // Chuyển hướng đến trang tương ứng với role
+      if (role === "Admin") {
+        navigate("/adminPage");
+      } else if (role === "Staff") {
+        navigate("/staffPage");
+      } else {
+        throw new Error("Role không hợp lệ");
+      }
+
+      message.success("Đăng nhập thành công");
+      handleCloseLoginModal(); // Đóng modal sau khi đăng nhập thành công
+    } catch (error) {
+      console.error("Error logging in:", error);
+      message.error(error.message || "Đăng nhập thất bại");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -36,53 +115,50 @@ const SignIn = () => {
             initialValues={{
               remember: true,
             }}
-            onSubmit={handleSubmit}
+            onFinish={formik.handleSubmit}
           >
-            <Form.Item name="email">
+            <Form.Item
+              name="email"
+              validateStatus={formik.errors.email ? "error" : ""}
+              help={formik.errors.email}
+            >
               <Input
                 className="signIn__card__detail__input__detail"
-                prefix={
-                  <MailOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
-                }
+                prefix={<MailOutlined className="site-form-item-icon" />}
                 placeholder="Email"
-                name="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value.trim())}
+                {...formik.getFieldProps("email")}
               />
             </Form.Item>
-            <Form.Item name="password">
+            <Form.Item
+              name="password"
+              validateStatus={formik.errors.password ? "error" : ""}
+              help={formik.errors.password}
+            >
               <Input.Password
                 className="signIn__card__detail__input__detail"
                 placeholder="Mật khẩu"
-                prefix={
-                  <LockOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
-                }
+                prefix={<LockOutlined className="site-form-item-icon" />}
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
-                name="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value.trim())}
+                {...formik.getFieldProps("password")}
               />
             </Form.Item>
 
             <Form.Item>
               <Button
                 className="signIn__card__detail__options__option"
+                type="primary"
                 htmlType="submit"
                 style={{
                   fontWeight: "500",
                   fontSize: "1.2em",
                   textTransform: "uppercase",
                 }}
+                loading={loading}
+                disabled={formik.isSubmitting}
               >
-                <Spin spinning={loading}>Đăng nhập</Spin>
+                Đăng nhập
               </Button>
             </Form.Item>
           </Form>
@@ -93,9 +169,75 @@ const SignIn = () => {
               Đăng ký
             </Link>
           </p>
+          <Button
+            type="link"
+            onClick={handleShowLoginModal}
+            style={{
+              color: "#ff469e",
+              fontSize: "1em",
+              cursor: "pointer",
+              border: "none",
+              background: "none",
+              padding: 0,
+              textDecoration: "none",
+              display: "block",
+              margin: "0 auto", // Căn giữa
+            }}
+          >
+            Tài khoản nhân viên
+          </Button>
         </Card>
       </Col>
       <Col className="signIn__sidePic" md={12}></Col>
+
+      {/* Modal đăng nhập */}
+      <Modal
+        title="Đăng nhập cho Tài khoản nhân viên"
+        visible={showLoginModal}
+        onCancel={handleCloseLoginModal}
+        footer={[
+          <Button key="cancel" onClick={handleCloseLoginModal}>
+            Hủy
+          </Button>,
+          <Button key="login" type="primary" onClick={() => modalForm.submit()}>
+            Đăng nhập
+          </Button>,
+        ]}
+      >
+        <Form
+          form={modalForm} // Sử dụng form trong modal
+          name="staff_admin_login"
+          initialValues={{
+            email: "",
+            password: "",
+          }}
+          onFinish={loginAdmin}
+        >
+          <Form.Item name="email">
+            <Input
+              prefix={<MailOutlined className="site-form-item-icon" />}
+              placeholder="Email"
+            />
+          </Form.Item>
+          <Form.Item
+            name="password"
+            rules={[
+              {
+                required: true,
+                message: "Vui lòng nhập mật khẩu",
+              },
+            ]}
+          >
+            <Input.Password
+              placeholder="Mật khẩu"
+              prefix={<LockOutlined className="site-form-item-icon" />}
+              iconRender={(visible) =>
+                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+              }
+            />
+          </Form.Item>
+        </Form>
+      </Modal>
     </Row>
   );
 };

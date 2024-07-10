@@ -1,7 +1,7 @@
 import React, { createContext, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/router";
-import { ToastContainer } from "react-toastify";
+
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import { useStorage } from "./Services/Hooks/useStorage";
@@ -17,7 +17,6 @@ function App() {
   return (
     <Data.Provider value={{ user, setUser }}>
       <RouterProvider router={router} />
-      {/* <ToastContainer /> */}
     </Data.Provider>
   );
 }

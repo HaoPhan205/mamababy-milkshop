@@ -1,43 +1,61 @@
-.Cartlist {
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    img {
-      margin-right: 20px;
-    }
-  
-    .text {
-      .cart__name {
-        font-size: 18px;
-        font-weight: bold;
-      }
-  
-      .cart__categories {
-        font-size: 14px;
-        color: gray;
-      }
-  
-      .cart__buy {
-        display: flex;
-        align-items: center;
-        margin-top: 5px;
-        
-        span {
-          margin-right: 5px;
-        }
-  
-        .price {
-          font-size: 16px;
-          color: green; // Add styling for the price
-        }
-      }
-    }
-    .close__button {
-        position: absolute; /* Định vị tuyệt đối để đặt nút ở góc */
-        top: 5px; 
-        right: 10px; 
-        font-size: 20px;
-        cursor: pointer;
-      }
-  }
-  
+.cart-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  position: relative;
+}
+
+.cart-list {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.cart-item-image {
+  width: 100px;
+  height: auto;
+}
+
+.text {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  flex: 1;
+}
+
+.cart-item-name {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.cart-item-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-item-price {
+  color: #ff469e;
+  font-weight: bold;
+}
+
+.cart-item-quantity {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  cursor: pointer;
+  color: red;
+}

@@ -3,17 +3,19 @@ import SignIn from "../Pages/signIn/SignIn";
 import SignUp from "../Pages/signUp/SignUp";
 import HomePage from "../Pages/home/HomePage";
 import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
-import PublicRoute from "./PublicRoute";
+
 import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
 import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
 import CreateNewProduct from "../Pages/Staff/createProductPage/CreateProductsPage";
-import PaymentForm from "../Components/vnpay/PaymentForm";
+import StaffPage from "../Pages/Staff/staffPage";
 import AdminPage from "../Pages/Admin/admin";
 import Donhang from "../Pages/donhang/donhang";
 import PageError from "../Pages/PageError/PageError";
-import AdminDashboard from "../Pages/Admin/DashboardAdmin/AdminDashboard";
-import LayoutAdmin from "../Pages/Admin/layoutAdmin";
+
+import Staff from "../Pages/Admin/quanlinhanvien/staff";
+import Sanpham from "../Pages/Admin/donhang/sanpham";
+import ProtectedRoute from "./ProtectedRoute";
 
 export const router = createBrowserRouter([
   {
@@ -41,7 +43,7 @@ export const router = createBrowserRouter([
         element: <Shopping />,
       },
       {
-        path: "//don-hang-cua-ban",
+        path: "/don-hang-cua-ban",
         element: <Donhang />,
       },
 
@@ -76,7 +78,10 @@ export const router = createBrowserRouter([
       },
     ],
   },
-
+  {
+    path: "/404",
+    element: <PageError />,
+  },
   {
     path: "/sign-in",
     element: <SignIn />,
@@ -85,34 +90,30 @@ export const router = createBrowserRouter([
     path: "/sign-up",
     element: <SignUp />,
   },
+
   {
     path: "/adminPage",
-    element: (
-      <>
-        <LayoutAdmin />
-      </>
-    ),
-    children: [
-      {
-        path: "/adminPage",
-        element: <AdminPage />,
-      },
-      {
-        path: "/adminPage/quan-li-san-pham",
-        element: <AdminDashboard />,
-      },
-      {
-        path: "/adminPage/quan-li-don-hang",
-        element: <CreateNewProduct />,
-      },
-      {
-        path: "/adminPage/quan-li-nhan-vien",
-        element: <CreateNewProduct />,
-      },
-      {
-        path: "/adminPage/doanh-thu-cua-hang",
-        element: <CreateNewProduct />,
-      },
-    ],
+    element: <AdminPage />,
+  },
+  {
+    path: "/adminPage/quan-li-san-pham",
+    element: <Sanpham />,
+  },
+  {
+    path: "/adminPage/quan-li-don-hang",
+    element: <CreateNewProduct />,
+  },
+  {
+    path: "/adminPage/quan-li-nhan-vien",
+    element: <Staff />,
+  },
+  {
+    path: "/adminPage/doanh-thu-cua-hang",
+    element: <CreateNewProduct />,
+  },
+
+  {
+    path: "/staffPage",
+    element: <StaffPage />,
   },
 ]);

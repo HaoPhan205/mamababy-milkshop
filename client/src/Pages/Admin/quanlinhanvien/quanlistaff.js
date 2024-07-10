@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Card, Spin } from "antd";
-import "./donhang.scss";
+import { Card, Spin, message, Button, Popconfirm } from "antd";
+import "./quanlistaff.scss";
 import {
   Paper,
   Table,
@@ -10,24 +10,20 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import api from "../../config/axios";
+import api from "../../../config/axios";
+import StaffFormModal from "./StaffFormModal";
 
-const makeStyle = (status) => {
-  switch (status) {
-    case "approved":
+const makeStyle = (role) => {
+  switch (role) {
+    case "Admin":
       return {
         background: "rgb(145 254 159 / 47%)",
         color: "green",
       };
-    case "pending":
+    case "Staff":
       return {
         background: "#ffadad8f",
         color: "red",
-      };
-    case "delivered":
-      return {
-        background: "#59bfff",
-        color: "white",
       };
     default:
       return {
@@ -36,45 +32,53 @@ const makeStyle = (status) => {
       };
   }
 };
-const renderTable = (orders, loadingState, title) => (
-  <Card title={title} style={{ marginBottom: 20 }}>
+
+const renderTable = (admins, loadingState, onEdit, onDelete) => (
+  <Card title="Danh sách nhân viên" style={{ marginBottom: 20 }}>
     <Spin spinning={loadingState}>
       <TableContainer
         component={Paper}
+        className="table-container"
         sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Hình ảnh</TableCell>
-              <TableCell align="left">Sản phẩm</TableCell>
-              <TableCell align="left">Số lượng</TableCell>
-              <TableCell align="left">Trạng thái</TableCell>
-              <TableCell align="left">Tổng tiền</TableCell>
+              <TableCell>Mã nhân viên</TableCell>
+              <TableCell align="left">Tài khoản nhân viên</TableCell>
+              <TableCell align="left">Mật khẩu</TableCell>
+              <TableCell align="left">Vai trò</TableCell>
+              <TableCell align="left">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {orders.map((order) => (
-              <TableRow key={order.trackingId}>
+            {admins.map((admin) => (
+              <TableRow key={admin.adminID}>
+                <TableCell>{admin.adminID}</TableCell>
+                <TableCell>{admin.username}</TableCell>
+                <TableCell>{admin.password}</TableCell>
                 <TableCell>
-                  <img
-                    src={order.image}
-                    alt="Product"
-                    style={{
-                      width: "50px",
-                      height: "50px",
-                      objectFit: "cover",
-                    }}
-                  />
-                </TableCell>
-                <TableCell>{order.itemName}</TableCell>
-                <TableCell>{order.quantity}</TableCell>
-                <TableCell>
-                  <span className="status" style={makeStyle(order.orderStatus)}>
-                    {order.orderStatus}
+                  <span className="status" style={makeStyle(admin.role)}>
+                    {admin.role}
                   </span>
                 </TableCell>
-                <TableCell>{order.total}</TableCell>
+                <TableCell>
+                  <div className="action-buttons">
+                    <Button type="link" onClick={() => onEdit(admin)}>
+                      Edit
+                    </Button>
+                    <Popconfirm
+                      title="Are you sure to delete this staff?"
+                      onConfirm={() => onDelete(admin.adminID)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button type="link" danger>
+                        Delete
+                      </Button>
+                    </Popconfirm>
+                  </div>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -83,3 +87,118 @@ const renderTable = (orders, loadingState, title) => (
     </Spin>
   </Card>
 );
+
+const Staffs = () => {
+  const [admins, setAdmins] = useState([]);
+  const [loadingState, setLoadingState] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [currentAdmin, setCurrentAdmin] = useState(null);
+
+  const fetchAdmins = () => {
+    setLoadingState(true);
+    api
+      .get("/api/admins")
+      .then((res) => {
+        const staff = res.data.filter((admin) => admin.role === "Staff");
+        setAdmins(staff);
+        setLoadingState(false);
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Failed to fetch staff members");
+        setLoadingState(false);
+      });
+  };
+
+  useEffect(() => {
+    fetchAdmins();
+  }, []);
+
+  const handleAddEdit = (values) => {
+    const isDuplicateID = admins.some(
+      (admin) =>
+        admin.adminID === values.adminID &&
+        admin.adminID !== (currentAdmin?.adminID || "")
+    );
+    const isDuplicateEmail = admins.some(
+      (admin) =>
+        admin.username === values.username &&
+        admin.username !== (currentAdmin?.username || "")
+    );
+
+    if (isDuplicateID) {
+      message.error("Mã nhân viên đã tồn tại");
+      return;
+    }
+
+    if (isDuplicateEmail) {
+      message.error("Tài khoản đã tồn tại");
+      return;
+    }
+
+    const request = currentAdmin
+      ? api.put(`/api/admins/${currentAdmin.adminID}`, values)
+      : api.post("/api/admins", { ...values, role: "Staff" });
+
+    request
+      .then(() => {
+        message.success(
+          currentAdmin
+            ? "Staff updated successfully"
+            : "Staff added successfully"
+        );
+        fetchAdmins(); // Update the list after successful add/update
+        setModalVisible(false);
+        setCurrentAdmin(null);
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Failed to save staff");
+      });
+  };
+
+  const handleDelete = (adminID) => {
+    api
+      .delete(`/api/admins/${adminID}`)
+      .then(() => {
+        message.success("Staff deleted successfully");
+        fetchAdmins();
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Failed to delete staff");
+      });
+  };
+
+  return (
+    <div className="staffs">
+      <Button
+        type="primary"
+        onClick={() => {
+          setModalVisible(true);
+          setCurrentAdmin(null);
+        }}
+        className="add-staff-button"
+      >
+        Tạo tài khoản nhân viên
+      </Button>
+      {renderTable(
+        admins,
+        loadingState,
+        (admin) => {
+          setCurrentAdmin(admin);
+          setModalVisible(true);
+        },
+        handleDelete
+      )}
+      <StaffFormModal
+        visible={modalVisible}
+        onClose={() => setModalVisible(false)}
+        onSubmit={handleAddEdit}
+        initialValues={currentAdmin}
+      />
+    </div>
+  );
+};
+
+export default Staffs;

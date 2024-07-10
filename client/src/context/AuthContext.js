@@ -11,22 +11,25 @@ const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const storedUser = Cookies.get("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    const token = Cookies.get("token");
+    const role = Cookies.get("role");
+
+    if (token && role) {
+      setUser({ token, role });
     }
   }, []);
 
-  const login = (userData) => {
-    Cookies.set("user", JSON.stringify(userData), { expires: 1 });
-    setUser(userData);
-    navigate("/"); // Navigate upon successful login
+  const login = (token, role) => {
+    Cookies.set("token", token, { expires: 1 });
+    Cookies.set("role", role, { expires: 1 });
+    setUser({ token, role });
   };
 
   const logout = () => {
-    Cookies.remove("user");
+    Cookies.remove("token");
+    Cookies.remove("role");
     setUser(null);
-    navigate("/sign-in"); // Navigate upon logout
+    navigate("/login");
   };
 
   return (

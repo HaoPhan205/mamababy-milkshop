@@ -3,97 +3,50 @@ import api from "../../config/axios";
 import { message } from "antd";
 import { Data } from "../../App";
 import { useNavigate } from "react-router-dom";
-import { useStorage } from "./useStorage";
+import Cookies from "js-cookie";
 
-const customersEndPoint = "/api/customers";
-const customerByEmailEndPoint = "/api/customers/byemail";
+const loginEndpoint = "/api/auth/logincustomer";
 
 export const useUsers = () => {
-  const { setUser, user } = useContext(Data);
-  const { saveToStorage, removeFromStorage } = useStorage();
+  const { user, setUser } = useContext(Data);
   const navigate = useNavigate();
 
-  // Function to lookup a user by email
-  const lookUpUserByEmail = async (email) => {
-    let lookedUpUser = null;
-    await api
-      .get(`${customerByEmailEndPoint}?email=${email}`)
-      .then((res) => {
-        const data = res.data;
-        if (data.length > 0) {
-          if (data[0].email === email) {
-            lookedUpUser = data[0];
-          }
-        }
-      })
-      .catch((err) => console.log(err));
+  // Function to handle user login
+  const onLogIn = async (username, password) => {
+    try {
+      const response = await api.post(loginEndpoint, { username, password });
+      const { token, customerId, customerName } = response.data;
 
-    return lookedUpUser;
-  };
+      // Set token to cookie
+      Cookies.set("token", token, { expires: 7 }); // Example: set token cookie for 7 days
+      console.log("Token set in cookie:", token);
 
-  // Function to handle user signup
-  const onSignup = async (customerName, email, password) => {
-    const isExisted = await lookUpUserByEmail(email);
-
-    if (isExisted) {
-      message.error("Email này đã tồn tại");
-    } else {
-      // Create a new user if email does not exist
-      const newUser = { customerName, email, password };
-      const response = await api.post(customersEndPoint, newUser);
-      const createdUser = response.data;
-      setUser(createdUser);
-      saveToStorage("user", createdUser);
-      message.success("Tạo tài khoản thành công");
+      // Set user context
+      setUser({ customerId, customerName });
+      console.log("User context updated:", { customerId, customerName });
+      message.success("Đăng nhập thành công");
       navigate("/");
+    } catch (error) {
+      console.error("Login error:", error);
+      message.error(
+        "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin đăng nhập."
+      );
     }
   };
 
   // Function to handle user logout
   const onLogOut = () => {
+    // Remove token cookie and clear user context
+    Cookies.remove("token");
     setUser(null);
-    removeFromStorage("user");
     message.success("Đã đăng xuất khỏi tài khoản");
     navigate("/");
   };
 
-  // Function to handle user login
-  const onLogIn = async (email, password) => {
-    const lookedUpUser = await lookUpUserByEmail(email);
-    if (lookedUpUser) {
-      const checkEmail = lookedUpUser.email === email;
-      const checkPassword = lookedUpUser.password === password;
-
-      if (checkEmail && checkPassword) {
-        setUser(lookedUpUser);
-        saveToStorage("user", lookedUpUser);
-        message.success("Đăng nhập thành công");
-        navigate("/");
-      } else {
-        message.error("Password không hợp lệ");
-      }
-    } else {
-      message.error("Username hoặc password không hợp lệ");
-    }
-  };
-
   // Function to get current user
   const getCurrUser = () => {
-    return user;
+    return user ? user.customerName : null;
   };
 
-  // Function to get all users (not typically used in frontend, consider security implications)
-  const getAllUsers = (setData, setLoading) => {
-    setLoading(true);
-    api
-      .get(customersEndPoint)
-      .then((res) => setData(res.data))
-      .catch((err) => {
-        console.error("Error fetching users:", err);
-        message.error("Error fetching user data");
-      })
-      .finally(() => setLoading(false));
-  };
-
-  return { onSignup, getCurrUser, onLogOut, onLogIn, getAllUsers };
+  return { onLogIn, onLogOut, getCurrUser };
 };

@@ -8,6 +8,9 @@
 }
 
 .table-container {
+  max-height: 600px;
+  overflow-y: auto;
+
   .MuiTableCell-root {
     text-align: center;
     vertical-align: middle;
@@ -41,4 +44,14 @@
 .add-staff-button {
   display: block;
   margin-bottom: 20px;
+}
+
+.table-container {
+  max-height: 600px; /* Điều chỉnh chiều cao tối đa của khu vực cuộn */
+  overflow-y: scroll; /* Kích hoạt thanh cuộn dọc, ngay cả khi nội dung không đầy đủ */
+}
+
+.parent-element {
+  // Loại bỏ overflow: hidden nếu có
+  overflow: visible;
 }

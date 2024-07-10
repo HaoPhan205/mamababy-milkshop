@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import "./ProductCard.scss";
-import { Card, Modal, Button } from "antd";
+import { Card, Modal, Button, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 function ProductCard({ product, onClick, onAddToCart }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
@@ -21,12 +22,27 @@ function ProductCard({ product, onClick, onAddToCart }) {
   };
 
   const handleAddToCart = () => {
-    // Check if the user is logged in
-    const isLoggedIn = false; // Replace with your logic to check login status
-    if (!isLoggedIn) {
+    const token = Cookies.get("token"); // Lấy token từ cookie
+
+    if (!token) {
       showModal();
     } else {
-      onAddToCart();
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      const existingProduct = cart.find(
+        (item) => item.productItemId === product.productItemId
+      );
+
+      if (existingProduct) {
+        message.warning("Sản phẩm đã có trong giỏ hàng.");
+        return;
+      }
+
+      // Thêm sản phẩm vào giỏ hàng
+      cart.push(product);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      message.success("Đã thêm sản phẩm vào giỏ hàng.");
     }
   };
 

@@ -9,25 +9,17 @@ import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
 import { Avatar, Badge, Button, Dropdown, Space } from "antd";
 import React, { useState } from "react";
+import Cookies from "js-cookie";
+import { useUsers } from "../../../Services/Hooks/useUsers";
 
 function Header({ collapsed, toggleCollapsed }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [searchRedirect, setSearchRedirect] = useState(false);
-
-  const contentStyle = {
-    // Define your content style if needed
-  };
-
-  const menuStyle = {
-    // Define your menu style if needed
-  };
-
-  const phoneNumber = "0354019580";
+  const { getCurrUser, onLogOut } = useUsers();
 
   const handleLogout = async () => {
-    // Implement your logout logic here
-    navigate("/sign-in");
+    onLogOut();
   };
 
   const handleShoppingCart = () => {
@@ -37,6 +29,8 @@ function Header({ collapsed, toggleCollapsed }) {
   const handleSearch = () => {
     setSearchRedirect(true);
   };
+
+  const phoneNumber = "0354019580";
 
   const items = [
     {
@@ -68,6 +62,8 @@ function Header({ collapsed, toggleCollapsed }) {
       ),
     },
   ];
+
+  const currentUser = getCurrUser();
 
   return (
     <header className="header">
@@ -107,15 +103,13 @@ function Header({ collapsed, toggleCollapsed }) {
           />
         </Badge>
         <div className="header__signin" aria-label="Authentication Options">
-          {/* Example of conditional rendering based on authentication */}
-          {/* Replace with your authentication logic */}
-          {false ? (
+          {currentUser ? (
             <Dropdown
               menu={{
                 items,
               }}
               dropdownRender={(menu) => (
-                <div style={contentStyle}>
+                <div>
                   <Space
                     style={{
                       padding: 8,
@@ -136,13 +130,11 @@ function Header({ collapsed, toggleCollapsed }) {
                         style={{ width: "2.5em", height: "2.5em" }}
                       />
                       <div>
-                        <h5>{""}</h5>
+                        <h5>{currentUser.customerName}</h5>
                       </div>
                     </div>
                   </Space>
-                  {React.cloneElement(menu, {
-                    style: menuStyle,
-                  })}
+                  {React.cloneElement(menu, {})}
                 </div>
               )}
             >

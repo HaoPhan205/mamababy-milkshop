@@ -1,14 +1,16 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import Logo from "../../Assets/LOGO.png";
 import { UilSignOutAlt, UilBars } from "@iconscout/react-unicons";
 import { SidebarData } from "./Data/Data";
 import { motion, AnimatePresence } from "framer-motion";
+import Cookies from "js-cookie";
 
 const Sidebar = () => {
   const [selected, setSelected] = useState(0);
   const [expanded, setExpanded] = useState(true);
+  const navigate = useNavigate();
 
   const sidebarVariants = {
     true: {
@@ -17,6 +19,12 @@ const Sidebar = () => {
     false: {
       left: "-60%",
     },
+  };
+
+  const handleLogout = () => {
+    Cookies.remove("token");
+    Cookies.remove("role");
+    navigate("/sign-in");
   };
 
   return (
@@ -62,7 +70,7 @@ const Sidebar = () => {
                 );
               })}
               {/* signoutIcon */}
-              <div className="menuItem">
+              <div className="menuItem" onClick={handleLogout}>
                 <UilSignOutAlt />
               </div>
             </div>
