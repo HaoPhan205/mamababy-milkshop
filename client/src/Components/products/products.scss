@@ -20,12 +20,9 @@
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 10px;
-
   }
 
   &__card {
-
-
     .product-card-image {
       display: flex;
       justify-content: center;
@@ -57,7 +54,6 @@
     .product-price {
       margin-top: 10px;
       font-weight: bold;
-
     }
 
     .products-info {

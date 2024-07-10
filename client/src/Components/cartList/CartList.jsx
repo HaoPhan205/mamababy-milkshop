@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Input, List, message, Typography } from "antd";
 import { CloseOutlined } from "@ant-design/icons";
 import "./CartList.scss";
+import Cookies from "js-cookie";
 
 const { Title, Text } = Typography;
 
@@ -33,6 +34,18 @@ function CartList() {
     });
     setCartItems(updatedCart);
     localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+
+  const clearCart = () => {
+    // Clear cart items state
+    setCartItems([]);
+    // Remove cart from localStorage
+    localStorage.removeItem("cart");
+    // Display a message
+    message.warn(
+      "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại để tiếp tục mua sắm.",
+      5 // duration in seconds
+    );
   };
 
   return (

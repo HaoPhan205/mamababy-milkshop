@@ -1,154 +1,93 @@
-import React, { useState } from "react";
-import { Form, Input, Button, Select, Tabs, Card, Typography } from "antd";
+import React, { useState, useEffect } from "react";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Tabs,
+  Card,
+  Typography,
+  message,
+} from "antd";
 import "./PaymentForm.scss";
+import api from "../../config/axios";
+import { Data } from "../../App";
+import { useContext } from "react";
 
 const { TabPane } = Tabs;
 const { Option } = Select;
-const { Title, Text } = Typography;
+const { Title } = Typography;
 
-const PaymentForm = () => {
+const PaymentForm = ({ totalPrice }) => {
   const [form] = Form.useForm();
   const [paymentMethod, setPaymentMethod] = useState("creditCard");
+  const { user } = useContext(Data);
+  const [totalAmount, setTotalAmount] = useState(totalPrice);
+
+  useEffect(() => {
+    setTotalAmount(totalPrice);
+  }, [totalPrice]);
 
   const handlePaymentMethodChange = (key) => {
     setPaymentMethod(key);
   };
 
-  const onFinish = (values) => {
-    console.log("Received values: ", values);
+  const onFinish = async (values) => {
+    try {
+      const orderData = {
+        orderId: user.customerId,
+        customerId: user.customerId,
+        deliveryManId: 1,
+        orderDate: new Date().toISOString(),
+        shippingAddress: values.shippingAddress,
+        totalAmount: totalAmount,
+        storageId: 1,
+        deliveryName: "DeliveryMan A",
+        deliveryPhone: values.deliveryPhone,
+        paymentMethod: paymentMethod,
+        status: "Pending",
+      };
+
+      const orderResponse = await api.post("/api/orders", orderData);
+      console.log("Order submitted:", orderResponse.data);
+      message.success("Order placed successfully!");
+
+      const paymentResponse = await api.post("/api/VNPay/payment", {
+        totalAmount: totalAmount,
+        customerId: user.customerId,
+      });
+      const paymentLink = paymentResponse.data.paymentLink;
+      window.location.href = paymentLink;
+    } catch (error) {
+      console.error("Error submitting order:", error);
+      message.error("Failed to place order. Please try again later.");
+    }
   };
 
   return (
-    <Card className="payment-form" title="Select Payment Method">
+    <Card className="payment-form" title="Choose Payment Method">
       <Form form={form} onFinish={onFinish} layout="vertical">
         <Tabs
           defaultActiveKey="creditCard"
           onChange={handlePaymentMethodChange}
         >
-          <TabPane tab="Credit/Debit Card" key="creditCard">
-            <Form.Item
-              name="holderName"
-              label="Holder Name"
-              rules={[
-                { required: true, message: "Please enter the holder name" },
-              ]}
-            >
-              <Input placeholder="Enter Holder Name" />
-            </Form.Item>
-            <Form.Item
-              name="cardNumber"
-              label="Card Number"
-              rules={[
-                { required: true, message: "Please enter the card number" },
-              ]}
-            >
-              <Input placeholder="Card #" />
-            </Form.Item>
-            <Form.Item
-              name="expirationMonth"
-              label="Expiration Month"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select the expiration month",
-                },
-              ]}
-            >
-              <Select placeholder="Month">
-                {Array.from({ length: 12 }, (_, i) => (
-                  <Option key={i + 1} value={i + 1}>
-                    {i + 1}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="expirationYear"
-              label="Expiration Year"
-              rules={[
-                {
-                  required: true,
-                  message: "Please select the expiration year",
-                },
-              ]}
-            >
-              <Select placeholder="Year">
-                {Array.from({ length: 21 }, (_, i) => (
-                  <Option key={i + 2024} value={i + 2024}>
-                    {i + 2024}
-                  </Option>
-                ))}
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="cvc"
-              label="CVC"
-              rules={[{ required: true, message: "Please enter the CVC" }]}
-            >
-              <Input placeholder="CVC" />
-            </Form.Item>
-          </TabPane>
-          <TabPane tab="🏦 Bank Transfer" key="bankTransfer">
-            <Form.Item
-              name="accountHolderName"
-              label="Account Holder Name"
-              rules={[
-                {
-                  required: true,
-                  message: "Please enter the account holder name",
-                },
-              ]}
-            >
-              <Input placeholder="Enter Your Full Name" />
-            </Form.Item>
-            <Form.Item
-              name="accountNumber"
-              label="Account Number"
-              rules={[
-                { required: true, message: "Please enter the account number" },
-              ]}
-            >
-              <Input placeholder="Enter Account Number" />
-            </Form.Item>
-            <Form.Item
-              name="bankName"
-              label="Bank Name"
-              rules={[
-                { required: true, message: "Please select the bank name" },
-              ]}
-            >
-              <Select placeholder="State Bank of India">
-                <Option value="State Bank of India">State Bank of India</Option>
-              </Select>
-            </Form.Item>
-            <Form.Item
-              name="ifscCode"
-              label="IFSC Code"
-              rules={[
-                { required: true, message: "Please enter the IFSC code" },
-              ]}
-            >
-              <Input placeholder="Enter IFSC Code" />
-            </Form.Item>
-          </TabPane>
-
-          <TabPane tab="VNPAY" key="paypal">
+          <TabPane tab="VNPay" key="vnpay">
             <p>
-              After payment via PayPal's secure checkout, we will send you a
-              link to download your files.
+              After payment via VNPay, we will send you a link to download your
+              file.
             </p>
+            <Title level={4}>Total Amount: {totalAmount} VNĐ</Title>
           </TabPane>
+          {/* Other payment methods tabs */}
         </Tabs>
-        <Button type="primary" onClick={() => form.submit()}>
-          VNPAY
-        </Button>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit">
+            Place Order
+          </Button>
+        </Form.Item>
       </Form>
-      <div className="order-details">
-        <Title level={3}>Order Details</Title>
-        <Text>Baby Plan: $49</Text>
-        <Text>Taxes(GST): $2</Text>
-        <Title level={4}>Total: $51</Title>
-      </div>
+      <div className="order-details"></div>
     </Card>
   );
 };

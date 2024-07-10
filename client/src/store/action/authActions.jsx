@@ -5,13 +5,13 @@ import { auth } from "../../config/firebase";
 import { toast } from "react-toastify";
 
 export const login = createAsyncThunk(
-  "auth/login",
+  "api/auth/logincustomer",
   async (credentials, { rejectWithValue }) => {
     try {
       const response = await api.post("/api/auth/login", credentials);
       const { token, email, role } = response.data;
       localStorage.setItem("token", token);
-      toast.success("Login successful");
+      toast.success("Đăng nhập thành công");
       return { token, email, role };
     } catch (error) {
       if (error.response && error.response.status === 401) {

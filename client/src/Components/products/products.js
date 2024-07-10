@@ -3,7 +3,6 @@ import "./products.scss";
 import { Row, Col, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
-import { ShoppingCartOutlined } from "@ant-design/icons";
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
 
@@ -15,7 +14,6 @@ const Products = ({ user }) => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {

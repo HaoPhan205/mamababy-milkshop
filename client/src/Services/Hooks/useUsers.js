@@ -15,7 +15,7 @@ export const useUsers = () => {
   const onLogIn = async (username, password) => {
     try {
       const response = await api.post(loginEndpoint, { username, password });
-      const { token, customerId, customerName } = response.data;
+      const { token, customerName, customerId } = response.data;
 
       // Set token to cookie
       Cookies.set("token", token, { expires: 7 }); // Example: set token cookie for 7 days
@@ -40,6 +40,7 @@ export const useUsers = () => {
     Cookies.remove("token");
     setUser(null);
     message.success("Đã đăng xuất khỏi tài khoản");
+
     navigate("/");
   };
 

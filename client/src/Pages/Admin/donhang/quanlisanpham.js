@@ -53,6 +53,89 @@ const renderImages = (image1, image2, image3) => (
   </Row>
 );
 
+const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
+  <Card title="Danh sách sản phẩm" style={{ marginBottom: 20 }}>
+    <Spin spinning={loadingState}>
+      <TableContainer
+        component={Paper}
+        className="table-container"
+        sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
+      >
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Mã đơn hàng</TableCell>
+              <TableCell align="left">Tên đơn hàng</TableCell>
+              <TableCell align="left">Đối tượng sử dụng</TableCell>
+              <TableCell align="left">Giá</TableCell>
+              <TableCell align="left">Đã bán</TableCell>
+              <TableCell align="left">Lượng hàng</TableCell>
+              <TableCell align="left">Actions</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products.map((product) => (
+              <TableRow key={product.productItemId}>
+                <TableCell>{product.productItemId}</TableCell>
+                <TableCell>{product.itemName}</TableCell>
+                <TableCell>
+                  {product.baby ? (
+                    <>
+                      trẻ từ <br />
+                      {product.baby}
+                    </>
+                  ) : product.mama ? (
+                    <>
+                      mẹ bầu <br />
+                      {product.mama}
+                    </>
+                  ) : (
+                    "N/A"
+                  )}
+                </TableCell>
+                <TableCell>{product.price}</TableCell>
+                <TableCell>{product.soldQuantity}</TableCell>
+                <TableCell>
+                  <span
+                    className="status"
+                    style={makeStyle(product.stockQuantity)}
+                  >
+                    {product.stockQuantity === 0
+                      ? "Hết hàng"
+                      : product.soldQuantity}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="action-buttons">
+                    <Button
+                      type="link"
+                      icon={<EyeOutlined />}
+                      onClick={() => onView(product)}
+                    />
+                    <Button
+                      type="link"
+                      icon={<EditOutlined />}
+                      onClick={() => onEdit(product)}
+                    />
+                    <Popconfirm
+                      title="Are you sure to delete this product?"
+                      onConfirm={() => onDelete(product.productItemId)}
+                      okText="Yes"
+                      cancelText="No"
+                    >
+                      <Button type="link" icon={<DeleteOutlined />} danger />
+                    </Popconfirm>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Spin>
+  </Card>
+);
+
 const Staffs = () => {
   const [products, setProducts] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
@@ -102,20 +185,14 @@ const Staffs = () => {
   };
 
   const filteredProducts = searchText
-    ? products.filter((product) => {
-        const lowerCaseSearch = searchText.toLowerCase();
-        return (
-          product.productItemId.toLowerCase().includes(lowerCaseSearch) ||
-          product.itemName.toLowerCase().includes(lowerCaseSearch) ||
-          product.price.toString().includes(lowerCaseSearch) ||
-          product.stockQuantity.toString().includes(lowerCaseSearch)
-        );
-      })
+    ? products.filter(
+        (product) =>
+          product.productItemId.toLowerCase().includes(searchText) ||
+          product.itemName.toLowerCase().includes(searchText) ||
+          product.price.toString().includes(searchText) ||
+          product.stockQuantity.toString().includes(searchText)
+      )
     : products;
-
-  const startIndex = page * rowsPerPage;
-  const endIndex = startIndex + rowsPerPage;
-  const paginatedProducts = filteredProducts.slice(startIndex, endIndex);
 
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
@@ -125,6 +202,11 @@ const Staffs = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const paginatedProducts = filteredProducts.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
 
   const handleAddEdit = (values) => {
     const { productItemId } = values;
@@ -177,92 +259,6 @@ const Staffs = () => {
     fetchProductDetail(product.productItemId);
   };
 
-  const renderTable = () => (
-    <Card title="Danh sách sản phẩm" style={{ marginBottom: 20 }}>
-      <Spin spinning={loadingState}>
-        <TableContainer
-          component={Paper}
-          className="table-container"
-          sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
-        >
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Mã đơn hàng</TableCell>
-                <TableCell align="left">Tên đơn hàng</TableCell>
-                <TableCell align="left">Đối tượng sử dụng</TableCell>
-                <TableCell align="left">Giá</TableCell>
-                <TableCell align="left">Đã bán</TableCell>
-                <TableCell align="left">Lượng hàng</TableCell>
-                <TableCell align="left">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedProducts.map((product) => (
-                <TableRow key={product.productItemId}>
-                  <TableCell>{product.productItemId}</TableCell>
-                  <TableCell>{product.itemName}</TableCell>
-                  <TableCell>
-                    {product.baby ? (
-                      <>
-                        trẻ từ <br />
-                        {product.baby}
-                      </>
-                    ) : product.mama ? (
-                      <>
-                        mẹ bầu <br />
-                        {product.mama}
-                      </>
-                    ) : (
-                      "N/A"
-                    )}
-                  </TableCell>
-                  <TableCell>{product.price}</TableCell>
-                  <TableCell>{product.soldQuantity}</TableCell>
-                  <TableCell>
-                    <span
-                      className="status"
-                      style={makeStyle(product.stockQuantity)}
-                    >
-                      {product.stockQuantity === 0
-                        ? "Hết hàng"
-                        : product.soldQuantity}
-                    </span>
-                  </TableCell>
-                  <TableCell>
-                    <div className="action-buttons">
-                      <Button
-                        type="link"
-                        icon={<EyeOutlined />}
-                        onClick={() => handleView(product)}
-                      />
-                      <Button
-                        type="link"
-                        icon={<EditOutlined />}
-                        onClick={() => {
-                          setCurrentProduct(product);
-                          setModalVisible(true);
-                        }}
-                      />
-                      <Popconfirm
-                        title="Are you sure to delete this product?"
-                        onConfirm={() => handleDelete(product.productItemId)}
-                        okText="Yes"
-                        cancelText="No"
-                      >
-                        <Button type="link" icon={<DeleteOutlined />} danger />
-                      </Popconfirm>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Spin>
-    </Card>
-  );
-
   return (
     <div className="staffs">
       <Input.Search
@@ -271,7 +267,16 @@ const Staffs = () => {
         onSearch={handleSearch}
         style={{ width: 400, marginBottom: 20 }}
       />
-      {renderTable()}
+      {renderTable(
+        paginatedProducts,
+        loadingState,
+        (product) => {
+          setCurrentProduct(product);
+          setModalVisible(true);
+        },
+        handleDelete,
+        handleView
+      )}
       <TablePagination
         rowsPerPageOptions={[10, 20, 50]}
         component="div"
@@ -311,34 +316,40 @@ const Staffs = () => {
             </p>
             <p>
               <strong>Lượng hàng:</strong>{" "}
-              <span
-                className="status"
-                style={makeStyle(selectedProduct.stockQuantity)}
-              >
+              <span style={makeStyle(selectedProduct.stockQuantity)}>
                 {selectedProduct.stockQuantity === 0
                   ? "Hết hàng"
                   : selectedProduct.stockQuantity}
               </span>
             </p>
             <p>
-              <strong>Hình ảnh:</strong>{" "}
-              {renderImages(
-                selectedProduct.image1,
-                selectedProduct.image2,
-                selectedProduct.image3
-              )}
+              <strong>Thương hiệu:</strong> {selectedProduct.brandName}
             </p>
+            <p>
+              <strong>Xuất xứ:</strong> {selectedProduct.countryName}
+            </p>
+            <p>
+              <strong>Công ty sản xuất:</strong> {selectedProduct.companyName}
+            </p>
+            <p>
+              <strong>Mô tả:</strong> {selectedProduct.description}
+            </p>
+            <p>
+              <strong>Lợi ích:</strong> {selectedProduct.benefit}
+            </p>
+            {renderImages(
+              selectedProduct.image1,
+              selectedProduct.image2,
+              selectedProduct.image3
+            )}
           </div>
         )}
       </Modal>
       <StaffFormModal
         visible={modalVisible}
-        onCancel={() => {
-          setModalVisible(false);
-          setCurrentProduct(null);
-        }}
+        onClose={() => setModalVisible(false)}
         onSubmit={handleAddEdit}
-        product={currentProduct}
+        initialValues={currentProduct}
       />
     </div>
   );

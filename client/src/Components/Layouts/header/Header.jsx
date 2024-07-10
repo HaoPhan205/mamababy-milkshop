@@ -7,15 +7,15 @@ import {
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
-import { Avatar, Badge, Button, Dropdown, Space } from "antd";
+import { Avatar, Badge, Button, Dropdown, Space, message } from "antd";
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { useUsers } from "../../../Services/Hooks/useUsers";
+import api from "../../../config/axios";
 
 function Header({ collapsed, toggleCollapsed }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchRedirect, setSearchRedirect] = useState(false);
   const { getCurrUser, onLogOut } = useUsers();
 
   const handleLogout = async () => {
@@ -26,25 +26,42 @@ function Header({ collapsed, toggleCollapsed }) {
     navigate("/shoppingCart");
   };
 
-  const handleSearch = () => {
-    setSearchRedirect(true);
-  };
+  const handleSearch = async () => {
+    if (searchTerm.trim() === "") {
+      message.warning("Vui lòng nhập từ khóa tìm kiếm");
+      return;
+    }
 
+    try {
+      const response = await api.get(`/api/productitems/search`, {
+        params: { query: searchTerm },
+      });
+
+      if (response.data && response.data.length > 0) {
+        navigate("/cua-hang", { state: { products: response.data } });
+      } else {
+        message.warning("Không tìm thấy sản phẩm nào");
+      }
+    } catch (error) {
+      console.error("Lỗi tìm kiếm:", error);
+      message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
+    }
+  };
   const phoneNumber = "0354019580";
 
   const items = [
-    {
-      key: "1",
-      label: <a href="/user-dashboard">Dashboard</a>,
-    },
-    {
-      key: "2",
-      label: <a href="/thongtin">Thông tin tài khoản</a>,
-    },
-    {
-      key: "3",
-      label: <a href="/settings">Đơn mua</a>,
-    },
+    // {
+    //   key: "1",
+    //   label: <a href="/user-dashboard">Dashboard</a>,
+    // },
+    // {
+    //   key: "2",
+    //   label: <a href="/thongtin">Thông tin tài khoản</a>,
+    // },
+    // {
+    //   key: "3",
+    //   label: <a href="/settings">Đơn mua</a>,
+    // },
     {
       key: "4",
       label: (
@@ -77,13 +94,15 @@ function Header({ collapsed, toggleCollapsed }) {
           placeholder="Ba mẹ muốn tìm mua gì hôm nay ?"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onPressEnter={handleSearch}
-          addonAfter={
-            <SearchOutlined
-              onClick={handleSearch}
-              style={{ cursor: "pointer" }}
-            />
-          }
+          onKeyPress={(e) => {
+            if (e.key === "Enter") {
+              handleSearch();
+            }
+          }}
+        />
+        <SearchOutlined
+          onClick={handleSearch}
+          style={{ cursor: "pointer", fontSize: "1.5em", marginLeft: "0.5em" }}
         />
       </div>
       <div className="header__free">

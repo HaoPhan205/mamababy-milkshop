@@ -1,5 +1,5 @@
 .carousel-container {
-  max-width: 80%;
+  max-width: 100%;
   margin: auto;
   position: relative;
   overflow: hidden;
@@ -7,9 +7,9 @@
 }
 
 .carousel-content img {
-  width: 100%;
+  width: 80%;
   display: block;
-  height: 500px;
+  height: 400px;
   object-fit: cover;
 }
 

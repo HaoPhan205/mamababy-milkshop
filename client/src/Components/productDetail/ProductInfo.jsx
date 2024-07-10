@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Button, Card, Col, Row, Typography, InputNumber, Modal } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Row,
+  Typography,
+  InputNumber,
+  Modal,
+  message,
+} from "antd";
 import Slider from "react-slick";
 import api from "../../config/axios";
 import "./ProductInfo.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate, useParams } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const { Title, Paragraph } = Typography;
 
@@ -50,24 +60,54 @@ const ProductInfo = () => {
   };
 
   const handleAddToCart = () => {
-    if (!isLoggedIn()) {
+    const token = Cookies.get("token"); // Lấy token từ cookie
+
+    if (!token) {
       showModal();
     } else {
-      // Add to cart logic here
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      const existingProduct = cart.find(
+        (item) => item.productItemId === product.productItemId
+      );
+
+      if (existingProduct) {
+        existingProduct.quantity += quantity; // Cập nhật số lượng
+      } else {
+        // Thêm sản phẩm vào giỏ hàng với số lượng được chọn
+        cart.push({ ...product, quantity });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      message.success("Đã thêm sản phẩm vào giỏ hàng.");
     }
   };
 
   const handleBuyNow = () => {
-    if (!isLoggedIn()) {
+    const token = Cookies.get("token"); // Lấy token từ cookie
+
+    if (!token) {
       showModal();
     } else {
-      // Buy now logic here
-    }
-  };
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-  const isLoggedIn = () => {
-    // Replace with actual login check logic
-    return false;
+      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
+      const existingProduct = cart.find(
+        (item) => item.productItemId === product.productItemId
+      );
+
+      if (existingProduct) {
+        existingProduct.quantity += quantity; // Cập nhật số lượng
+      } else {
+        // Thêm sản phẩm vào giỏ hàng với số lượng được chọn
+        cart.push({ ...product, quantity });
+      }
+
+      localStorage.setItem("cart", JSON.stringify(cart));
+      message.success("Đã thêm sản phẩm vào giỏ hàng.");
+      navigate("/shoppingCart");
+    }
   };
 
   const showModal = () => {

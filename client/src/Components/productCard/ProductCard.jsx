@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 function ProductCard({ product, onClick, onAddToCart }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
+  const [quantity, setQuantity] = useState(1);
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -35,14 +36,16 @@ function ProductCard({ product, onClick, onAddToCart }) {
       );
 
       if (existingProduct) {
-        message.warning("Sản phẩm đã có trong giỏ hàng.");
-        return;
+        // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
+        existingProduct.quantity += quantity;
+        message.success("Đã cập nhật số lượng sản phẩm trong giỏ hàng.");
+      } else {
+        // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm vào giỏ hàng với số lượng được chọn
+        cart.push({ ...product, quantity });
+        message.success("Đã thêm sản phẩm vào giỏ hàng.");
       }
 
-      // Thêm sản phẩm vào giỏ hàng
-      cart.push(product);
       localStorage.setItem("cart", JSON.stringify(cart));
-      message.success("Đã thêm sản phẩm vào giỏ hàng.");
     }
   };
 
