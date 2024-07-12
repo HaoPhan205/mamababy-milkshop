@@ -1,5 +1,5 @@
 .staffs {
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 :where(.css-dev-only-do-not-override-98ntnt).ant-btn-primary {
@@ -21,7 +21,8 @@
   }
 
   .MuiTableBody-root .MuiTableCell-root {
-    padding: 8px 16px;
+    padding: 6px 12px;
+    font-size: 12px;
   }
 
   .MuiTableRow-root:hover {
@@ -37,7 +38,7 @@
   .action-buttons {
     display: flex;
     justify-content: center;
-    gap: 8px;
+    gap: 0 px;
   }
 }
 
@@ -46,12 +47,22 @@
   margin-bottom: 20px;
 }
 
-.table-container {
-  max-height: 600px; /* Điều chỉnh chiều cao tối đa của khu vực cuộn */
-  overflow-y: scroll; /* Kích hoạt thanh cuộn dọc, ngay cả khi nội dung không đầy đủ */
-}
-
 .parent-element {
   // Loại bỏ overflow: hidden nếu có
-  overflow: visible;
+  overflow: hidden;
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-card .ant-card-head {
+  min-height: 40px;
+  padding: 0 15px;
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-card .ant-card-body {
+  padding: 15px;
+}
+
+.MuiTablePagination-root {
+  position: absolute;
+  top: 40px;
+  right: 110px;
 }

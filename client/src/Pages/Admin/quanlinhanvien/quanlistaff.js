@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import api from "../../../config/axios";
 import StaffFormModal from "./StaffFormModal";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
 const makeStyle = (role) => {
   switch (role) {
@@ -64,7 +65,11 @@ const renderTable = (admins, loadingState, onEdit, onDelete) => (
                 </TableCell>
                 <TableCell>
                   <div className="action-buttons">
-                    <Button type="link" onClick={() => onEdit(admin)}>
+                    <Button
+                      type="link"
+                      icon={<EditOutlined />}
+                      onClick={() => onEdit(admin)}
+                    >
                       Edit
                     </Button>
                     <Popconfirm
@@ -73,7 +78,7 @@ const renderTable = (admins, loadingState, onEdit, onDelete) => (
                       okText="Yes"
                       cancelText="No"
                     >
-                      <Button type="link" danger>
+                      <Button type="link" danger icon={<DeleteOutlined />}>
                         Delete
                       </Button>
                     </Popconfirm>
@@ -115,6 +120,8 @@ const Staffs = () => {
   }, []);
 
   const handleAddEdit = (values) => {
+    console.log("Form Values:", values);
+
     const isDuplicateID = admins.some(
       (admin) =>
         admin.adminID === values.adminID &&
@@ -136,24 +143,41 @@ const Staffs = () => {
       return;
     }
 
+    if (
+      currentAdmin &&
+      currentAdmin.adminID === values.adminID &&
+      currentAdmin.username === values.username &&
+      currentAdmin.password === values.password &&
+      currentAdmin.role === values.role
+    ) {
+      message.warning("Không có thay đổi nào được thực hiện");
+      return;
+    }
+
     const request = currentAdmin
-      ? api.put(`/api/admins/${currentAdmin.adminID}`, values)
+      ? api.put(`/api/admins/${currentAdmin.adminID}`, {
+          adminID: values.adminID,
+          username: values.username,
+          password: values.password,
+          role: values.role,
+        })
       : api.post("/api/admins", { ...values, role: "Staff" });
 
     request
-      .then(() => {
+      .then((response) => {
+        console.log("Response:", response);
         message.success(
           currentAdmin
-            ? "Staff updated successfully"
-            : "Staff added successfully"
+            ? "Cập nhật tài khoản nhân viên thành công"
+            : "Thêm tài khoản nhân viên thành công"
         );
-        fetchAdmins(); // Update the list after successful add/update
+        fetchAdmins();
         setModalVisible(false);
         setCurrentAdmin(null);
       })
       .catch((err) => {
-        console.error(err);
-        message.error("Failed to save staff");
+        console.error("Request Error:", err);
+        message.error("Lưu thất bại");
       });
   };
 
@@ -161,12 +185,12 @@ const Staffs = () => {
     api
       .delete(`/api/admins/${adminID}`)
       .then(() => {
-        message.success("Staff deleted successfully");
+        message.success("Đã xoá tài khoản nhân viên");
         fetchAdmins();
       })
       .catch((err) => {
         console.error(err);
-        message.error("Failed to delete staff");
+        message.error("Xoá không thành công");
       });
   };
 

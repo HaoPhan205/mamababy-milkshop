@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_URL } from "../constants/index";
+import Cookies from "js-cookie";
 
 const config = {
   baseURL: API_URL,
@@ -7,13 +8,15 @@ const config = {
   timeout: 30000,
 };
 const api = axios.create(config);
+
 const handleRequest = (config) => {
-  const token = localStorage.getItem("token");
+  const token = Cookies.get("token");
   if (token) {
     config.headers["Authorization"] = `Bearer ${token}`;
   }
   return config;
 };
+
 const handleRequestError = (error) => {
   return Promise.reject(error);
 };

@@ -1,1 +1,1 @@
-export const API_URL = "https://babymamamilkstore1.azurewebsites.net/";
+export const API_URL = "https://milkstoreapi.azurewebsites.net/";

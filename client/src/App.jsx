@@ -1,7 +1,6 @@
 import React, { createContext, useState } from "react";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./Routes/router";
-
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import { useStorage } from "./Services/Hooks/useStorage";

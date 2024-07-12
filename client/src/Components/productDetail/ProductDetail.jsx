@@ -54,7 +54,7 @@ const ProductDetail = () => {
         <Paragraph style={{ color: "black" }}>{product?.companyName}</Paragraph>
       </div>
       <div className="description">
-        <Title level={2}>Quốc gia: </Title>
+        <Title level={2}>Xuất xứ: </Title>
         <Paragraph style={{ color: "black" }}>{product?.countryName}</Paragraph>
       </div>
     </div>

@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import api from "../../config/axios";
 import { message } from "antd";
 import { Data } from "../../App";
@@ -10,6 +10,13 @@ const loginEndpoint = "/api/auth/logincustomer";
 export const useUsers = () => {
   const { user, setUser } = useContext(Data);
   const navigate = useNavigate();
+  useEffect(() => {
+    // Load user data from localStorage when the component mounts
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, [setUser]);
 
   // Function to handle user login
   const onLogIn = async (username, password) => {
@@ -22,7 +29,10 @@ export const useUsers = () => {
       console.log("Token set in cookie:", token);
 
       // Set user context
-      setUser({ customerId, customerName });
+      const userData = { customerName, customerId };
+      setUser(userData);
+      localStorage.setItem("user", JSON.stringify(userData));
+
       console.log("User context updated:", { customerId, customerName });
       message.success("Đăng nhập thành công");
       navigate("/");
@@ -34,17 +44,15 @@ export const useUsers = () => {
     }
   };
 
-  // Function to handle user logout
   const onLogOut = () => {
-    // Remove token cookie and clear user context
     Cookies.remove("token");
     setUser(null);
+    localStorage.removeItem("user");
     message.success("Đã đăng xuất khỏi tài khoản");
 
     navigate("/");
   };
 
-  // Function to get current user
   const getCurrUser = () => {
     return user ? user.customerName : null;
   };

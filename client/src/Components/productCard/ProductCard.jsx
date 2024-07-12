@@ -23,7 +23,7 @@ function ProductCard({ product, onClick, onAddToCart }) {
   };
 
   const handleAddToCart = () => {
-    const token = Cookies.get("token"); // Lấy token từ cookie
+    const token = Cookies.get("token");
 
     if (!token) {
       showModal();

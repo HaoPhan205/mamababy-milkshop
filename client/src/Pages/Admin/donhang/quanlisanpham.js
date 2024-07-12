@@ -42,13 +42,13 @@ const makeStyle = (stockQuantity) => {
 const renderImages = (image1, image2, image3) => (
   <Row gutter={[16, 16]}>
     <Col span={8}>
-      <img src={image1} alt="Product Image 1" style={{ width: "100%" }} />
+      <img src={image1} alt="Hinh anh 1" style={{ width: "100%" }} />
     </Col>
     <Col span={8}>
-      <img src={image2} alt="Product Image 2" style={{ width: "100%" }} />
+      <img src={image2} alt="Hinh anh 2" style={{ width: "100%" }} />
     </Col>
     <Col span={8}>
-      <img src={image3} alt="Product Image 3" style={{ width: "100%" }} />
+      <img src={image3} alt="Hinh anh 3" style={{ width: "100%" }} />
     </Col>
   </Row>
 );
@@ -64,10 +64,10 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Mã đơn hàng</TableCell>
-              <TableCell align="left">Tên đơn hàng</TableCell>
+              <TableCell>Mã</TableCell>
+              <TableCell align="left">Tên sản phẩm</TableCell>
               <TableCell align="left">Đối tượng sử dụng</TableCell>
-              <TableCell align="left">Giá</TableCell>
+              <TableCell align="left">Giá (VNĐ)</TableCell>
               <TableCell align="left">Đã bán</TableCell>
               <TableCell align="left">Lượng hàng</TableCell>
               <TableCell align="left">Actions</TableCell>
@@ -81,12 +81,12 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
                 <TableCell>
                   {product.baby ? (
                     <>
-                      trẻ từ <br />
+                      Trẻ từ {/* <br /> */}
                       {product.baby}
                     </>
                   ) : product.mama ? (
                     <>
-                      mẹ bầu <br />
+                      Mẹ bầu {/* <br /> */}
                       {product.mama}
                     </>
                   ) : (

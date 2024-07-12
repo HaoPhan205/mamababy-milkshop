@@ -4,7 +4,7 @@
   --black: #242d49;
   --gray: #788097;
   --purple: linear-gradient(180deg, #bb67ff 0%, #c484f3 100%);
-  --pink: #ff919d;
+  --pink: #ff469e;
   --glass: rgba(255, 255, 255, 0.54);
   --boxShadow: 0px 19px 60px rgb(0 0 0 / 8%);
   --smboxShadow: -79px 51px 60px rgba(0, 0, 0, 0.08);
@@ -12,13 +12,13 @@
 }
 
 .Admin {
-  /* padding: 0.5rem 3.5rem; */
+  padding: 0.5rem 1rem;
   color: var(--black);
   background: linear-gradient(
     106.37deg,
     #ffe1bc 29.63%,
     #ffcfd1 51.55%,
-    #f3c6f1 90.85%
+    #ff469e 90.85%
   );
   height: 100vh;
   display: flex;
@@ -34,14 +34,13 @@
   background: var(--glass);
   border-radius: 2rem;
   gap: 50px;
-  grid-template-columns: 15rem 65rem;
+  grid-template-columns: 16rem 65rem;
   overflow: hidden;
 }
 
 @media screen and (max-width: 1200px) {
   .AppGlass {
     grid-template-columns: 10% 50% auto;
-    overflow-y: scroll;
   }
 }
 

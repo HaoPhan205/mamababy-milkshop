@@ -1,23 +1,21 @@
-// Sidebar imports
 import {
   UilEstate,
   UilClipboardAlt,
   UilUsersAlt,
   UilPackage,
   UilChart,
-  UilSignOutAlt,
+  // UilSignOutAlt,
+  UilBriefcaseAlt,
+  UilMapMarkerInfo,
+  UilWaterGlass,
 } from "@iconscout/react-unicons";
 
-// Analytics Cards imports
 import { UilUsdSquare, UilMoneyWithdrawal } from "@iconscout/react-unicons";
-import { keyboard } from "@testing-library/user-event/dist/keyboard";
 
-// Recent Card Imports
 import img1 from "../imgs/img1.png";
 import img2 from "../imgs/img2.png";
 import img3 from "../imgs/img3.png";
 
-// Sidebar Data
 export const SidebarData = [
   {
     icon: UilEstate,
@@ -25,14 +23,34 @@ export const SidebarData = [
     path: "/adminPage",
   },
   {
-    icon: UilClipboardAlt,
+    icon: UilUsersAlt,
     heading: "Quản lý nhân viên",
     path: "/adminPage/quan-li-nhan-vien",
   },
   {
-    icon: UilUsersAlt,
+    icon: UilClipboardAlt,
     heading: "Quản lý đơn hàng",
     path: "/adminPage/quan-li-don-hang",
+  },
+  {
+    icon: UilMapMarkerInfo,
+    heading: "Quản lý xuất xứ",
+    path: "/adminPage/quan-li-xuat-xu",
+  },
+  {
+    icon: UilBriefcaseAlt,
+    heading: "Quản lý công ty sữa",
+    path: "/adminPage/quan-li-cong-ty",
+  },
+  {
+    icon: UilWaterGlass,
+    heading: "Quản lý thương hiệu sữa",
+    path: "/adminPage/quan-li-thuong-hieu",
+  },
+  {
+    icon: UilUsersAlt,
+    heading: "Quản lý đối tượng sử dụng sữa",
+    path: "/adminPage/quan-li-san-pham",
   },
   {
     icon: UilPackage,
@@ -46,7 +64,6 @@ export const SidebarData = [
   },
 ];
 
-// Analytics Cards Data
 export const cardsData = [
   {
     title: "Danh thu tháng",
@@ -99,7 +116,6 @@ export const cardsData = [
   },
 ];
 
-// Recent Update Card Data
 export const UpdatesData = [
   {
     img: img1,

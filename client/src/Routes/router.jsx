@@ -7,7 +7,7 @@ import DefaultLayout from "../Pages/defaultLayout/DefaultLayout";
 import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
 import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
-import CreateNewProduct from "../Pages/Staff/createProductPage/CreateProductsPage";
+
 import StaffPage from "../Pages/Staff/staffPage";
 import AdminPage from "../Pages/Admin/admin";
 import Donhang from "../Pages/donhang/donhang";
@@ -95,26 +95,45 @@ export const router = createBrowserRouter([
     path: "/sign-up",
     element: <SignUp />,
   },
-
   {
     path: "/adminPage",
     element: <AdminPage />,
   },
   {
-    path: "/adminPage/quan-li-san-pham",
-    element: <Sanpham />,
+    path: "/adminPage/dashboard",
+    element: <AdminPage />,
   },
   {
     path: "/adminPage/quan-li-don-hang",
-    element: <CreateNewProduct />,
+    element: <Staff />,
   },
   {
     path: "/adminPage/quan-li-nhan-vien",
     element: <Staff />,
   },
   {
+    path: "/adminPage/quan-li-xuat-xu",
+    element: <Staff />,
+  },
+  {
+    path: "/adminPage/quan-li-cong-ty",
+    element: <Staff />,
+  },
+  {
+    path: "/adminPage/quan-li-thuong-hieu",
+    element: <Staff />,
+  },
+  {
+    path: "/adminPage/quan-li-doi-tuong",
+    element: <Staff />,
+  },
+  {
+    path: "/adminPage/quan-li-san-pham",
+    element: <Sanpham />,
+  },
+  {
     path: "/adminPage/doanh-thu-cua-hang",
-    element: <CreateNewProduct />,
+    element: <Staff />,
   },
 
   {

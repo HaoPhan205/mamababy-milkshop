@@ -1,102 +1,100 @@
-.card{
-    display: flex;
-    flex-direction: row;
-    width: 100%;
-    height: 210px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 4px rgba(0, 0, 0, .2);
-    margin: 5px;
-    cursor: pointer;
-    transition: transform 0.4s;
+.card {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 210px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 5px;
+  cursor: pointer;
+  transition: transform 0.4s;
 }
-.card:hover{
-    transform: scale(1.05);
-    .course-price>span{
-        visibility: visible;
-    }
+.card:hover {
+  transform: scale(1.05);
+  .course-price > span {
+    visibility: visible;
+  }
 }
-.card img{
-    height: 100%;
-    width: auto;
-    object-fit: cover;
-    object-position: center;
-    padding: .6rem;
-    border-radius: 15px;
-    position: relative;
-    
+.card img {
+  height: 100%;
+  width: auto;
+  object-fit: cover;
+  object-position: center;
+  padding: 0.6rem;
+  border-radius: 15px;
+  position: relative;
 }
-.play-effect{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(255,255,255,.3);
-    z-index: 100;
-    visibility: hidden;
-    color: rgb(50, 50, 50);
-    transition: visibility 0.3s;
-    
+.play-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.3);
+  z-index: 100;
+  visibility: hidden;
+  color: rgb(50, 50, 50);
+  transition: visibility 0.3s;
 }
 .course-card-image:hover {
-    .card img{
-        filter: blur(2px);
-    }
-    .play-effect{
-        visibility: visible;
-    }
-} 
-.content{
-    width: 100%;
-    padding: 1rem;
+  .card img {
+    filter: blur(2px);
+  }
+  .play-effect {
+    visibility: visible;
+  }
 }
-.content>.views-times{
-    margin: .5rem auto;
-    color: gray;
+.content {
+  width: 100%;
+  padding: 1rem;
 }
-.content>h3{
-    margin: .8rem auto;
-    font-size: 1.2rem;
+.content > .views-times {
+  margin: 0.5rem auto;
+  color: gray;
 }
-.content>.course-category{
-    margin: .5rem auto;
-    color: gray;
-    cursor: pointer;
+.content > h3 {
+  margin: 0.8rem auto;
+  font-size: 1.2rem;
 }
-.content>.course-category:hover{
-    color: black;
+.content > .course-category {
+  margin: 0.5rem auto;
+  color: gray;
+  cursor: pointer;
 }
-.content>.course-info{
-    display: flex;
-    justify-content: space-between;
-    margin: 1.2rem auto;
+.content > .course-category:hover {
+  color: black;
 }
-.content>.course-info>.course-instructor>span{
-    font-weight: 700;
-    font-size: 1rem;
+.content > .course-info {
+  display: flex;
+  justify-content: space-between;
+  margin: 1.2rem auto;
 }
-.content>.course-info>.course-instructor>span:hover{
-    text-decoration: underline;
+.content > .course-info > .course-instructor > span {
+  font-weight: 700;
+  font-size: 1rem;
 }
-.course-price{
-    display: flex;
-    font-size: 1.2rem;
-    font-weight: 600;
-    gap: 20px;
+.content > .course-info > .course-instructor > span:hover {
+  text-decoration: underline;
 }
-.course-price>span{
-    cursor: pointer;
-    visibility: hidden;
+.course-price {
+  display: flex;
+  font-size: 1.2rem;
+  font-weight: 600;
+  gap: 20px;
 }
-.course-price>span:hover{
-    color: red;
+.course-price > span {
+  cursor: pointer;
+  visibility: hidden;
+}
+.course-price > span:hover {
+  color: red;
 }
 @media (max-width: 1000px) {
-    .card{
-        flex-direction: column;
-        height: 450px;
-    }
-    .card img{
-        width: 100%;
-        height: 260px;
-        object-fit: cover;
-    }
+  .card {
+    flex-direction: column;
+    height: 450px;
+  }
+  .card img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+  }
 }

@@ -4,8 +4,8 @@ import ProductQuanli from "./quanlisanpham";
 
 function Sanpham() {
   return (
-    <div className="Sanpham">
-      <div className="AppGlass-sp">
+    <div className="Admin">
+      <div className="AppGlass">
         <Sidebar />
         <ProductQuanli />
       </div>

@@ -4,6 +4,8 @@ import {
   UserOutlined,
   SearchOutlined,
 } from "@ant-design/icons";
+
+import { UilUserCircle } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
@@ -17,6 +19,7 @@ function Header({ collapsed, toggleCollapsed }) {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const { getCurrUser, onLogOut } = useUsers();
+  const token = Cookies.get("token");
 
   const handleLogout = async () => {
     onLogOut();
@@ -63,15 +66,15 @@ function Header({ collapsed, toggleCollapsed }) {
     //   label: <a href="/settings">Đơn mua</a>,
     // },
     {
-      key: "4",
+      key: "1",
       label: (
         <button
           onClick={handleLogout}
           style={{
             all: "unset",
             cursor: "pointer",
-            color: "blue",
-            textDecoration: "underline",
+            color: "black",
+            textDecoration: "none",
           }}
         >
           Đăng xuất
@@ -131,7 +134,7 @@ function Header({ collapsed, toggleCollapsed }) {
                 <div>
                   <Space
                     style={{
-                      padding: 8,
+                      // padding: 8,
                       margin: "1em",
                       borderBottom: "1px solid gray",
                     }}
@@ -143,11 +146,11 @@ function Header({ collapsed, toggleCollapsed }) {
                         gap: "1em",
                       }}
                     >
-                      <Avatar
+                      {/* <Avatar
                         src=""
                         icon={<UserOutlined />}
-                        style={{ width: "2.5em", height: "2.5em" }}
-                      />
+                        style={{ width: "2em", height: "2em" }}
+                      /> */}
                       <div>
                         <h5>{currentUser.customerName}</h5>
                       </div>
@@ -162,7 +165,7 @@ function Header({ collapsed, toggleCollapsed }) {
                   e.preventDefault();
                 }}
                 style={{
-                  background: "none",
+                  background: "#ff469e",
                   color: "inherit",
                   border: "none",
                   padding: 0,

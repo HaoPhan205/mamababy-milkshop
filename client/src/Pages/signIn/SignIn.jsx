@@ -81,7 +81,8 @@ const SignIn = () => {
       const { token, role } = response.data;
 
       // Lưu token vào cookie với thời gian sống là 1 ngày (hoặc thời gian phù hợp)
-      Cookies.set("token", token, { expires: 1 });
+      Cookies.set("token", token, { expires: 7 });
+      Cookies.set("role", role, { expires: 7 });
 
       // Chuyển hướng đến trang tương ứng với role
       if (role === "Admin") {
@@ -96,7 +97,7 @@ const SignIn = () => {
       handleCloseLoginModal(); // Đóng modal sau khi đăng nhập thành công
     } catch (error) {
       console.error("Error logging in:", error);
-      message.error(error.message || "Đăng nhập thất bại");
+      message.error(error.response?.data?.message || "Đăng nhập thất bại");
     } finally {
       setLoading(false);
     }
