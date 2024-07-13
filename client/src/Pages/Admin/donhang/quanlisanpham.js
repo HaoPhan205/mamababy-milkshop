@@ -10,7 +10,12 @@ import {
   Row,
   Col,
 } from "antd";
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import {
+  EditOutlined,
+  DeleteOutlined,
+  EyeOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import "./quanlisanpham.scss";
 import {
   Paper,
@@ -157,7 +162,7 @@ const Staffs = () => {
       })
       .catch((err) => {
         console.error(err);
-        message.error("Failed to fetch products");
+        message.error("Không thể tải sản phẩm");
         setLoadingState(false);
       });
   };
@@ -171,11 +176,10 @@ const Staffs = () => {
       .get(`/api/productitems/${productItemId}`)
       .then((res) => {
         setSelectedProduct(res.data);
-        setDetailVisible(true);
       })
       .catch((err) => {
         console.error(err);
-        message.error("Failed to fetch product details");
+        message.error("Không thể tải chi tiết sản phẩm");
       });
   };
 
@@ -221,16 +225,16 @@ const Staffs = () => {
       return;
     }
 
-    const request = currentProduct
+    const apiCall = currentProduct
       ? api.put(`/api/productitems/${currentProduct.productItemId}`, values)
       : api.post("/api/productitems", values);
-
-    request
+    console.log("12", values);
+    apiCall
       .then(() => {
         message.success(
           currentProduct
-            ? "Product updated successfully"
-            : "Product added successfully"
+            ? "Sản phẩm cập nhật thành công"
+            : "Sản phẩm thêm thành công"
         );
         fetchProducts();
         setModalVisible(false);
@@ -238,13 +242,13 @@ const Staffs = () => {
       })
       .catch((err) => {
         console.error(err);
-        message.error("Failed to save product");
+        message.error("Không thể lưu sản phẩm");
       });
   };
 
   const handleDelete = (productItemId) => {
     api
-      .delete(`/api/productitems/${productItemId}`)
+      .delete(`/api/productitems/softdelete/${productItemId}`)
       .then(() => {
         message.success("Product deleted successfully");
         fetchProducts();
@@ -267,6 +271,16 @@ const Staffs = () => {
         onSearch={handleSearch}
         style={{ width: 400, marginBottom: 20 }}
       />
+      <Button
+        type="primary"
+        icon={<PlusOutlined />}
+        onClick={() => {
+          setCurrentProduct(null);
+          setModalVisible(true);
+        }}
+      >
+        Thêm sản phẩm
+      </Button>
       {renderTable(
         paginatedProducts,
         loadingState,

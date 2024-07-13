@@ -3,12 +3,16 @@ import "./ProductCard.scss";
 import { Card, Modal, Button, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
-import Cookies from "js-cookie";
 
-function ProductCard({ product, onClick, onAddToCart }) {
+import api from "../../config/axios";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../Store/reduxReducer/cartSlice";
+
+function ProductCard({ product, onClick }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
-  const [quantity, setQuantity] = useState(1);
+  // const [quantity, setQuantity] = useState(1);
+  const dispatch = useDispatch();
   const showModal = () => {
     setIsModalVisible(true);
   };
@@ -22,31 +26,13 @@ function ProductCard({ product, onClick, onAddToCart }) {
     setIsModalVisible(false);
   };
 
-  const handleAddToCart = () => {
-    const token = Cookies.get("token");
-
-    if (!token) {
-      showModal();
-    } else {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      const existingProduct = cart.find(
-        (item) => item.productItemId === product.productItemId
-      );
-
-      if (existingProduct) {
-        // Nếu sản phẩm đã có trong giỏ hàng, tăng số lượng
-        existingProduct.quantity += quantity;
-        message.success("Đã cập nhật số lượng sản phẩm trong giỏ hàng.");
-      } else {
-        // Nếu sản phẩm chưa có trong giỏ hàng, thêm sản phẩm vào giỏ hàng với số lượng được chọn
-        cart.push({ ...product, quantity });
-        message.success("Đã thêm sản phẩm vào giỏ hàng.");
-      }
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-    }
+  const handleAddToCart = async () => {
+    const pro = {
+      ...product,
+      quantity: 1,
+    };
+    dispatch(addToCart(pro));
+    message.success("Sản phẩm đã được thêm vào giỏ hàng");
   };
 
   return (

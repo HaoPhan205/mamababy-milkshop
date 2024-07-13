@@ -4,8 +4,11 @@ import { router } from "./Routes/router";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import { useStorage } from "./Services/Hooks/useStorage";
+import store from "./Store/store";
+import { Provider } from "react-redux";
 
 export const Data = createContext(null);
+
 function App() {
   const { getFromStorage } = useStorage();
   const [user, setUser] = useState(
@@ -14,9 +17,11 @@ function App() {
   console.log(user);
 
   return (
-    <Data.Provider value={{ user, setUser }}>
-      <RouterProvider router={router} />
-    </Data.Provider>
+    <Provider store={store}>
+      <Data.Provider value={{ user, setUser }}>
+        <RouterProvider router={router} />
+      </Data.Provider>
+    </Provider>
   );
 }
 

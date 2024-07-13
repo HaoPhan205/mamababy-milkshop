@@ -5,21 +5,22 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
-import { UilUserCircle } from "@iconscout/react-unicons";
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
 import { Avatar, Badge, Button, Dropdown, Space, message } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useUsers } from "../../../Services/Hooks/useUsers";
 import api from "../../../config/axios";
+import { useSelector } from "react-redux";
 
 function Header({ collapsed, toggleCollapsed }) {
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const { getCurrUser, onLogOut } = useUsers();
-  const token = Cookies.get("token");
+  const [cartQuantity, setCartQuantity] = useState(0);
 
   const handleLogout = async () => {
     onLogOut();
@@ -27,6 +28,34 @@ function Header({ collapsed, toggleCollapsed }) {
 
   const handleShoppingCart = () => {
     navigate("/shoppingCart");
+  };
+
+  useEffect(() => {
+    fetchCartQuantity();
+  }, []);
+
+  const fetchCartQuantity = () => {
+    const customerID = Cookies.get("customerId");
+
+    if (customerID) {
+      api
+        .get(`/api/orderdetails/productquantityincart?customerID=${customerID}`)
+        .then((res) => {
+          if (res.data && res.data.productItemCount) {
+            setCartQuantity(res.data.productItemCount);
+          } else {
+            setCartQuantity(0);
+          }
+        })
+        .catch((error) => {
+          console.error("Failed to fetch cart quantity:", error);
+          message.error(
+            "Failed to fetch cart quantity. Please try again later."
+          );
+        });
+    } else {
+      setCartQuantity(0);
+    }
   };
 
   const handleSearch = async () => {
@@ -118,7 +147,7 @@ function Header({ collapsed, toggleCollapsed }) {
         <img src={free} alt="" className="header__freeIcon" />
       </div>
       <div className="header__right">
-        <Badge count={1}>
+        <Badge count={totalQuantity}>
           <ShoppingCartOutlined
             style={{ fontSize: "2em" }}
             onClick={handleShoppingCart}

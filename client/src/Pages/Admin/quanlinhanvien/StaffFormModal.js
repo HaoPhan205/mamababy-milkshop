@@ -26,15 +26,19 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
 
   return (
     <Modal
-      title={initialValues ? "Edit Staff" : "Add Staff"}
+      title={
+        initialValues
+          ? "Chỉnh sửa tài khoản nhân viên"
+          : "Tạo tài khoản nhân viên"
+      }
       visible={visible}
       onCancel={onClose}
       footer={[
         <Button key="back" onClick={onClose}>
-          Cancel
+          Hủy
         </Button>,
         <Button key="submit" type="primary" onClick={handleOk}>
-          Submit
+          Xác nhận
         </Button>,
       ]}
     >
@@ -42,7 +46,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
         <Form.Item
           name="adminID"
           label="Mã nhân viên"
-          rules={[{ required: true, message: "Please input the staff ID!" }]}
+          rules={[{ required: true, message: "Vui lòng nhập mã nhân viên!" }]}
         >
           <Input />
         </Form.Item>
@@ -50,8 +54,12 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           name="username"
           label="Tài khoản"
           rules={[
-            { required: true, message: "Please input the username!" },
-            { type: "email", message: "The input is not a valid email!" },
+            { required: true, message: "Vui lòng nhập tài khoản!" },
+            { type: "email" },
+            {
+              pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
+              message: "Chỉ chấp nhận tài khoản Gmail!",
+            },
           ]}
         >
           <Input />
@@ -60,8 +68,8 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           name="password"
           label="Mật khẩu"
           rules={[
-            { required: true, message: "Please input the password!" },
-            { min: 8, message: "Password must be at least 8 characters!" },
+            { required: true, message: "Vui lòng nhập mật khẩu!" },
+            { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự!" },
           ]}
         >
           <Input.Password />

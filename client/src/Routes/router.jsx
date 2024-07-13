@@ -16,7 +16,8 @@ import PageError from "../Pages/PageError/PageError";
 import Staff from "../Pages/Admin/quanlinhanvien/staff";
 import Sanpham from "../Pages/Admin/donhang/sanpham";
 import ProtectedRoute from "./ProtectedRoute";
-import PaymentForm from "../Components/vnpay/PaymentForm";
+import SuccessPayment from "../Pages/Payment/SuccessPayment";
+import FailurePayment from "../Pages/Payment/FailurePayment";
 
 export const router = createBrowserRouter([
   {
@@ -76,6 +77,14 @@ export const router = createBrowserRouter([
       {
         path: "/chinh-sach-doi-tra-hang",
         element: <PageError />,
+      },
+      {
+        path: "/thanh-toan-thanh-cong",
+        element: <SuccessPayment />,
+      },
+      {
+        path: "/thanh-toan-that-bai",
+        element: <FailurePayment />,
       },
       // {
       //   path: "/thong-tin-thanh-toan",

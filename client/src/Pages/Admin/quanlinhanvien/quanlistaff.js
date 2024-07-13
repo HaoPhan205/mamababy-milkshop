@@ -119,8 +119,43 @@ const Staffs = () => {
     fetchAdmins();
   }, []);
 
-  const handleAddEdit = (values) => {
-    console.log("Form Values:", values);
+  const handleAdd = (values) => {
+    console.log("Add Staff:", values);
+
+    const isDuplicateID = admins.some(
+      (admin) => admin.adminID === values.adminID
+    );
+    const isDuplicateEmail = admins.some(
+      (admin) => admin.username === values.username
+    );
+
+    if (isDuplicateID) {
+      message.error("Mã nhân viên đã tồn tại");
+      return;
+    }
+
+    if (isDuplicateEmail) {
+      message.error("Tài khoản đã tồn tại");
+      return;
+    }
+
+    api
+      .post("/api/admins", { ...values, role: "Staff" })
+      .then((response) => {
+        console.log("Response:", response);
+        message.success("Thêm tài khoản nhân viên thành công");
+        fetchAdmins();
+        setModalVisible(false);
+        setCurrentAdmin(null);
+      })
+      .catch((err) => {
+        console.error("Request Error:", err);
+        message.error("Lưu thất bại");
+      });
+  };
+
+  const handleEdit = (values) => {
+    console.log("Edit Staff:", values);
 
     const isDuplicateID = admins.some(
       (admin) =>
@@ -154,23 +189,16 @@ const Staffs = () => {
       return;
     }
 
-    const request = currentAdmin
-      ? api.put(`/api/admins/${currentAdmin.adminID}`, {
-          adminID: values.adminID,
-          username: values.username,
-          password: values.password,
-          role: values.role,
-        })
-      : api.post("/api/admins", { ...values, role: "Staff" });
-
-    request
+    api
+      .put(`/api/admins/${currentAdmin.adminID}`, {
+        adminID: values.adminID,
+        username: values.username,
+        password: values.password,
+        role: values.role,
+      })
       .then((response) => {
         console.log("Response:", response);
-        message.success(
-          currentAdmin
-            ? "Cập nhật tài khoản nhân viên thành công"
-            : "Thêm tài khoản nhân viên thành công"
-        );
+        message.success("Cập nhật tài khoản nhân viên thành công");
         fetchAdmins();
         setModalVisible(false);
         setCurrentAdmin(null);
@@ -218,7 +246,7 @@ const Staffs = () => {
       <StaffFormModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
-        onSubmit={handleAddEdit}
+        onSubmit={currentAdmin ? handleEdit : handleAdd}
         initialValues={currentAdmin}
       />
     </div>

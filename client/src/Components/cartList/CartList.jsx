@@ -1,72 +1,68 @@
-import React, { useEffect, useState } from "react";
-import { Button, Input, List, message, Typography } from "antd";
-import { CloseOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Button, Input, List, message, Typography, Checkbox } from "antd";
+import { CloseOutlined, PlusOutlined, MinusOutlined } from "@ant-design/icons";
 import "./CartList.scss";
-import Cookies from "js-cookie";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  deleteItem,
+  decreaseQuantity,
+  increaseQuantity,
+  resetCart,
+} from "../../Store/reduxReducer/cartSlice";
 
 const { Title, Text } = Typography;
 
-function CartList() {
-  const [cartItems, setCartItems] = useState([]);
+function CartList({ selectedItems, setSelectedItems }) {
+  const carts = useSelector((state) => state.cart).products;
+  const dispatch = useDispatch();
 
-  useEffect(() => {
-    // Lấy dữ liệu giỏ hàng từ localStorage
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
-
-  const removeFromCart = (productItemId) => {
-    // Xóa sản phẩm khỏi giỏ hàng
-    const updatedCart = cartItems.filter(
-      (item) => item.productItemId !== productItemId
-    );
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-    message.success("Đã xóa sản phẩm khỏi giỏ hàng");
-  };
-
-  const updateQuantity = (productItemId, newQuantity) => {
-    const updatedCart = cartItems.map((item) => {
-      if (item.productItemId === productItemId) {
-        return { ...item, quantity: newQuantity };
+  const handleCheckboxChange = (productItemId) => {
+    setSelectedItems((prevSelectedItems) => {
+      if (prevSelectedItems.includes(productItemId)) {
+        return prevSelectedItems.filter((id) => id !== productItemId);
+      } else {
+        return [...prevSelectedItems, productItemId];
       }
-      return item;
     });
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  };
+  // console.log("hê", carts.total);
+  const handleIncreaseQuantity = (productItemId) => {
+    dispatch(increaseQuantity({ productItemId }));
   };
 
-  const clearCart = () => {
-    // Clear cart items state
-    setCartItems([]);
-    // Remove cart from localStorage
-    localStorage.removeItem("cart");
-    // Display a message
-    message.warn(
-      "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại để tiếp tục mua sắm.",
-      5 // duration in seconds
-    );
+  const handleDecreaseQuantity = (productItemId) => {
+    dispatch(decreaseQuantity({ productItemId }));
+  };
+
+  const calculateTotal = (item) => {
+    // Calculate total based on item price and quantity
+    return item.total * item.quantity;
   };
 
   return (
     <div className="cart-list">
       <Title level={2}>Giỏ hàng của bạn</Title>
-      {cartItems.length === 0 ? (
+      {Array.isArray(carts) && carts.length === 0 ? (
         <p>Giỏ hàng của bạn trống</p>
       ) : (
         <List
           itemLayout="horizontal"
-          dataSource={cartItems}
+          dataSource={carts}
           renderItem={(item) => (
             <List.Item
+              key={item.productItemId}
               actions={[
                 <Button
                   type="text"
                   icon={<CloseOutlined />}
-                  onClick={() => removeFromCart(item.productItemId)}
+                  onClick={() => dispatch(deleteItem(item.productItemId))}
                 />,
               ]}
             >
+              <Checkbox
+                // checked={selectedItems[item.productItemId]}
+                onChange={() => handleCheckboxChange(item.productItemId)}
+              />
               <List.Item.Meta
                 avatar={
                   <img
@@ -79,21 +75,42 @@ function CartList() {
                 description={
                   <div>
                     <Text>Giá: {item.price} VNĐ</Text>
+                    {"   "}
+                    {/* Display discount and adjusted price if applicable */}
+                    {item.discount > 0 && (
+                      <>
+                        <Text type="danger">Giảm giá: {item.discount}%</Text>
+                      </>
+                    )}
+                    <br />
+                    <Text strong>{item.total} VNĐ</Text>
                     <div className="cart-item-quantity">
                       <span>Số lượng: </span>
+                      <Button
+                        type="text"
+                        icon={<MinusOutlined />}
+                        onClick={() =>
+                          handleDecreaseQuantity(item.productItemId)
+                        }
+                      />
                       <Input
                         type="number"
                         min="1"
-                        value={item.quantity || 1}
-                        onChange={(e) =>
-                          updateQuantity(
-                            item.productItemId,
-                            parseInt(e.target.value, 10)
-                          )
+                        value={item.quantity}
+                        style={{ width: "50px", textAlign: "center" }}
+                        readOnly
+                      />
+
+                      <Button
+                        type="text"
+                        icon={<PlusOutlined />}
+                        onClick={() =>
+                          handleIncreaseQuantity(item.productItemId)
                         }
-                        style={{ width: "50px", marginLeft: "10px" }}
                       />
                     </div>
+                    <br />
+                    <Text strong>Tổng tiền: {calculateTotal(item)} VNĐ</Text>
                   </div>
                 }
               />
@@ -101,6 +118,9 @@ function CartList() {
           )}
         />
       )}
+      <Button type="primary" danger onClick={() => dispatch(resetCart())}>
+        Xóa hết giỏ hàng
+      </Button>
     </div>
   );
 }

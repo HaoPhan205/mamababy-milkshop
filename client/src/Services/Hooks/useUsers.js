@@ -25,9 +25,10 @@ export const useUsers = () => {
       const { token, customerName, customerId } = response.data;
 
       // Set token to cookie
-      Cookies.set("token", token, { expires: 7 }); // Example: set token cookie for 7 days
+      Cookies.set("token", token, { expires: 7 });
       console.log("Token set in cookie:", token);
-
+      Cookies.set("customerName", customerName, { expires: 7 });
+      Cookies.set("customerId", customerId, { expires: 7 });
       // Set user context
       const userData = { customerName, customerId };
       setUser(userData);
@@ -46,6 +47,8 @@ export const useUsers = () => {
 
   const onLogOut = () => {
     Cookies.remove("token");
+    Cookies.remove("customerName");
+    Cookies.remove("customerId");
     setUser(null);
     localStorage.removeItem("user");
     message.success("Đã đăng xuất khỏi tài khoản");

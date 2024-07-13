@@ -3,12 +3,15 @@ import "./ShoppingCart.scss";
 import { Col, Row } from "antd";
 import CartList from "../../Components/cartList/CartList";
 import CartTotal from "../../Components/cartTotal/CartTotal";
+import { useState } from "react";
 const style = {
   background: "#ffff",
   padding: "8px 0",
 };
 
 function ShoppingCart() {
+  const [selectedItems, setSelectedItems] = useState([]);
+  // console.log(selectedItems);
   return (
     <div>
       <div className="shoppingcart">
@@ -32,12 +35,15 @@ function ShoppingCart() {
       <Row className="cart__list" gutter={16}>
         <Col className="gutter-row" span={17}>
           <div style={style}>
-            <CartList />
+            <CartList
+              selectedItems={selectedItems}
+              setSelectedItems={setSelectedItems}
+            />
           </div>
         </Col>
         <Col className="gutter-row" span={7}>
           <div style={style}>
-            <CartTotal />
+            <CartTotal selectedItems={selectedItems} />
           </div>
         </Col>
       </Row>
