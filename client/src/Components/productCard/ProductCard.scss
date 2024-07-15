@@ -74,19 +74,7 @@
 .content > .course-info > .course-instructor > span:hover {
   text-decoration: underline;
 }
-.course-price {
-  display: flex;
-  font-size: 1.2rem;
-  font-weight: 600;
-  gap: 20px;
-}
-.course-price > span {
-  cursor: pointer;
-  visibility: hidden;
-}
-.course-price > span:hover {
-  color: red;
-}
+
 @media (max-width: 1000px) {
   .card {
     flex-direction: column;

@@ -11,23 +11,21 @@
   padding: 0 60px;
   z-index: 1;
 
-  &__search {
-    display: flex;
-    border-radius: 18px;
-    border: 2px solid #ff469e;
-    padding: 10px 20px;
-    cursor: pointer;
-    width: 400px;
+  // &__search {
+  //   display: flex;
 
-    input {
-      flex: 1;
-      border: none;
-      outline: none;
-      background-color: inherit;
-      width: 100%;
-      font-size: 15px;
-    }
-  }
+  //   // padding: 10px 20px;
+  //   cursor: pointer;
+  //   width: 400px;
+
+  //   input {
+  //     border-radius: 12px;
+  //     outline: none;
+  //     background-color: inherit;
+  //     width: 100%;
+  //     font-size: 15px;
+  //   }
+  // }
 
   &__right {
     padding: 10px;
@@ -40,6 +38,10 @@
     display: flex;
     align-items: center;
     margin-right: 20px;
+    &_title {
+      font-size: 15px;
+      font-weight: bold;
+    }
 
     &Icon {
       height: 24px;
@@ -72,5 +74,29 @@
         color: black;
       }
     }
+  }
+}
+.header__search {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 1em auto;
+  padding: 1em;
+  border-radius: 10px;
+  max-width: 600px;
+
+  .ant-input-search {
+    width: 100%;
+    border-radius: 15px !important; /* Ensures the border radius is applied */
+  }
+
+  .ant-input-search-button {
+    background-color: #ff469e !important; /* Button background color */
+    border-color: #ff469e !important; /* Button border color */
+    color: white !important; /* Button text color */
+  }
+
+  .ant-input-affix-wrapper {
+    border-width: 2px !important; /* Border width */
   }
 }

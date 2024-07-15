@@ -1,10 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Card, Badge, Carousel, Button } from "antd";
-import {
-  LeftOutlined,
-  RightOutlined,
-  ShoppingCartOutlined,
-} from "@ant-design/icons";
+import { Carousel, Button } from "antd";
+import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
 import { Link } from "react-router-dom";

@@ -21,6 +21,7 @@ import "./SignIn.scss";
 import { useForm } from "antd/es/form/Form";
 import api from "../../config/axios";
 import Cookies from "js-cookie";
+import { auth, googleProvider, signInWithPopup } from "../../config/firebase";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);

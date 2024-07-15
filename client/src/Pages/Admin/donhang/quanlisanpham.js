@@ -107,7 +107,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
                   >
                     {product.stockQuantity === 0
                       ? "Hết hàng"
-                      : product.soldQuantity}
+                      : product.stockQuantity}
                   </span>
                 </TableCell>
                 <TableCell>
@@ -325,17 +325,17 @@ const Staffs = () => {
             <p>
               <strong>Giá:</strong> {selectedProduct.price}
             </p>
-            <p>
-              <strong>Đã bán:</strong> {selectedProduct.soldQuantity}
-            </p>
-            <p>
-              <strong>Lượng hàng:</strong>{" "}
-              <span style={makeStyle(selectedProduct.stockQuantity)}>
+            <TableCell>{selectedProduct.soldQuantity}</TableCell>
+            <TableCell>
+              <span
+                className="status"
+                style={makeStyle(selectedProduct.stockQuantity)}
+              >
                 {selectedProduct.stockQuantity === 0
                   ? "Hết hàng"
                   : selectedProduct.stockQuantity}
               </span>
-            </p>
+            </TableCell>
             <p>
               <strong>Thương hiệu:</strong> {selectedProduct.brandName}
             </p>

@@ -8,12 +8,23 @@ import {
 import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
-import { Avatar, Badge, Button, Dropdown, Space, message } from "antd";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Dropdown,
+  Space,
+  Typography,
+  message,
+} from "antd";
 import React, { useEffect, useState } from "react";
 import Cookies from "js-cookie";
 import { useUsers } from "../../../Services/Hooks/useUsers";
 import api from "../../../config/axios";
 import { useSelector } from "react-redux";
+import Search from "antd/es/input/Search";
+
+const { Text } = Typography;
 
 function Header({ collapsed, toggleCollapsed }) {
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
@@ -58,27 +69,14 @@ function Header({ collapsed, toggleCollapsed }) {
     }
   };
 
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (searchTerm.trim() === "") {
       message.warning("Vui lòng nhập từ khóa tìm kiếm");
       return;
     }
-
-    try {
-      const response = await api.get(`/api/productitems/search`, {
-        params: { query: searchTerm },
-      });
-
-      if (response.data && response.data.length > 0) {
-        navigate("/cua-hang", { state: { products: response.data } });
-      } else {
-        message.warning("Không tìm thấy sản phẩm nào");
-      }
-    } catch (error) {
-      console.error("Lỗi tìm kiếm:", error);
-      message.error("Đã có lỗi xảy ra. Vui lòng thử lại sau.");
-    }
+    navigate(`/cua-hang?query=${searchTerm}`);
   };
+
   const phoneNumber = "0354019580";
 
   const items = [
@@ -120,30 +118,32 @@ function Header({ collapsed, toggleCollapsed }) {
         <Logo />
       </div>
 
-      <div className="header__search">
-        <input
-          type="text"
-          placeholder="Ba mẹ muốn tìm mua gì hôm nay ?"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              handleSearch();
-            }
-          }}
-        />
-        <SearchOutlined
-          onClick={handleSearch}
-          style={{ cursor: "pointer", fontSize: "1.5em", marginLeft: "0.5em" }}
-        />
-      </div>
+      <Search
+        className="header__search"
+        placeholder="Ba mẹ muốn tìm mua gì hôm nay?"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        onSearch={handleSearch}
+        enterButton
+        style={{
+          cursor: "pointer",
+          fontSize: "1.5em",
+          borderWidth: "2px",
+          color: "#ff469e",
+        }}
+      />
+
       <div className="header__free">
-        <p>
+        <Text className="header__free_title">
           Mua hàng và CSKH:{" "}
-          <a href={`tel:${phoneNumber}`} className="header__phone">
+          <a
+            href={`tel:${phoneNumber}`}
+            className="header__phone"
+            style={{ color: "#ff469e" }}
+          >
             {phoneNumber}
           </a>
-        </p>
+        </Text>
         <img src={free} alt="" className="header__freeIcon" />
       </div>
       <div className="header__right">

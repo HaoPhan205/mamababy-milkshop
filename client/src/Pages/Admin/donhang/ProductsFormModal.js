@@ -108,7 +108,7 @@ const ProductsFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
         </Form.Item>
 
         <Form.Item
-          name="brandMilkId"
+          name="brandName"
           label="Thương hiệu sữa"
           rules={[{ required: true, message: "Bạn chưa nhập thương hiệu sữa" }]}
         >

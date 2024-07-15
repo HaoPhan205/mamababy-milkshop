@@ -27,6 +27,7 @@ const { Title, Text } = Typography;
 const CartTotal = ({ selectedItems }) => {
   const dispatch = useDispatch();
   const [totalPrice, setTotalPrice] = useState(0);
+  const [totalDiscount, setTotalDiscount] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [isConfirmed, setIsConfirmed] = useState(false);
   const navigate = useNavigate();
@@ -44,11 +45,20 @@ const CartTotal = ({ selectedItems }) => {
     const selected = carts.filter((item) =>
       selectedItems.includes(item.productItemId)
     );
+
     const total = selected.reduce(
-      (acc, item) => acc + item.total * (item.quantity || 1),
+      (acc, item) => acc + item.price * (item.quantity || 1),
       0
     );
+
+    const discount = selected.reduce((acc, item) => {
+      const itemDiscount = (item.total - item.price) * (item.quantity || 1);
+
+      return acc + itemDiscount;
+    }, 0);
+
     setTotalPrice(total);
+    setTotalDiscount(discount);
   };
 
   const handleCheckout = () => {
@@ -95,23 +105,32 @@ const CartTotal = ({ selectedItems }) => {
       });
   };
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
   return (
     <div className="cart-total">
-      <Title level={2}>Tổng tiền</Title>
+      <Title level={2}>Thanh toán</Title>
       <Divider />
       <div className="cart-total__detail">
         <div className="cart-total__item">
-          <Text>Giá gốc</Text>
-          <Text>{totalPrice} VNĐ</Text>
+          <Text>Tính tạm</Text>
+          <Text>{formatCurrency(totalPrice)}</Text>
         </div>
         <div className="cart-total__item">
-          <Text>Giảm giá</Text>
-          <Text>0 %</Text>
+          <Text>Giảm giá sản phẩm</Text>
+          <Text style={{ color: "#ff469e" }}>
+            {formatCurrency(totalDiscount)}
+          </Text>
         </div>
         <Divider />
         <div className="cart-total__item cart-total__total">
-          <Text strong>Tổng cộng</Text>
-          <Text strong>{totalPrice} VNĐ</Text>
+          <Text strong>Tổng tiền</Text>
+          <Text strong>{formatCurrency(totalPrice + totalDiscount)}</Text>
         </div>
         <Button
           type="primary"

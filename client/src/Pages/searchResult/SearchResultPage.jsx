@@ -15,20 +15,23 @@ const SearchResultPage = ({ user }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 15; // Number of products per page
-  const columns = { xs: 24, sm: 12, md: 8, lg: 8, xl: 4 }; // Number of columns in a row
+  const itemsPerPage = 16;
+  const columns = { xs: 24, sm: 12, md: 8, lg: 8, xl: 6 };
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        const queryParams = new URLSearchParams(location.search);
+        const query = queryParams.get("query");
+
         const response = await api.get("/api/productitems", {
           params: {
             page: currentPage,
             pageSize: itemsPerPage,
-            query: location.search,
+            query: query,
           },
         });
-        setProducts(response.data); // Set products to fetched data
+        setProducts(response.data);
       } catch (err) {
         setError(err);
         message.error("Đã có lỗi xảy ra khi tìm kiếm sản phẩm.");
@@ -39,19 +42,6 @@ const SearchResultPage = ({ user }) => {
 
     fetchProducts();
   }, [currentPage, location.search]);
-
-  const handleItemClick = (productItemId) => {
-    navigate(`/chi-tiet-san-pham/${productItemId}`);
-  };
-
-  const handleAddToCart = (productId) => {
-    if (!user) {
-      navigate("/sign-in");
-      return;
-    }
-    console.log("Product added to cart:", productId);
-    // Add logic here to add product to cart
-  };
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -65,6 +55,10 @@ const SearchResultPage = ({ user }) => {
     return <div>Error: {error.message}</div>;
   }
 
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentProducts = products.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="productsall">
       <div className="productsall__title">
@@ -74,13 +68,9 @@ const SearchResultPage = ({ user }) => {
       </div>
 
       <Row gutter={[16, 16]}>
-        {products.map((product) => (
+        {currentProducts.map((product) => (
           <Col key={product.productItemId} {...columns}>
-            <ProductCard
-              product={product}
-              onClick={() => handleItemClick(product.productItemId)}
-              onAddToCart={() => handleAddToCart(product.productItemId)}
-            />
+            <ProductCard product={product} />
           </Col>
         ))}
       </Row>

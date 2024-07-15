@@ -4,7 +4,8 @@ import { Card, Modal, Button, message } from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 
-import api from "../../config/axios";
+// import api from "../../config/axios";
+
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../Store/reduxReducer/cartSlice";
 
@@ -13,9 +14,10 @@ function ProductCard({ product, onClick }) {
   const navigate = useNavigate();
   // const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-  const showModal = () => {
-    setIsModalVisible(true);
-  };
+
+  // const showModal = () => {
+  //   setIsModalVisible(true);
+  // };
 
   const handleOk = () => {
     setIsModalVisible(false);
@@ -27,12 +29,23 @@ function ProductCard({ product, onClick }) {
   };
 
   const handleAddToCart = async () => {
-    const pro = {
-      ...product,
-      quantity: 1,
-    };
-    dispatch(addToCart(pro));
-    message.success("Sản phẩm đã được thêm vào giỏ hàng");
+    if (product) {
+      const pro = {
+        ...product,
+        quantity: 1,
+      };
+      dispatch(addToCart(pro));
+      message.success("Sản phẩm đã được thêm vào giỏ hàng");
+    } else {
+      message.error("Sản phẩm không hợp lệ");
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
   };
 
   return (
@@ -47,7 +60,12 @@ function ProductCard({ product, onClick }) {
       >
         <div className="product-meta">
           <Card.Meta title={product.itemName} />
-          <div className="product-price">{product.price} VNĐ</div>
+          <div className="product-price">
+            {formatCurrency(product?.total)}
+            {product?.discount > 0 && (
+              <span className="product-discount"> - {product.discount}%</span>
+            )}
+          </div>
         </div>
         <div className="products-info">
           <div>Đã bán {product.soldQuantity}</div>
@@ -72,7 +90,6 @@ function ProductCard({ product, onClick }) {
         ]}
       >
         <p>Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.</p>
-        {/* Include your login form here */}
       </Modal>
     </div>
   );

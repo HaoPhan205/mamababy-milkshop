@@ -5,13 +5,15 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
-  apiKey: "AIzaSyAyvPjMuVqUGYx17FmxX5xxXV4TLIyko0I",
-  authDomain: "cursus-add39.firebaseapp.com",
-  projectId: "cursus-add39",
-  storageBucket: "cursus-add39.appspot.com",
-  messagingSenderId: "721147504882",
-  appId: "1:721147504882:web:a7c973d1e0150cd852086b",
+  apiKey: "AIzaSyCRkGfV6uc3YuO3YATLW9xyWL-yoFv3vBs",
+  authDomain: "mama-baby-d972b.firebaseapp.com",
+  projectId: "mama-baby-d972b",
+  storageBucket: "mama-baby-d972b.appspot.com",
+  messagingSenderId: "967858980220",
+  appId: "1:967858980220:web:1d9873a1fae9639853d0f9",
+  measurementId: "G-5Z47YQF5RF",
 };
 
 // Initialize Firebase
@@ -21,4 +23,3 @@ export const firestore = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 export const storage = getStorage(app);
 export { signInWithPopup };
-

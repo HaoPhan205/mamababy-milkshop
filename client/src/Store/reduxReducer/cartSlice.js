@@ -36,7 +36,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const item = state.products.find(
+      const item = state.products?.find(
         (item) => item.productItemId === action.payload.productItemId
       );
       if (item) {
@@ -54,6 +54,21 @@ const cartSlice = createSlice({
       saveState(state);
       toast.success("Product added to cart");
     },
+
+    updateQuantity: (state, action) => {
+      const item = state.products.find(
+        (item) => item.productItemId === action.payload.productItemId
+      );
+      if (item) {
+        item.quantity = action.payload.quantity;
+        state.totalQuantity = state.products.reduce(
+          (acc, item) => acc + item.quantity,
+          0
+        );
+        saveState(state); // Save state to localStorage
+      }
+    },
+
     increaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload.productItemId
@@ -67,6 +82,7 @@ const cartSlice = createSlice({
         saveState(state); // Save state to localStorage
       }
     },
+
     decreaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload.productItemId
@@ -82,6 +98,7 @@ const cartSlice = createSlice({
         saveState(state); // Save state to localStorage
       }
     },
+
     deleteItem: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload
@@ -97,6 +114,7 @@ const cartSlice = createSlice({
         saveState(state); // Save state to localStorage
       }
     },
+
     deleteSelectedItems: (state, action) => {
       const selectedIds = action.payload;
       state.products = state.products.filter(
@@ -108,6 +126,7 @@ const cartSlice = createSlice({
       );
       saveState(state); // Save state to localStorage
     },
+
     resetCart: (state) => {
       state.products = [];
       state.totalQuantity = 0;
@@ -118,6 +137,7 @@ const cartSlice = createSlice({
 
 export const {
   addToCart,
+  updateQuantity,
   increaseQuantity,
   decreaseQuantity,
   deleteItem,

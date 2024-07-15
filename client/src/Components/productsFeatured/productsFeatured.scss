@@ -110,9 +110,14 @@
 
 .product-price {
   font-size: 17px;
-  color: #ff469e;
+  color: black;
   font-weight: bold;
   padding: 10px 0;
+}
+
+.product-discount {
+  color: #ff469e;
+  font-size: 14px;
 }
 
 :where(.css-dev-only-do-not-override-m4timi).ant-card .ant-card-meta-title {
