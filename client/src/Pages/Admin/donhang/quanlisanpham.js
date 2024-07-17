@@ -82,7 +82,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
             {products.map((product) => (
               <TableRow key={product.productItemId}>
                 <TableCell>{product.productItemId}</TableCell>
-                <TableCell>{product.itemName}</TableCell>
+                <TableCell align="left">{product.itemName}</TableCell>
                 <TableCell>
                   {product.baby ? (
                     <>
@@ -261,6 +261,13 @@ const Staffs = () => {
 
   const handleView = (product) => {
     fetchProductDetail(product.productItemId);
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
   };
 
   return (

@@ -84,16 +84,16 @@ function Header({ collapsed, toggleCollapsed }) {
     //   key: "1",
     //   label: <a href="/user-dashboard">Dashboard</a>,
     // },
-    // {
-    //   key: "2",
-    //   label: <a href="/thongtin">Thông tin tài khoản</a>,
-    // },
+    {
+      key: "1",
+      label: <a href="/thongtin">Thông tin tài khoản</a>,
+    },
     // {
     //   key: "3",
     //   label: <a href="/settings">Đơn mua</a>,
     // },
     {
-      key: "1",
+      key: "2",
       label: (
         <button
           onClick={handleLogout}

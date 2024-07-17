@@ -12,12 +12,7 @@ import { addToCart } from "../../Store/reduxReducer/cartSlice";
 function ProductCard({ product, onClick }) {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
-  // const [quantity, setQuantity] = useState(1);
   const dispatch = useDispatch();
-
-  // const showModal = () => {
-  //   setIsModalVisible(true);
-  // };
 
   const handleOk = () => {
     setIsModalVisible(false);

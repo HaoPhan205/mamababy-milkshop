@@ -166,3 +166,17 @@ div:where(.css-dev-only-do-not-override-98ntnt).ant-typography-h2 > textarea,
 :where(.css-dev-only-do-not-override-98ntnt).ant-typography h2 {
   font-size: 20px;
 }
+
+.discount-textinfo {
+  margin-left: 8px;
+  size: 16px;
+}
+.price-textinfo {
+  font-size: 16px;
+}
+
+.total-textinfo {
+  font-size: 26px;
+  text-align: center;
+  font-weight: bold;
+}

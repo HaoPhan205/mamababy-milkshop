@@ -1,5 +1,8 @@
 import React, { useEffect } from "react";
-import { Form, Input, Modal, Button } from "antd";
+import { Form, Input, Modal, Button, Select } from "antd";
+import { UserSwitchOutlined } from "@ant-design/icons";
+
+const { Option } = Select;
 
 const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
   const [form] = Form.useForm();
@@ -46,7 +49,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
         <Form.Item
           name="adminID"
           label="Mã nhân viên"
-          rules={[{ required: true, message: "Vui lòng nhập mã nhân viên!" }]}
+          rules={[{ required: true, message: "Bạn chưa nhập mã nhân viên!" }]}
         >
           <Input />
         </Form.Item>
@@ -54,7 +57,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           name="username"
           label="Tài khoản"
           rules={[
-            { required: true, message: "Vui lòng nhập tài khoản!" },
+            { required: true, message: "Bạn chưa nhập tài khoản nhân viên!" },
             { type: "email" },
             {
               pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
@@ -68,11 +71,21 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           name="password"
           label="Mật khẩu"
           rules={[
-            { required: true, message: "Vui lòng nhập mật khẩu!" },
+            { required: true, message: "Bạn chưa nhập mật khẩu!" },
             { min: 8, message: "Mật khẩu phải có ít nhất 8 ký tự!" },
           ]}
         >
           <Input.Password />
+        </Form.Item>
+        <Form.Item
+          name="role"
+          label="Vai trò"
+          rules={[{ required: true, message: "Bạn chưa chọn vai trò" }]}
+        >
+          <Select>
+            <Select.Option value="Admin">Admin</Select.Option>
+            <Select.Option value="Staff">Staff</Select.Option>
+          </Select>
         </Form.Item>
       </Form>
     </Modal>

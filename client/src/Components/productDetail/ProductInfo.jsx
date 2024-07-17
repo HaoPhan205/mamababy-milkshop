@@ -5,7 +5,7 @@ import {
   Col,
   Row,
   Typography,
-  InputNumber,
+  Input,
   Modal,
   message,
 } from "antd";
@@ -15,24 +15,34 @@ import "./ProductInfo.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  addToCart,
+  increaseQuantity,
+  decreaseQuantity,
+  updateQuantity,
+} from "../../Store/reduxReducer/cartSlice";
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 
-const { Title, Paragraph } = Typography;
+const { Title, Paragraph, Text } = Typography;
 
 const ProductInfo = () => {
   const { productItemId } = useParams();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [quantity, setQuantity] = useState(1);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const carts = useSelector((state) => state.cart).products;
+  const [newQuantity, setNewQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
         const response = await api.get(`/api/productitems/${productItemId}`);
-        setProduct(response.data); // Assuming response.data contains the product details
+        setProduct(response.data);
       } catch (err) {
         setError(err);
       } finally {
@@ -60,52 +70,23 @@ const ProductInfo = () => {
   };
 
   const handleAddToCart = () => {
-    const token = Cookies.get("token"); // Lấy token từ cookie
-
-    if (!token) {
-      showModal();
-    } else {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      const existingProduct = cart.find(
-        (item) => item.productItemId === product.productItemId
-      );
-
-      if (existingProduct) {
-        existingProduct.quantity += quantity; // Cập nhật số lượng
-      } else {
-        // Thêm sản phẩm vào giỏ hàng với số lượng được chọn
-        cart.push({ ...product, quantity });
-      }
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-      message.success("Đã thêm sản phẩm vào giỏ hàng.");
-    }
+    const quantity = newQuantity === "" ? 0 : parseInt(newQuantity, 10);
+    dispatch(addToCart({ ...product, quantity }));
+    message.success("Đã thêm sản phẩm vào giỏ hàng.");
   };
 
+  const item = carts.find(
+    (cartItem) => cartItem.productItemId === productItemId
+  ) || { quantity: 1, price: 0, discount: 0, total: 0 };
+
   const handleBuyNow = () => {
-    const token = Cookies.get("token"); // Lấy token từ cookie
+    const token = Cookies.get("token");
 
     if (!token) {
       showModal();
     } else {
-      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      dispatch(addToCart({ ...product, quantity: newQuantity }));
 
-      // Kiểm tra xem sản phẩm đã có trong giỏ hàng chưa
-      const existingProduct = cart.find(
-        (item) => item.productItemId === product.productItemId
-      );
-
-      if (existingProduct) {
-        existingProduct.quantity += quantity; // Cập nhật số lượng
-      } else {
-        // Thêm sản phẩm vào giỏ hàng với số lượng được chọn
-        cart.push({ ...product, quantity });
-      }
-
-      localStorage.setItem("cart", JSON.stringify(cart));
-      message.success("Đã thêm sản phẩm vào giỏ hàng.");
       navigate("/shoppingCart");
     }
   };
@@ -123,8 +104,39 @@ const ProductInfo = () => {
     setIsModalVisible(false);
   };
 
-  const onQuantityChange = (value) => {
-    setQuantity(value);
+  const handleIncreaseQuantity = (productItemId) => {
+    if (newQuantity < product.stockQuantity) {
+      setNewQuantity(newQuantity + 1);
+      dispatch(increaseQuantity({ productItemId }));
+    } else {
+      message.warning("Số lượng không thể vượt quá hàng tồn kho.");
+    }
+  };
+
+  const handleDecreaseQuantity = (productItemId) => {
+    if (newQuantity > 1) {
+      setNewQuantity(newQuantity - 1);
+      dispatch(decreaseQuantity({ productItemId }));
+    }
+  };
+
+  const handleQuantityChange = (e) => {
+    const value = e.target.value === "" ? 0 : parseInt(e.target.value, 10);
+    if (value <= product.stockQuantity && value > 0) {
+      setNewQuantity(value);
+      dispatch(updateQuantity({ productItemId, quantity: value }));
+    } else if (value > product.stockQuantity) {
+      message.warning("Số lượng không thể vượt quá hàng tồn kho.");
+    } else if (value <= 0) {
+      message.warning("Số lượng phải lớn hơn 0.");
+    }
+  };
+
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
   };
 
   return (
@@ -152,22 +164,53 @@ const ProductInfo = () => {
           )}
         </Col>
         <Col xs={24} md={16} className="product-info">
-          <Title level={1} className="product-title">
+          <Title level={2} className="product-title">
             {product?.itemName}
           </Title>
           <Paragraph style={{ color: "black" }}>{product?.benefit}</Paragraph>
+          <div className="info-container">
+            <Text className="total-textinfo">
+              {formatCurrency(product.total)}
+            </Text>
+            <br />
+            <Text className="price-textinfo" delete>
+              {formatCurrency(product.price)}
+            </Text>
+            {product.discount > 0 && (
+              <Text type="danger" className="discount-textinfo">
+                {" "}
+                -{product.discount}%
+              </Text>
+            )}
+          </div>
+
+          <div className="product-stats">
+            Số lượng{"  "}
+            <Button
+              type="text"
+              icon={<MinusOutlined />}
+              onClick={() => handleDecreaseQuantity(productItemId)}
+              className="quantity"
+            />
+            <Input
+              className="quantity-input"
+              type="text"
+              min="0"
+              value={newQuantity}
+              onChange={handleQuantityChange}
+            />
+            <Button
+              type="text"
+              icon={<PlusOutlined />}
+              onClick={() => handleIncreaseQuantity(productItemId)}
+              className="quantity"
+            />
+          </div>
+
           <div className="product-stats">
             Còn {product?.stockQuantity} sản phẩm
           </div>
-          <div className="product-stats">
-            Số lượng
-            <InputNumber
-              min={1}
-              max={product?.stockQuantity}
-              value={quantity}
-              onChange={onQuantityChange}
-            />
-          </div>
+
           <div className="product-actions">
             <Button
               type="primary"
@@ -180,6 +223,7 @@ const ProductInfo = () => {
               Mua ngay
             </Button>
           </div>
+
           <div className="guarantee">Đã bán {product?.soldQuantity}</div>
         </Col>
       </Row>
@@ -189,7 +233,7 @@ const ProductInfo = () => {
         onOk={handleOk}
         onCancel={handleCancel}
       >
-        <p>Bạn cần đăng nhập để thêm sản phẩm vào giỏ hàng.</p>
+        <p>Bạn cần đăng nhập để mua hàng</p>
       </Modal>
     </Card>
   );

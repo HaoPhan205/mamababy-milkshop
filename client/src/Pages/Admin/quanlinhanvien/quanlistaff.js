@@ -8,6 +8,7 @@ import {
   TableCell,
   TableContainer,
   TableHead,
+  TablePagination,
   TableRow,
 } from "@mui/material";
 import api from "../../../config/axios";
@@ -23,8 +24,8 @@ const makeStyle = (role) => {
       };
     case "Staff":
       return {
-        background: "#ffadad8f",
-        color: "red",
+        background: "#ff469e",
+        color: "white",
       };
     default:
       return {
@@ -95,9 +96,13 @@ const renderTable = (admins, loadingState, onEdit, onDelete) => (
 
 const Staffs = () => {
   const [admins, setAdmins] = useState([]);
+  const [staffs, setStaffs] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [currentAdmin, setCurrentAdmin] = useState(null);
+  const [searchText, setSearchText] = useState("");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const fetchAdmins = () => {
     setLoadingState(true);
@@ -105,7 +110,9 @@ const Staffs = () => {
       .get("/api/admins")
       .then((res) => {
         const staff = res.data.filter((admin) => admin.role === "Staff");
-        setAdmins(staff);
+        setStaffs(staff);
+        const admin = res.data.filter((admin) => admin.role === "Admin");
+        setAdmins(admin);
         setLoadingState(false);
       })
       .catch((err) => {
@@ -222,6 +229,30 @@ const Staffs = () => {
       });
   };
 
+  const filteredProducts = searchText
+    ? staffs.filter(
+        (product) =>
+          product.productItemId.toLowerCase().includes(searchText) ||
+          product.itemName.toLowerCase().includes(searchText) ||
+          product.price.toString().includes(searchText) ||
+          product.stockQuantity.toString().includes(searchText)
+      )
+    : staffs;
+
+  const handlePageChange = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleRowsPerPageChange = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const paginatedProducts = filteredProducts.slice(
+    page * rowsPerPage,
+    page * rowsPerPage + rowsPerPage
+  );
+
   return (
     <div className="staffs">
       <Button
@@ -243,6 +274,24 @@ const Staffs = () => {
         },
         handleDelete
       )}
+      {renderTable(
+        staffs,
+        loadingState,
+        (staff) => {
+          setCurrentAdmin(staff);
+          setModalVisible(true);
+        },
+        handleDelete
+      )}
+      <TablePagination
+        rowsPerPageOptions={[5, 10, 20]}
+        component="div"
+        count={filteredProducts.length}
+        rowsPerPage={rowsPerPage}
+        page={page}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleRowsPerPageChange}
+      />
       <StaffFormModal
         visible={modalVisible}
         onClose={() => setModalVisible(false)}
