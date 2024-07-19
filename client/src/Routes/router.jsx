@@ -18,6 +18,7 @@ import Sanpham from "../Pages/Admin/donhang/sanpham";
 import ProtectedRoute from "./ProtectedRoute";
 import SuccessPayment from "../Pages/Payment/SuccessPayment";
 import FailurePayment from "../Pages/Payment/FailurePayment";
+import Countries from "../Pages/Admin/quanlixuatxu/Countries";
 
 export const router = createBrowserRouter([
   {
@@ -122,7 +123,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/adminPage/quan-li-xuat-xu",
-    element: <Staff />,
+    element: <Countries />,
   },
   {
     path: "/adminPage/quan-li-cong-ty",

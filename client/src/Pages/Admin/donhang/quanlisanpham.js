@@ -58,6 +58,13 @@ const renderImages = (image1, image2, image3) => (
   </Row>
 );
 
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(amount);
+};
+
 const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
   <Card title="Danh sách sản phẩm" style={{ marginBottom: 20 }}>
     <Spin spinning={loadingState}>
@@ -72,7 +79,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
               <TableCell>Mã</TableCell>
               <TableCell align="left">Tên sản phẩm</TableCell>
               <TableCell align="left">Đối tượng sử dụng</TableCell>
-              <TableCell align="left">Giá (VNĐ)</TableCell>
+              <TableCell align="left">Giá</TableCell>
               <TableCell align="left">Đã bán</TableCell>
               <TableCell align="left">Lượng hàng</TableCell>
               <TableCell align="left">Actions</TableCell>
@@ -98,7 +105,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
                     "N/A"
                   )}
                 </TableCell>
-                <TableCell>{product.price}</TableCell>
+                <TableCell>{formatCurrency(product.price)}</TableCell>
                 <TableCell>{product.soldQuantity}</TableCell>
                 <TableCell>
                   <span
@@ -228,7 +235,7 @@ const Staffs = () => {
     const apiCall = currentProduct
       ? api.put(`/api/productitems/${currentProduct.productItemId}`, values)
       : api.post("/api/productitems", values);
-    console.log("12", values);
+
     apiCall
       .then(() => {
         message.success(
@@ -261,13 +268,7 @@ const Staffs = () => {
 
   const handleView = (product) => {
     fetchProductDetail(product.productItemId);
-  };
-
-  const formatCurrency = (amount) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(amount);
+    setDetailVisible(true);
   };
 
   return (
@@ -307,19 +308,29 @@ const Staffs = () => {
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
       />
+      <StaffFormModal
+        visible={modalVisible}
+        product={currentProduct}
+        onCancel={() => {
+          setModalVisible(false);
+          setCurrentProduct(null);
+        }}
+        onSave={handleAddEdit}
+      />
       <Modal
         visible={detailVisible}
         onCancel={() => setDetailVisible(false)}
-        title="Thông tin chi tiết sản phẩm"
+        title={selectedProduct?.itemName}
         footer={null}
       >
+        <h3>Thông tin chi tiết sản phẩm:</h3>
         {selectedProduct && (
           <div>
             <p>
-              <strong>Mã đơn hàng:</strong> {selectedProduct.productItemId}
+              <strong>Mã sản phẩm:</strong> {selectedProduct.productItemId}
             </p>
             <p>
-              <strong>Tên đơn hàng:</strong> {selectedProduct.itemName}
+              <strong>Tên sản phẩm:</strong> {selectedProduct.itemName}
             </p>
             <p>
               <strong>Đối tượng sử dụng:</strong>{" "}
@@ -330,7 +341,7 @@ const Staffs = () => {
                 : "N/A"}
             </p>
             <p>
-              <strong>Giá:</strong> {selectedProduct.price}
+              <strong>Giá:</strong> {formatCurrency(selectedProduct.price)}
             </p>
             <TableCell>{selectedProduct.soldQuantity}</TableCell>
             <TableCell>
@@ -366,12 +377,6 @@ const Staffs = () => {
           </div>
         )}
       </Modal>
-      <StaffFormModal
-        visible={modalVisible}
-        onClose={() => setModalVisible(false)}
-        onSubmit={handleAddEdit}
-        initialValues={currentProduct}
-      />
     </div>
   );
 };

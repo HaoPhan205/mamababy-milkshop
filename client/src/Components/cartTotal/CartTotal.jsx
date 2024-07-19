@@ -89,7 +89,7 @@ const CartTotal = ({ selectedItems }) => {
     const xacnhan = "xac-nhan";
     api
       .get(
-        `/api/VNPay/payment/${amount}/${xacnhan}/${shippingInfo}/${customerId}`
+        `/api/payment/VNPay/${amount}/${xacnhan}/${shippingInfo}/${customerId}`
       )
       .then((response) => {
         message.success("Tiến hành thanh toán");
