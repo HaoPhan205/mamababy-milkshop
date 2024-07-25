@@ -142,7 +142,7 @@ const ProductInfo = () => {
   return (
     <Card className="product-detail">
       <Row gutter={[16, 16]} className="product-header">
-        <Col xs={24} md={8} className="product-media">
+        <Col xs={24} md={6} className="product-media">
           {product && (
             <Slider {...settings}>
               {product.image1 && (

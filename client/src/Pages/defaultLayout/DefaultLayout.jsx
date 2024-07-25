@@ -17,7 +17,7 @@ function DefaultLayout() {
       <Header collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
 
       <Layout style={{ overflowX: "hidden" }}>
-        <SideBar style={{ maxHeight: "100vh" }} collapsed={collapsed} />
+        {/* <SideBar style={{ maxHeight: "100vh" }} collapsed={collapsed} /> */}
         <Layout style={{ maxHeight: "100vh", overflowY: "auto" }}>
           <Layout
             style={{

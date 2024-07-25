@@ -1,5 +1,6 @@
 .productsall {
   padding: 0px 60px;
+
   &__title {
     display: flex;
     justify-content: center;
@@ -14,6 +15,7 @@
 
     h1 {
       color: #ff469e;
+      margin: 0 10px; // Add some margin to separate from icons
     }
   }
 
@@ -96,4 +98,66 @@
 :where(.css-dev-only-do-not-override-m4timi).ant-btn-primary {
   background-color: #ff469e;
   border-radius: 20px;
+}
+
+.pagination {
+  margin: 40px;
+  display: flex;
+  justify-content: center;
+}
+
+.search-sort-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 40px;
+
+  .ant-select {
+    margin-left: 16px;
+  }
+
+  .ant-btn {
+    margin-left: 16px;
+  }
+}
+
+// SearchResultPage.scss
+
+// SearchResultPage.scss
+
+.product-content {
+  display: flex;
+  flex-direction: row;
+}
+
+.filter-sidebar {
+  width: 250px;
+  padding: 16px;
+}
+
+.product-list {
+  flex: 1;
+  padding: 16px;
+}
+
+.ant-collapse-header {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.ant-checkbox-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.ant-select {
+  width: 100%;
+}
+
+.pagination {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.ant-slider {
+  margin-top: 16px;
 }

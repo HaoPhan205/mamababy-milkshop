@@ -48,11 +48,11 @@ export const Data = [
     heading: "Quản lý thương hiệu sữa",
     path: "/adminPage/quan-li-thuong-hieu",
   },
-  {
-    icon: UilUsersAlt,
-    heading: "Quản lý đối tượng sử dụng sữa",
-    path: "/adminPage/quan-li-doi-tuong",
-  },
+  // {
+  //   icon: UilUsersAlt,
+  //   heading: "Quản lý đối tượng sử dụng sữa",
+  //   path: "/adminPage/quan-li-doi-tuong",
+  // },
   {
     icon: UilPackage,
     heading: "Quản lý sản phẩm",

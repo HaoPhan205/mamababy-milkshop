@@ -9,10 +9,10 @@ const HomePage = () => {
   return (
     <div className="home">
       <Row gutter={[16, 16]} justify="center">
-        <Col span={24}>
+        <Col span={20}>
           <SlideIndex />
         </Col>
-        <Col span={24}>
+        <Col span={20}>
           <Product />
         </Col>
         <Col span={20}>

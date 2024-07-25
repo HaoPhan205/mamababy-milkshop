@@ -1,9 +1,12 @@
 .product-detail {
   background-color: white;
   border-radius: 8px;
-  padding: 20px;
+  padding: 40px;
   color: black;
   border-bottom: #ff469e;
+  display: flex; // Added
+  justify-content: center;
+
   .product-media {
     .slick-slide img {
       width: 100%;
@@ -15,9 +18,14 @@
   .product-header {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
+    max-width: 1200px;
+
     .product-media {
       flex: 1;
       margin-right: 16px;
+      justify-content: center;
+
       .product-image {
         position: relative;
         width: 100%;

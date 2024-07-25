@@ -34,12 +34,28 @@
     align-items: center;
   }
 
+  &__nav {
+    display: flex;
+    gap: 80px;
+
+    &-item {
+      text-decoration: none;
+      color: #333;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      &:hover {
+        color: #ff469e;
+      }
+    }
+  }
+
   &__free {
     display: flex;
     align-items: center;
     margin-right: 20px;
     &_title {
-      font-size: 15px;
+      font-size: 16px;
       font-weight: bold;
     }
 

@@ -19,6 +19,8 @@ import ProtectedRoute from "./ProtectedRoute";
 import SuccessPayment from "../Pages/Payment/SuccessPayment";
 import FailurePayment from "../Pages/Payment/FailurePayment";
 import Countries from "../Pages/Admin/quanlixuatxu/Countries";
+import Payment from "../Pages/Payment/PaymentPage";
+import Revenue from "../Pages/Admin/doanhthu/RevenuePage";
 
 export const router = createBrowserRouter([
   {
@@ -87,10 +89,10 @@ export const router = createBrowserRouter([
         path: "/thanh-toan-that-bai",
         element: <FailurePayment />,
       },
-      // {
-      //   path: "/thong-tin-thanh-toan",
-      //   element: <PaymentForm />,
-      // },
+      {
+        path: "/thanh-toan",
+        element: <Payment />,
+      },
     ],
   },
   {
@@ -143,11 +145,15 @@ export const router = createBrowserRouter([
   },
   {
     path: "/adminPage/doanh-thu-cua-hang",
-    element: <Staff />,
+    element: <Revenue />,
   },
 
   {
     path: "/staffPage",
     element: <StaffPage />,
+  },
+  {
+    path: "/*",
+    element: <PageError />,
   },
 ]);

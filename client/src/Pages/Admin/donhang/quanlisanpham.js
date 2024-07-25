@@ -80,6 +80,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
               <TableCell align="left">Tên sản phẩm</TableCell>
               <TableCell align="left">Đối tượng sử dụng</TableCell>
               <TableCell align="left">Giá</TableCell>
+              <TableCell align="left">Khuyến mãi</TableCell>
               <TableCell align="left">Đã bán</TableCell>
               <TableCell align="left">Lượng hàng</TableCell>
               <TableCell align="left">Actions</TableCell>
@@ -106,6 +107,7 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
                   )}
                 </TableCell>
                 <TableCell>{formatCurrency(product.price)}</TableCell>
+                <TableCell>{product.discount}%</TableCell>
                 <TableCell>{product.soldQuantity}</TableCell>
                 <TableCell>
                   <span
@@ -311,10 +313,7 @@ const Staffs = () => {
       <StaffFormModal
         visible={modalVisible}
         product={currentProduct}
-        onCancel={() => {
-          setModalVisible(false);
-          setCurrentProduct(null);
-        }}
+        onCancel={() => setModalVisible(false)}
         onSave={handleAddEdit}
       />
       <Modal

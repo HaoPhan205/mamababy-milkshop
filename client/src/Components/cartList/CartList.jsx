@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Input,
@@ -19,27 +19,47 @@ import {
   increaseQuantity,
   resetCart,
   updateQuantity,
+  setSelectedItems,
 } from "../../Store/reduxReducer/cartSlice";
 import close from "../../Assets/deleted.png";
 
 const { Text } = Typography;
 
-function CartList({ selectedItems, setSelectedItems }) {
+function CartList({ selectedItems }) {
   const carts = useSelector((state) => state.cart).products;
   const dispatch = useDispatch();
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const [clearCartConfirmVisible, setClearCartConfirmVisible] = useState(false);
   const [deleteItemId, setDeleteItemId] = useState(null);
+  const [selectAll, setSelectAll] = useState(
+    carts.length > 0 && selectedItems.length === carts.length
+  );
+
+  useEffect(() => {
+    setSelectAll(carts.length > 0 && selectedItems.length === carts.length);
+  }, [carts, selectedItems]);
+
+  useEffect(() => {
+    dispatch(setSelectedItems(selectedItems));
+  }, [selectedItems, dispatch]);
 
   const handleCheckboxChange = (productItemId) => {
-    setSelectedItems((prevSelectedItems) => {
-      if (prevSelectedItems.includes(productItemId)) {
-        return prevSelectedItems.filter((id) => id !== productItemId);
-      } else {
-        return [...prevSelectedItems, productItemId];
-      }
-    });
+    const updatedSelectedItems = selectedItems.includes(productItemId)
+      ? selectedItems.filter((id) => id !== productItemId)
+      : [...selectedItems, productItemId];
+
+    dispatch(setSelectedItems(updatedSelectedItems));
   };
 
+  const handleSelectAllChange = (e) => {
+    const checked = e.target.checked;
+    setSelectAll(checked);
+    if (checked) {
+      dispatch(setSelectedItems(carts.map((item) => item.productItemId)));
+    } else {
+      dispatch(setSelectedItems([]));
+    }
+  };
   const handleIncreaseQuantity = (productItemId) => {
     dispatch(increaseQuantity({ productItemId }));
   };
@@ -56,7 +76,6 @@ function CartList({ selectedItems, setSelectedItems }) {
     const quantity = newQuantity === "" ? 0 : parseInt(newQuantity, 10);
     dispatch(updateQuantity({ productItemId, quantity }));
   };
-
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -82,6 +101,19 @@ function CartList({ selectedItems, setSelectedItems }) {
     setDeleteConfirmVisible(false);
   };
 
+  const showClearCartConfirm = () => {
+    setClearCartConfirmVisible(true);
+  };
+
+  const handleClearCartCancel = () => {
+    setClearCartConfirmVisible(false);
+  };
+
+  const handleClearCartOk = () => {
+    dispatch(resetCart());
+    setClearCartConfirmVisible(false);
+  };
+
   return (
     <div className="cart-list">
       {/* <Title level={2}>Giỏ hàng của bạn</Title> */}
@@ -90,7 +122,9 @@ function CartList({ selectedItems, setSelectedItems }) {
       ) : (
         <>
           <Row className="cart-list-header" gutter={[16, 16]}>
-            <Col span={1}></Col>
+            <Col span={1}>
+              <Checkbox checked={selectAll} onChange={handleSelectAllChange} />
+            </Col>
             <Col style={{ fontSize: 20 }} span={7}>
               Giỏ hàng của bạn
             </Col>
@@ -118,6 +152,7 @@ function CartList({ selectedItems, setSelectedItems }) {
                 <Row gutter={[16, 16]}>
                   <Col span={1} className="center-content">
                     <Checkbox
+                      checked={selectedItems.includes(item.productItemId)}
                       onChange={() => handleCheckboxChange(item.productItemId)}
                     />
                   </Col>
@@ -190,7 +225,6 @@ function CartList({ selectedItems, setSelectedItems }) {
                       className="center-content close"
                       alt="Close"
                       onClick={() => showDeleteConfirm(item.productItemId)}
-                      // onClick={() => dispatch(deleteItem(item.productItemId))}
                     ></img>
                   </Col>
                 </Row>
@@ -202,9 +236,10 @@ function CartList({ selectedItems, setSelectedItems }) {
               <Button
                 type="primary"
                 danger
-                onClick={() => dispatch(resetCart())}
+                // onClick={() => dispatch(resetCart())}
+                onClick={showClearCartConfirm}
               >
-                <ClearOutlined /> Xóa hết giỏ hàng
+                <ClearOutlined /> Dọn dẹp giỏ hàng
               </Button>
             )}
           </div>
@@ -225,6 +260,22 @@ function CartList({ selectedItems, setSelectedItems }) {
             <p style={{ textAlign: "center" }}>
               Bạn có chắc chắn muốn xoá sản phẩm này khỏi giỏ hàng?
             </p>
+          </Col>
+        </Row>
+      </Modal>
+      <Modal
+        title="Xác nhận xóa toàn bộ giỏ hàng"
+        visible={clearCartConfirmVisible}
+        onOk={handleClearCartOk}
+        onCancel={handleClearCartCancel}
+        okText="Xác nhận"
+        cancelText="Hủy"
+        centered
+        style={{ textAlign: "center" }}
+      >
+        <Row justify="center">
+          <Col span={24}>
+            <p>Bạn có chắc chắn muốn xóa toàn bộ giỏ hàng?</p>
           </Col>
         </Row>
       </Modal>

@@ -2,36 +2,23 @@ import "./Header.scss";
 import {
   ShoppingCartOutlined,
   UserOutlined,
-  SearchOutlined,
+  // SearchOutlined,
 } from "@ant-design/icons";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Dropdown,
-  Space,
-  Typography,
-  message,
-} from "antd";
-import React, { useEffect, useState } from "react";
-import Cookies from "js-cookie";
+import { Avatar, Badge, Button, Dropdown, Space, Typography } from "antd";
+import React from "react";
 import { useUsers } from "../../../Services/Hooks/useUsers";
-import api from "../../../config/axios";
 import { useSelector } from "react-redux";
-import Search from "antd/es/input/Search";
-
 const { Text } = Typography;
 
 function Header({ collapsed, toggleCollapsed }) {
   const totalQuantity = useSelector((state) => state.cart.totalQuantity);
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState("");
+
   const { getCurrUser, onLogOut } = useUsers();
-  const [cartQuantity, setCartQuantity] = useState(0);
 
   const handleLogout = async () => {
     onLogOut();
@@ -41,41 +28,41 @@ function Header({ collapsed, toggleCollapsed }) {
     navigate("/shoppingCart");
   };
 
-  useEffect(() => {
-    fetchCartQuantity();
-  }, []);
+  // useEffect(() => {
+  //   fetchCartQuantity();
+  // }, []);
 
-  const fetchCartQuantity = () => {
-    const customerID = Cookies.get("customerId");
+  // const fetchCartQuantity = () => {
+  //   const customerID = Cookies.get("customerId");
 
-    if (customerID) {
-      api
-        .get(`/api/orderdetails/productquantityincart?customerID=${customerID}`)
-        .then((res) => {
-          if (res.data && res.data.productItemCount) {
-            setCartQuantity(res.data.productItemCount);
-          } else {
-            setCartQuantity(0);
-          }
-        })
-        .catch((error) => {
-          console.error("Failed to fetch cart quantity:", error);
-          message.error(
-            "Failed to fetch cart quantity. Please try again later."
-          );
-        });
-    } else {
-      setCartQuantity(0);
-    }
-  };
+  //   if (customerID) {
+  //     api
+  //       .get(`/api/orderdetails/productquantityincart?customerID=${customerID}`)
+  //       .then((res) => {
+  //         if (res.data && res.data.productItemCount) {
+  //           setCartQuantity(res.data.productItemCount);
+  //         } else {
+  //           setCartQuantity(0);
+  //         }
+  //       })
+  //       .catch((error) => {
+  //         console.error("Failed to fetch cart quantity:", error);
+  //         message.error(
+  //           "Failed to fetch cart quantity. Please try again later."
+  //         );
+  //       });
+  //   } else {
+  //     setCartQuantity(0);
+  //   }
+  // };
 
-  const handleSearch = () => {
-    if (searchTerm.trim() === "") {
-      message.warning("Vui lòng nhập từ khóa tìm kiếm");
-      return;
-    }
-    navigate(`/cua-hang?query=${searchTerm}`);
-  };
+  // const handleSearch = () => {
+  //   if (searchTerm.trim() === "") {
+  //     message.warning("Vui lòng nhập từ khóa tìm kiếm");
+  //     return;
+  //   }
+  //   navigate(`/cua-hang?query=${searchTerm}`);
+  // };
 
   const phoneNumber = "0354019580";
 
@@ -88,12 +75,12 @@ function Header({ collapsed, toggleCollapsed }) {
       key: "1",
       label: <a href="/thongtin">Thông tin tài khoản</a>,
     },
-    // {
-    //   key: "3",
-    //   label: <a href="/settings">Đơn mua</a>,
-    // },
     {
       key: "2",
+      label: <a href="/don-hang-cua-ban">Thông tin đơn hàng</a>,
+    },
+    {
+      key: "3",
       label: (
         <button
           onClick={handleLogout}
@@ -118,7 +105,7 @@ function Header({ collapsed, toggleCollapsed }) {
         <Logo />
       </div>
 
-      <Search
+      {/* <Search
         className="header__search"
         placeholder="Ba mẹ muốn tìm mua gì hôm nay?"
         value={searchTerm}
@@ -131,7 +118,19 @@ function Header({ collapsed, toggleCollapsed }) {
           borderWidth: "2px",
           color: "#ff469e",
         }}
-      />
+      /> */}
+
+      <nav className="header__nav">
+        <Text className="header__nav-item" onClick={() => navigate("/")}>
+          Trang chủ
+        </Text>
+        <Text
+          className="header__nav-item"
+          onClick={() => navigate("/cua-hang")}
+        >
+          Cửa hàng
+        </Text>
+      </nav>
 
       <div className="header__free">
         <Text className="header__free_title">

@@ -4,14 +4,15 @@ import { Col, Row } from "antd";
 import CartList from "../../Components/cartList/CartList";
 import CartTotal from "../../Components/cartTotal/CartTotal";
 import { useState } from "react";
+import { useSelector } from "react-redux";
 const style = {
   background: "#ffff",
   padding: "8px 0",
 };
 
 function ShoppingCart() {
-  const [selectedItems, setSelectedItems] = useState([]);
-  // console.log(selectedItems);
+  const selectedItems = useSelector((state) => state.cart.selectedItems || []);
+
   return (
     <div>
       <div className="shoppingcart">
@@ -35,10 +36,7 @@ function ShoppingCart() {
       <Row className="cart__list" gutter={16}>
         <Col className="gutter-row" span={17}>
           <div style={style}>
-            <CartList
-              selectedItems={selectedItems}
-              setSelectedItems={setSelectedItems}
-            />
+            <CartList selectedItems={selectedItems} />
           </div>
         </Col>
         <Col className="gutter-row" span={7}>

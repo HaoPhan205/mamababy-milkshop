@@ -16,6 +16,13 @@ const ProductsFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
     fetchCountries();
   }, []);
 
+  useEffect(() => {
+    if (visible) {
+      form.resetFields();
+      form.setFieldsValue(initialValues);
+    }
+  }, [visible, initialValues, form]);
+
   const fetchBrandMilks = async () => {
     try {
       const response = await api.get("/api/brandmilks");
