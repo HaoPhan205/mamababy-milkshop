@@ -21,7 +21,7 @@ import {
   increaseQuantity,
   decreaseQuantity,
   updateQuantity,
-} from "../../Store/reduxReducer/cartSlice";
+} from "../../store/reduxReducer/cartSlice";
 import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
 import Cookies from "js-cookie";
 

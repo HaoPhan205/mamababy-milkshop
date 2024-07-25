@@ -1,0 +1,84 @@
+.brand-milk-management {
+  padding: 20px;
+  background-color: #f9f9f9;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+
+    h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .add-button {
+      background-color: #1890ff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #40a9ff;
+      }
+    }
+  }
+
+  .ant-table {
+    background-color: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    .ant-table-thead > tr > th {
+      background-color: #fafafa;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .ant-table-tbody > tr > td {
+      background-color: #fff;
+      color: #333;
+    }
+
+    .ant-table-tbody > tr:hover > td {
+      background-color: #e6f7ff;
+    }
+  }
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+
+    .edit-button {
+      background-color: #52c41a;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #73d13d;
+      }
+    }
+
+    .delete-button {
+      background-color: #ff4d4f;
+      color: #fff;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+
+      &:hover {
+        background-color: #ff7875;
+      }
+    }
+  }
+}

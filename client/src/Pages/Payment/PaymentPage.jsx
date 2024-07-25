@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import api from "../../config/axios";
 import "./Payment.scss";
-import { deleteSelectedItems } from "../../Store/reduxReducer/cartSlice";
+import { deleteSelectedItems } from "../../store/reduxReducer/cartSlice";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
 const { Title, Text } = Typography;

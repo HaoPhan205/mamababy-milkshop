@@ -47,7 +47,7 @@ export default function BasicTable() {
   return (
     <div className="Table">
       <h3>Quản lý đơn hàng</h3>
-      <TableContainer
+      {/* <TableContainer
         component={Paper}
         sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
       >
@@ -84,7 +84,7 @@ export default function BasicTable() {
             ))}
           </TableBody>
         </Table>
-      </TableContainer>
+      </TableContainer> */}
     </div>
   );
 }

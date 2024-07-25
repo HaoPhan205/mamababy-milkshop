@@ -273,6 +273,11 @@ const Staffs = () => {
     setDetailVisible(true);
   };
 
+  const handleCloseModal = () => {
+    setModalVisible(false);
+    setCurrentProduct(null);
+  };
+
   return (
     <div className="staffs">
       <Input.Search
@@ -312,15 +317,16 @@ const Staffs = () => {
       />
       <StaffFormModal
         visible={modalVisible}
-        product={currentProduct}
-        onCancel={() => setModalVisible(false)}
-        onSave={handleAddEdit}
+        onClose={handleCloseModal}
+        onSubmit={handleAddEdit}
+        initialValues={currentProduct}
       />
       <Modal
         visible={detailVisible}
         onCancel={() => setDetailVisible(false)}
         title={selectedProduct?.itemName}
         footer={null}
+        width={800}
       >
         <h3>Thông tin chi tiết sản phẩm:</h3>
         {selectedProduct && (

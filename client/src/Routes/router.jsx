@@ -21,6 +21,7 @@ import FailurePayment from "../Pages/Payment/FailurePayment";
 import Countries from "../Pages/Admin/quanlixuatxu/Countries";
 import Payment from "../Pages/Payment/PaymentPage";
 import Revenue from "../Pages/Admin/doanhthu/RevenuePage";
+import BrandMilks from "../Pages/Admin/quanlithuonghieu/brandMilk";
 
 export const router = createBrowserRouter([
   {
@@ -133,7 +134,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/adminPage/quan-li-thuong-hieu",
-    element: <Staff />,
+    element: <BrandMilks />,
   },
   {
     path: "/adminPage/quan-li-doi-tuong",

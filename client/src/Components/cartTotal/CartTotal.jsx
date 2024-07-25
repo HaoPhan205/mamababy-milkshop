@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./CartTotal.scss";
 import api from "../../config/axios";
-import { setTotalInfo } from "../../Store/reduxReducer/cartSlice";
+import { setTotalInfo } from "../../store/reduxReducer/cartSlice";
 
 const { Title, Text } = Typography;
 

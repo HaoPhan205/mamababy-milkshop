@@ -20,7 +20,7 @@ import {
   resetCart,
   updateQuantity,
   setSelectedItems,
-} from "../../Store/reduxReducer/cartSlice";
+} from "../../store/reduxReducer/cartSlice";
 import close from "../../Assets/deleted.png";
 
 const { Text } = Typography;
