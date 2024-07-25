@@ -4,7 +4,7 @@ import { router } from "./Routes/router";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
 import { useStorage } from "./Services/Hooks/useStorage";
-import store from "./Store/store";
+import store from "./store/store";
 import { Provider } from "react-redux";
 
 export const Data = createContext(null);
