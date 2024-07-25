@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 // import api from "../../config/axios";
 
 import { useDispatch } from "react-redux";
-import { addToCart } from "../../store/reduxReducer/cartSlice";
+import { addToCart } from "../../Store/reduxReducer/cartSlice";
 
 function ProductCard({ product, onClick }) {
   const [isModalVisible, setIsModalVisible] = useState(false);

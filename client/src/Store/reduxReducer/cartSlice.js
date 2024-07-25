@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
-
+// Load cart from localStorage
 const loadState = () => {
   try {
     const serializedState = localStorage.getItem("cart");
@@ -8,10 +8,6 @@ const loadState = () => {
       return {
         products: [],
         totalQuantity: 0,
-        selectedItems: [],
-        selectAll: false,
-        totalPrice: 0,
-        totalDiscount: 0,
       };
     }
     return JSON.parse(serializedState);
@@ -19,19 +15,18 @@ const loadState = () => {
     return {
       products: [],
       totalQuantity: 0,
-      selectedItems: [],
-      selectAll: false,
-      totalPrice: 0,
-      totalDiscount: 0,
     };
   }
 };
 
+// Save cart to localStorage
 const saveState = (state) => {
   try {
     const serializedState = JSON.stringify(state);
     localStorage.setItem("cart", serializedState);
-  } catch (err) {}
+  } catch (err) {
+    // Ignore write errors.
+  }
 };
 
 const initialState = loadState();
@@ -41,7 +36,7 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      const item = state.products?.find(
+      const item = state.products.find(
         (item) => item.productItemId === action.payload.productItemId
       );
       if (item) {
@@ -59,21 +54,6 @@ const cartSlice = createSlice({
       saveState(state);
       toast.success("Product added to cart");
     },
-
-    updateQuantity: (state, action) => {
-      const item = state.products.find(
-        (item) => item.productItemId === action.payload.productItemId
-      );
-      if (item) {
-        item.quantity = action.payload.quantity;
-        state.totalQuantity = state.products.reduce(
-          (acc, item) => acc + item.quantity,
-          0
-        );
-        saveState(state);
-      }
-    },
-
     increaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload.productItemId
@@ -84,10 +64,9 @@ const cartSlice = createSlice({
           (acc, item) => acc + item.quantity,
           0
         );
-        saveState(state);
+        saveState(state); // Save state to localStorage
       }
     },
-
     decreaseQuantity: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload.productItemId
@@ -100,10 +79,9 @@ const cartSlice = createSlice({
             0
           );
         }
-        saveState(state);
+        saveState(state); // Save state to localStorage
       }
     },
-
     deleteItem: (state, action) => {
       const item = state.products.find(
         (item) => item.productItemId === action.payload
@@ -116,11 +94,9 @@ const cartSlice = createSlice({
           (acc, item) => acc + item.quantity,
           0
         );
-        state.selectAll = false;
-        saveState(state);
+        saveState(state); // Save state to localStorage
       }
     },
-
     deleteSelectedItems: (state, action) => {
       const selectedIds = action.payload;
       state.products = state.products.filter(
@@ -130,68 +106,22 @@ const cartSlice = createSlice({
         (acc, item) => acc + item.quantity,
         0
       );
-      state.selectAll = false;
-      saveState(state);
+      saveState(state); // Save state to localStorage
     },
-
     resetCart: (state) => {
       state.products = [];
       state.totalQuantity = 0;
-      state.totalPrice = 0;
-      state.totalDiscount = 0;
-      state.selectedItems = [];
-      saveState(state);
-    },
-
-    toggleSelectAll: (state) => {
-      if (state.selectAll) {
-        state.selectedItems = [];
-      } else {
-        state.selectedItems = state.products.map((item) => item.productItemId);
-      }
-      state.selectAll = !state.selectAll;
-      saveState(state);
-    },
-
-    toggleItemSelection: (state, action) => {
-      const { productItemId } = action.payload;
-      if (state.selectedItems.includes(productItemId)) {
-        state.selectedItems = state.selectedItems.filter(
-          (id) => id !== productItemId
-        );
-      } else {
-        state.selectedItems.push(productItemId);
-      }
-      if (state.selectedItems.length === state.products.length) {
-        state.selectAll = true;
-      } else {
-        state.selectAll = false;
-      }
-      saveState(state);
-    },
-
-    setTotalInfo: (state, action) => {
-      state.totalPrice = action.payload.total;
-      state.totalDiscount = action.payload.discount;
-    },
-
-    setSelectedItems(state, action) {
-      state.selectedItems = action.payload;
+      saveState(state); // Save state to localStorage
     },
   },
 });
 
 export const {
   addToCart,
-  updateQuantity,
   increaseQuantity,
   decreaseQuantity,
   deleteItem,
   resetCart,
   deleteSelectedItems,
-  toggleSelectAll,
-  toggleItemSelection,
-  setTotalInfo,
-  setSelectedItems,
 } = cartSlice.actions;
 export default cartSlice.reducer;
