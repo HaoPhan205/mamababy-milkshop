@@ -72,7 +72,7 @@ function ProductCard({ product, onClick }) {
       </Card>
       <Modal
         title="Đăng nhập"
-        visible={isModalVisible}
+        open={isModalVisible}
         onOk={handleOk}
         onCancel={handleCancel}
         footer={[

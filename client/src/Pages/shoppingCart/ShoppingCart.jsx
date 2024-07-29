@@ -3,7 +3,6 @@ import "./ShoppingCart.scss";
 import { Col, Row } from "antd";
 import CartList from "../../Components/cartList/CartList";
 import CartTotal from "../../Components/cartTotal/CartTotal";
-import { useState } from "react";
 import { useSelector } from "react-redux";
 const style = {
   background: "#ffff",
@@ -24,7 +23,7 @@ function ShoppingCart() {
         >
           Trang chủ
         </Link>
-        <h>/</h>
+        <span> / </span>
         <Link
           style={{
             color: "black",

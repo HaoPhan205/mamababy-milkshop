@@ -11,25 +11,22 @@ export const useUsers = () => {
   const { user, setUser } = useContext(Data);
   const navigate = useNavigate();
   useEffect(() => {
-    // Load user data from localStorage when the component mounts
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
       setUser(JSON.parse(savedUser));
     }
   }, [setUser]);
 
-  // Function to handle user login
   const onLogIn = async (username, password) => {
     try {
       const response = await api.post(loginEndpoint, { username, password });
       const { token, customerName, customerId } = response.data;
 
-      // Set token to cookie
       Cookies.set("token", token, { expires: 7 });
       console.log("Token set in cookie:", token);
       Cookies.set("customerName", customerName, { expires: 7 });
       Cookies.set("customerId", customerId, { expires: 7 });
-      // Set user context
+
       const userData = { customerName, customerId };
       setUser(userData);
       localStorage.setItem("user", JSON.stringify(userData));

@@ -14,7 +14,7 @@ function App() {
   const [user, setUser] = useState(
     getFromStorage("user") ? getFromStorage("user") : null
   );
-  console.log(user);
+  // console.log(user);
 
   return (
     <Provider store={store}>

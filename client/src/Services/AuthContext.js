@@ -20,13 +20,13 @@ const AuthProvider = ({ children }) => {
   const login = (userData) => {
     Cookies.set("user", JSON.stringify(userData), { expires: 1 });
     setUser(userData);
-    navigate("/"); // Navigate upon successful login
+    navigate("/");
   };
 
   const logout = () => {
     Cookies.remove("user");
     setUser(null);
-    navigate("/sign-in"); // Navigate upon logout
+    navigate("/sign-in");
   };
 
   return (

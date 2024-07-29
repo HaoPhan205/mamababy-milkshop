@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Button, Divider, Typography, message } from "antd";
+import { Button, Divider, Modal, Typography, message } from "antd";
 import {} from "@ant-design/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 import "./CartTotal.scss";
-import api from "../../config/axios";
+// import api from "../../config/axios";
 import { setTotalInfo } from "../../store/reduxReducer/cartSlice";
 
 const { Title, Text } = Typography;
@@ -13,6 +13,7 @@ const { Title, Text } = Typography;
 const CartTotal = ({ selectedItems }) => {
   const [totalPrice, setTotalPrice] = useState(0);
   const [totalDiscount, setTotalDiscount] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const navigate = useNavigate();
   const carts = useSelector((state) => state.cart).products;
@@ -20,7 +21,7 @@ const CartTotal = ({ selectedItems }) => {
 
   useEffect(() => {
     calculateTotalPrice();
-  }, [selectedItems, carts]);
+  });
 
   const calculateTotalPrice = () => {
     if (!selectedItems || !Array.isArray(selectedItems) || !carts) {
@@ -58,34 +59,18 @@ const CartTotal = ({ selectedItems }) => {
     if (token) {
       navigate("/thanh-toan");
     } else {
-      message.warning("Bạn cần đăng nhập để thanh toán.");
-      navigate("/sign-in");
+      setIsModalVisible(true);
     }
   };
 
-  // const handleFormSubmit = (values) => {
-  //   const { name, phone, address } = values;
-  //   const shippingInfo = `${name}-${phone}-${address}`;
-  //   const customerId = Cookies.get("customerId");
-  //   const amount = totalPrice; // Assuming totalPrice is already defined in your component
-  //   const xacnhan = "xac-nhan";
-  //   api
-  //     .get(
-  //       `/api/payment/VNPay/${amount}/${xacnhan}/${shippingInfo}/${customerId}`
-  //     )
-  //     .then((response) => {
-  //       message.success("Tiến hành thanh toán");
+  const handleModalOk = () => {
+    setIsModalVisible(false);
+    navigate("/sign-in");
+  };
 
-  //       const paymentUrl = response.data; // Assuming the API returns the payment URL in `response.data.paymentUrl`
-  //       console.log(selectedItems);
-  //       window.location.href = paymentUrl; // Redirect to the payment page
-  //       dispatch(deleteSelectedItems(selectedItems));
-  //     })
-  //     .catch((error) => {
-  //       console.error("Failed to process payment:", error);
-  //       message.error("Failed to process payment. Please try again later.");
-  //     });
-  // };
+  const handleModalCancel = () => {
+    setIsModalVisible(false);
+  };
 
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
@@ -122,6 +107,16 @@ const CartTotal = ({ selectedItems }) => {
           Thanh toán ngay
         </Button>
       </div>
+      <Modal
+        title="Đăng nhập"
+        open={isModalVisible}
+        onOk={handleModalOk}
+        onCancel={handleModalCancel}
+        okText="Đăng nhập"
+        cancelText="Hủy"
+      >
+        <p>Bạn cần đăng nhập để thanh toán.</p>
+      </Modal>
     </div>
   );
 };

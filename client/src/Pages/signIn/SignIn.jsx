@@ -21,15 +21,14 @@ import "./SignIn.scss";
 import { useForm } from "antd/es/form/Form";
 import api from "../../config/axios";
 import Cookies from "js-cookie";
-import { auth, googleProvider, signInWithPopup } from "../../config/firebase";
 
 const SignIn = () => {
   const [loading, setLoading] = useState(false);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const { onLogIn } = useUsers();
   const navigate = useNavigate();
-  const [form] = useForm();
-  const [modalForm] = useForm(); // Form trong modal
+
+  const [modalForm] = useForm();
 
   const formik = useFormik({
     initialValues: {
@@ -46,11 +45,9 @@ const SignIn = () => {
       setLoading(true);
       try {
         await onLogIn(values.email, values.password);
-        // Đăng nhập thành công
 
         navigate("/");
       } catch (error) {
-        // Xử lý lỗi
         console.error("Error logging in:", error);
         if (error.response && error.response.data) {
           message.error(error.response.data.message || "Đăng nhập thất bại");
@@ -81,11 +78,9 @@ const SignIn = () => {
 
       const { token, role } = response.data;
 
-      // Lưu token vào cookie với thời gian sống là 1 ngày (hoặc thời gian phù hợp)
       Cookies.set("token", token, { expires: 7 });
       Cookies.set("role", role, { expires: 7 });
 
-      // Chuyển hướng đến trang tương ứng với role
       if (role === "Admin") {
         navigate("/adminPage");
       } else if (role === "Staff") {
@@ -95,7 +90,7 @@ const SignIn = () => {
       }
 
       message.success("Đăng nhập thành công");
-      handleCloseLoginModal(); // Đóng modal sau khi đăng nhập thành công
+      handleCloseLoginModal();
     } catch (error) {
       console.error("Error logging in:", error);
       message.error(error.response?.data?.message || "Đăng nhập thất bại");
@@ -192,10 +187,9 @@ const SignIn = () => {
       </Col>
       <Col className="signIn__sidePic" md={12}></Col>
 
-      {/* Modal đăng nhập */}
       <Modal
         title="Đăng nhập cho Tài khoản nhân viên"
-        visible={showLoginModal}
+        open={showLoginModal}
         onCancel={handleCloseLoginModal}
         footer={[
           <Button key="cancel" onClick={handleCloseLoginModal}>

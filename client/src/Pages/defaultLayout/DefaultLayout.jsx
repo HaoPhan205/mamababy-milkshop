@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import Header from "../../Components/Layouts/header/Header";
 import { Outlet } from "react-router-dom";
 import Footer from "../../Components/Layouts/footer/Footer";
-import SideBar from "../../Components/sidebar/SideBar";
 
 function DefaultLayout() {
   const [collapsed, setCollapsed] = useState(false);
@@ -17,7 +16,6 @@ function DefaultLayout() {
       <Header collapsed={collapsed} toggleCollapsed={toggleCollapsed} />
 
       <Layout style={{ overflowX: "hidden" }}>
-        {/* <SideBar style={{ maxHeight: "100vh" }} collapsed={collapsed} /> */}
         <Layout style={{ maxHeight: "100vh", overflowY: "auto" }}>
           <Layout
             style={{

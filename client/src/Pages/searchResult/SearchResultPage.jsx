@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "./SearchResultPage.scss";
 import {
   Row,
@@ -11,8 +11,10 @@ import {
   Checkbox,
   Collapse,
   Slider,
+  Spin,
+  Alert,
 } from "antd";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import api from "../../config/axios";
 import icon1 from "../../Assets/ticker-cute-1.png";
 import icon2 from "../../Assets/ticker-cute-2.png";
@@ -24,7 +26,7 @@ const { Panel } = Collapse;
 
 const SearchResultPage = ({ user }) => {
   const navigate = useNavigate();
-  const location = useLocation();
+
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -38,67 +40,49 @@ const SearchResultPage = ({ user }) => {
   const [selectedBrands, setSelectedBrands] = useState([]);
   const [selectedCountry, setSelectedCountry] = useState("");
   const [selectedCompany, setSelectedCompany] = useState("");
-  const [priceRange, setPriceRange] = useState([0, 10000000]); // Khởi tạo khoảng giá mặc định
+  const [priceRange, setPriceRange] = useState([0, 10000000]);
   const itemsPerPage = 16;
   const columns = { xs: 24, sm: 12, md: 8, lg: 8, xl: 6 };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get("/api/productitems");
-        const productList = response.data;
-        setProducts(productList);
-        setFilteredProducts(productList);
-      } catch (err) {
-        setError(err);
-        message.error("Đã có lỗi xảy ra khi tìm kiếm sản phẩm.");
-      } finally {
-        setLoading(false);
-      }
-    };
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      const [productResponse, brandResponse, countryResponse, companyResponse] =
+        await Promise.all([
+          api.get("/api/productitems"),
+          api.get("/api/brandmilks"),
+          api.get("/api/countries"),
+          api.get("/api/companies"),
+        ]);
 
-    const fetchBrands = async () => {
-      try {
-        const response = await api.get("/api/brandmilks");
-        const sortedBrands = response.data.sort((a, b) =>
+      setProducts(productResponse.data);
+      setFilteredProducts(productResponse.data);
+      setBrands(
+        brandResponse.data.sort((a, b) =>
           a.brandName.localeCompare(b.brandName)
-        );
-        setBrands(sortedBrands);
-      } catch (err) {
-        message.error("Đã có lỗi xảy ra khi lấy danh sách thương hiệu.");
-      }
-    };
-
-    const fetchCountries = async () => {
-      try {
-        const response = await api.get("/api/countries");
-        const sortedCountries = response.data.sort((a, b) =>
+        )
+      );
+      setCountries(
+        countryResponse.data.sort((a, b) =>
           a.countryName.localeCompare(b.countryName)
-        );
-        setCountries(sortedCountries);
-      } catch (err) {
-        message.error("Đã có lỗi xảy ra khi lấy danh sách xuất xứ.");
-      }
-    };
-
-    const fetchCompanies = async () => {
-      try {
-        const response = await api.get("/api/companies");
-        const sortedCompanies = response.data.sort((a, b) =>
+        )
+      );
+      setCompanies(
+        companyResponse.data.sort((a, b) =>
           a.companyName.localeCompare(b.companyName)
-        );
-        setCompanies(sortedCompanies);
-      } catch (err) {
-        message.error("Đã có lỗi xảy ra khi lấy danh sách công ty.");
-      }
-    };
-
-    fetchProducts();
-    fetchBrands();
-    fetchCountries();
-    fetchCompanies();
+        )
+      );
+    } catch (err) {
+      setError(err);
+      message.error("Đã có lỗi xảy ra khi tải dữ liệu.");
+    } finally {
+      setLoading(false);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchData();
+  }, [fetchData]);
 
   useEffect(() => {
     const filtered = products
@@ -111,10 +95,14 @@ const SearchResultPage = ({ user }) => {
           : true
       )
       .filter((product) =>
-        selectedCountry ? product.country === selectedCountry : true
+        selectedCountry.length
+          ? selectedCountry.includes(product.countryName)
+          : true
       )
       .filter((product) =>
-        selectedCompany ? product.companyName === selectedCompany : true
+        selectedCompany.length
+          ? selectedCompany.includes(product.companyName)
+          : true
       )
       .filter(
         (product) =>
@@ -122,11 +110,8 @@ const SearchResultPage = ({ user }) => {
       );
 
     const sorted = [...filtered].sort((a, b) => {
-      if (sortOrder === "ascend") {
-        return a.total - b.total;
-      } else if (sortOrder === "descend") {
-        return b.total - a.total;
-      }
+      if (sortOrder === "ascend") return a.total - b.total;
+      if (sortOrder === "descend") return b.total - a.total;
       return 0;
     });
 
@@ -193,13 +178,11 @@ const SearchResultPage = ({ user }) => {
     }).format(value);
   };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error.message}</div>;
-  }
+  if (loading) return <Spin size="large" />;
+  if (error)
+    return (
+      <Alert message="Lỗi" description={error.message} type="error" showIcon />
+    );
 
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -214,7 +197,7 @@ const SearchResultPage = ({ user }) => {
         <Link style={{ color: "black" }} to="/">
           Trang chủ
         </Link>
-        <h>/</h>
+        <span> / </span>
         <Link style={{ color: "black" }} to="/cua-hang">
           Cửa hàng
         </Link>
@@ -263,34 +246,24 @@ const SearchResultPage = ({ user }) => {
               />
             </Panel>
             <Panel header="Xuất xứ" key="2">
-              <Select
-                placeholder="Chọn xuất xứ"
-                value={selectedCountry}
+              <Checkbox.Group
+                options={countries.map((country) => ({
+                  label: country.countryName,
+                  value: country.countryName,
+                }))}
                 onChange={handleCountryChange}
-                style={{ width: "100%" }}
-              >
-                <Option value="">Tất cả xuất xứ</Option>
-                {countries.map((country) => (
-                  <Option key={country.countryID} value={country.countryName}>
-                    {country.countryName}
-                  </Option>
-                ))}
-              </Select>
+                style={{ display: "flex", flexDirection: "column" }}
+              />
             </Panel>
             <Panel header="Công ty" key="3">
-              <Select
-                placeholder="Chọn công ty"
-                value={selectedCompany}
+              <Checkbox.Group
+                options={companies.map((company) => ({
+                  label: company.companyName,
+                  value: company.companyName,
+                }))}
                 onChange={handleCompanyChange}
-                style={{ width: "100%" }}
-              >
-                <Option value="">Tất cả công ty</Option>
-                {companies.map((company) => (
-                  <Option key={company.companyID} value={company.companyName}>
-                    {company.companyName}
-                  </Option>
-                ))}
-              </Select>
+                style={{ display: "flex", flexDirection: "column" }}
+              />
             </Panel>
             <Panel header="Khoảng giá" key="4">
               <Slider

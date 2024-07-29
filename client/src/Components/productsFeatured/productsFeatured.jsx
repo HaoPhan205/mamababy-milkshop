@@ -1,9 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Carousel, Button } from "antd";
-import { LeftOutlined, RightOutlined } from "@ant-design/icons";
+import { Carousel } from "antd";
+// import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
-import { Link } from "react-router-dom";
 import api from "../../config/axios";
 
 import ProductCard from "../productCard/ProductCard";
@@ -34,18 +33,13 @@ const Product = () => {
     navigate(`/chi-tiet-san-pham/${productItemId}`);
   };
 
-  const handleAddToCart = (productId) => {
-    // Implement the logic for adding the product to the cart
-    console.log("Product added to cart:", productId);
-  };
+  // const handlePrev = () => {
+  //   carouselRef.current.prev();
+  // };
 
-  const handlePrev = () => {
-    carouselRef.current.prev();
-  };
-
-  const handleNext = () => {
-    carouselRef.current.next();
-  };
+  // const handleNext = () => {
+  //   carouselRef.current.next();
+  // };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -64,9 +58,6 @@ const Product = () => {
         >
           Sản phẩm nổi bật
         </div>
-        <Link to="/products-page" className="see-all-link">
-          Xem tất cả
-        </Link>
       </div>
       <Carousel
         dots={false}
@@ -81,15 +72,14 @@ const Product = () => {
             <ProductCard
               product={product}
               onClick={() => handleItemClick(product.productItemId)}
-              onAddToCart={() => handleAddToCart(product.productItemId)}
             />
           </div>
         ))}
       </Carousel>
-      <div className="carousel__button">
+      {/* <div className="carousel__button">
         <Button onClick={handlePrev} icon={<LeftOutlined />} />
         <Button onClick={handleNext} icon={<RightOutlined />} />
-      </div>
+      </div> */}
     </div>
   );
 };

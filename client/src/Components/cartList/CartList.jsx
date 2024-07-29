@@ -9,6 +9,7 @@ import {
   Col,
   Divider,
   Modal,
+  message,
 } from "antd";
 import { PlusOutlined, MinusOutlined, ClearOutlined } from "@ant-design/icons";
 import "./CartList.scss";
@@ -60,8 +61,14 @@ function CartList({ selectedItems }) {
       dispatch(setSelectedItems([]));
     }
   };
+
   const handleIncreaseQuantity = (productItemId) => {
-    dispatch(increaseQuantity({ productItemId }));
+    const item = carts.find((item) => item.productItemId === productItemId);
+    if (item.quantity < item.stockQuantity) {
+      dispatch(increaseQuantity({ productItemId }));
+    } else {
+      message.warning("Số lượng vượt quá lượng hàng có sẵn");
+    }
   };
 
   const handleDecreaseQuantity = (productItemId) => {
@@ -74,8 +81,14 @@ function CartList({ selectedItems }) {
 
   const handleQuantityChange = (productItemId, newQuantity) => {
     const quantity = newQuantity === "" ? 0 : parseInt(newQuantity, 10);
-    dispatch(updateQuantity({ productItemId, quantity }));
+    const item = carts.find((item) => item.productItemId === productItemId);
+    if (quantity <= item.stockQuantity) {
+      dispatch(updateQuantity({ productItemId, quantity }));
+    } else {
+      message.warning("Số lượng vượt quá lượng hàng có sẵn");
+    }
   };
+
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat("vi-VN", {
       style: "currency",
@@ -116,7 +129,6 @@ function CartList({ selectedItems }) {
 
   return (
     <div className="cart-list">
-      {/* <Title level={2}>Giỏ hàng của bạn</Title> */}
       {Array.isArray(carts) && carts.length === 0 ? (
         <p>Giỏ hàng của bạn trống</p>
       ) : (
@@ -164,7 +176,9 @@ function CartList({ selectedItems }) {
                     />
                   </Col>
                   <Col span={5} className="itemName">
-                    <Text strong>{item.itemName}</Text>
+                    <Text strong>{item.itemName} </Text>
+                    <br />
+                    <Text>Lượng hàng: {item.stockQuantity}</Text>
                   </Col>
                   <Col span={4} className="center-content">
                     <div className="price-container">
@@ -247,7 +261,7 @@ function CartList({ selectedItems }) {
       )}
       <Modal
         title="Xác nhận xoá sản phẩm"
-        visible={deleteConfirmVisible}
+        open={deleteConfirmVisible}
         onOk={handleDeleteOk}
         onCancel={handleDeleteCancel}
         okText="Xác nhận"
@@ -265,7 +279,7 @@ function CartList({ selectedItems }) {
       </Modal>
       <Modal
         title="Xác nhận xóa toàn bộ giỏ hàng"
-        visible={clearCartConfirmVisible}
+        open={clearCartConfirmVisible}
         onOk={handleClearCartOk}
         onCancel={handleClearCartCancel}
         okText="Xác nhận"

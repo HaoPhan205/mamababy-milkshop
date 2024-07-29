@@ -9,7 +9,6 @@ import icon2 from "../../Assets/ticker-cute-2.png";
 import ProductCard from "../../Components/productCard/ProductCard";
 
 const Products = ({ user }) => {
-  // Ensure user prop is used here
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +18,7 @@ const Products = ({ user }) => {
     const fetchProducts = async () => {
       try {
         const response = await api.get("/api/productitems");
-        setProducts(response.data.slice(0, 16)); // Show only the first 16 products
+        setProducts(response.data.slice(0, 16));
       } catch (err) {
         setError(err);
       } finally {
@@ -39,8 +38,7 @@ const Products = ({ user }) => {
       navigate("/sign-in");
       return;
     }
-    console.log("Product added to cart:", productId);
-    // Here you would also add the product to the cart, e.g., by updating state or making an API call
+    // console.log("Product added to cart:", productId);
   };
 
   const handleSeeMore = () => {

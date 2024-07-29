@@ -15,7 +15,7 @@ import PageError from "../Pages/PageError/PageError";
 
 import Staff from "../Pages/Admin/quanlinhanvien/staff";
 import Sanpham from "../Pages/Admin/donhang/sanpham";
-import ProtectedRoute from "./ProtectedRoute";
+// import ProtectedRoute from "./ProtectedRoute";
 import SuccessPayment from "../Pages/Payment/SuccessPayment";
 import FailurePayment from "../Pages/Payment/FailurePayment";
 import Countries from "../Pages/Admin/quanlixuatxu/Countries";

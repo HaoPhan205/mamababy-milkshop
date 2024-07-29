@@ -1,11 +1,7 @@
 import "./Header.scss";
-import {
-  ShoppingCartOutlined,
-  UserOutlined,
-  // SearchOutlined,
-} from "@ant-design/icons";
+import { ShoppingCartOutlined, UserOutlined } from "@ant-design/icons";
 
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Logo from "../../logo/Logo";
 import free from "../../../Assets/free-call.png";
 import { Avatar, Badge, Button, Dropdown, Space, Typography } from "antd";
@@ -28,49 +24,9 @@ function Header({ collapsed, toggleCollapsed }) {
     navigate("/shoppingCart");
   };
 
-  // useEffect(() => {
-  //   fetchCartQuantity();
-  // }, []);
-
-  // const fetchCartQuantity = () => {
-  //   const customerID = Cookies.get("customerId");
-
-  //   if (customerID) {
-  //     api
-  //       .get(`/api/orderdetails/productquantityincart?customerID=${customerID}`)
-  //       .then((res) => {
-  //         if (res.data && res.data.productItemCount) {
-  //           setCartQuantity(res.data.productItemCount);
-  //         } else {
-  //           setCartQuantity(0);
-  //         }
-  //       })
-  //       .catch((error) => {
-  //         console.error("Failed to fetch cart quantity:", error);
-  //         message.error(
-  //           "Failed to fetch cart quantity. Please try again later."
-  //         );
-  //       });
-  //   } else {
-  //     setCartQuantity(0);
-  //   }
-  // };
-
-  // const handleSearch = () => {
-  //   if (searchTerm.trim() === "") {
-  //     message.warning("Vui lòng nhập từ khóa tìm kiếm");
-  //     return;
-  //   }
-  //   navigate(`/cua-hang?query=${searchTerm}`);
-  // };
-
   const phoneNumber = "0354019580";
 
   const items = [
-    // {
-    //   key: "1",
-    //   label: <a href="/user-dashboard">Dashboard</a>,
-    // },
     {
       key: "1",
       label: <a href="/thongtin">Thông tin tài khoản</a>,
@@ -104,21 +60,6 @@ function Header({ collapsed, toggleCollapsed }) {
       <div className="header__logo">
         <Logo />
       </div>
-
-      {/* <Search
-        className="header__search"
-        placeholder="Ba mẹ muốn tìm mua gì hôm nay?"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-        onSearch={handleSearch}
-        enterButton
-        style={{
-          cursor: "pointer",
-          fontSize: "1.5em",
-          borderWidth: "2px",
-          color: "#ff469e",
-        }}
-      /> */}
 
       <nav className="header__nav">
         <Text className="header__nav-item" onClick={() => navigate("/")}>
@@ -162,8 +103,7 @@ function Header({ collapsed, toggleCollapsed }) {
                 <div>
                   <Space
                     style={{
-                      // padding: 8,
-                      margin: "1em",
+                      // margin: "1em",
                       borderBottom: "1px solid gray",
                     }}
                   >
@@ -171,14 +111,9 @@ function Header({ collapsed, toggleCollapsed }) {
                       style={{
                         display: "flex",
                         alignItems: "center",
-                        gap: "1em",
+                        // gap: "1em",
                       }}
                     >
-                      {/* <Avatar
-                        src=""
-                        icon={<UserOutlined />}
-                        style={{ width: "2em", height: "2em" }}
-                      /> */}
                       <div>
                         <h5>{currentUser.customerName}</h5>
                       </div>

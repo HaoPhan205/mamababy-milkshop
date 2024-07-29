@@ -15,7 +15,7 @@ import "./ProductInfo.scss";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import { useNavigate, useParams } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   addToCart,
   increaseQuantity,
@@ -35,7 +35,7 @@ const ProductInfo = () => {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const carts = useSelector((state) => state.cart).products;
+  // const carts = useSelector((state) => state.cart).products;
   const [newQuantity, setNewQuantity] = useState(1);
 
   useEffect(() => {
@@ -75,9 +75,9 @@ const ProductInfo = () => {
     message.success("Đã thêm sản phẩm vào giỏ hàng.");
   };
 
-  const item = carts.find(
-    (cartItem) => cartItem.productItemId === productItemId
-  ) || { quantity: 1, price: 0, discount: 0, total: 0 };
+  // const item = carts.find(
+  //   (cartItem) => cartItem.productItemId === productItemId
+  // ) || { quantity: 1, price: 0, discount: 0, total: 0 };
 
   const handleBuyNow = () => {
     const token = Cookies.get("token");

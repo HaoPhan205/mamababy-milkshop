@@ -8,38 +8,8 @@ export default function SlideIndex({ interval = 3000 }) {
   const [activeStep, setActiveStep] = useState(0);
   const [items, setItems] = useState([]);
 
-  // useEffect(() => {
-  //   const fetchImages = async () => {
-  //     const response = await fetch(
-  //       "https://6601c3c89d7276a755521e4b.mockapi.io/IMAGE"
-  //     );
-  //     const data = await response.json();
-  //     const loadedItems = data.map((image, index) => (
-  //       <img
-  //         className="carousel_pic"
-  //         key={index}
-  //         src={image.img}
-  //         alt={`Slide ${index + 1}`}
-  //         style={{ width: "100%" }}
-  //       />
-  //     ));
-  //     setItems(loadedItems);
-  //   };
-
-  //   fetchImages();
-  // }, []);
-
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setActiveStep((prevActiveStep) => (prevActiveStep + 1) % items.length);
-  //   }, interval);
-
-  //   return () => clearInterval(timer);
-  // }, [items, interval]);
-
   useEffect(() => {
     if (Array.isArray(images) && images.length > 0) {
-      console.log("Images array:", images);
       const loadedItems = images.map((img, index) => (
         <img
           className="carousel_pic"
