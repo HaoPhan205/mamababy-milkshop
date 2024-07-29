@@ -16,11 +16,16 @@ const Payment = () => {
   const navigate = useNavigate();
   const customerId = Cookies.get("customerId");
   const selectedItems = useSelector((state) => state.cart.selectedItems);
+  const carts = useSelector((state) => state.cart).products;
   const [paymentMethodSelected, setPaymentMethodSelected] = useState(false);
   const totalInfo = useSelector((state) => ({
     total: state.cart.totalPrice,
     discount: state.cart.totalDiscount,
   }));
+
+  const filteredSelectedItems = carts.filter((item) =>
+    selectedItems.includes(item.productItemId)
+  );
 
   const handleVNPayPayment = async (values) => {
     setLoading(true);
@@ -50,7 +55,7 @@ const Payment = () => {
     const shippingAddress = `${name} - ${phone} - ${address}`;
     const amount = totalInfo.total + totalInfo.discount;
 
-    const productItems = selectedItems.map((item) => ({
+    const productItems = filteredSelectedItems.map((item) => ({
       productItemID: item.productItemId,
       quantity: item.quantity,
     }));
@@ -59,7 +64,7 @@ const Payment = () => {
       amount: amount,
       shippingAddress,
       customerID: customerId,
-      productItems,
+      productItems: productItems,
     };
 
     try {
@@ -111,7 +116,11 @@ const Payment = () => {
 
   const onPaymentMethodChange = (e) => {
     setPaymentMethodSelected(!!e.target.value);
-    console.log(selectedItems);
+    // console.log(selectedItems);
+    console.log(filteredSelectedItems);
+    // console.log(totalInfo.total);
+    // console.log(totalInfo.discount);
+    // console.log(totalInfo.total + totalInfo.discount);
   };
 
   return (

@@ -16,7 +16,7 @@ const CartTotal = ({ selectedItems }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
 
   const navigate = useNavigate();
-  const carts = useSelector((state) => state.cart).products;
+  const carts = useSelector((state) => state.cart.products);
   const dispatch = useDispatch();
 
   useEffect(() => {

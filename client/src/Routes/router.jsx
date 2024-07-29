@@ -22,6 +22,7 @@ import Countries from "../Pages/Admin/quanlixuatxu/Countries";
 import Payment from "../Pages/Payment/PaymentPage";
 import Revenue from "../Pages/Admin/doanhthu/RevenuePage";
 import BrandMilks from "../Pages/Admin/quanlithuonghieu/brandMilk";
+import CustomerInfo from "../Pages/CustomerInfo/CustomerInfo";
 
 export const router = createBrowserRouter([
   {
@@ -93,6 +94,10 @@ export const router = createBrowserRouter([
       {
         path: "/thanh-toan",
         element: <Payment />,
+      },
+      {
+        path: "/thongtin",
+        element: <CustomerInfo />,
       },
     ],
   },

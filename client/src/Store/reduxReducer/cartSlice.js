@@ -173,10 +173,12 @@ const cartSlice = createSlice({
     setTotalInfo: (state, action) => {
       state.totalPrice = action.payload.total;
       state.totalDiscount = action.payload.discount;
+      // saveState(state);
     },
 
     setSelectedItems(state, action) {
       state.selectedItems = action.payload;
+      saveState(state);
     },
   },
 });

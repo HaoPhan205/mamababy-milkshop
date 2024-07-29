@@ -54,7 +54,6 @@ const Donhang = ({ customerId }) => {
         console.error(`Error fetching orders with status ${status}:`, error);
       }
     };
-    // console.log("hello");
     setLoadingPending(true);
     setLoadingShipping(true);
     setLoadingDelivered(true);
