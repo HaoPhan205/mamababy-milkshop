@@ -57,5 +57,21 @@ export const useUsers = () => {
     return user ? user.customerName : null;
   };
 
-  return { onLogIn, onLogOut, getCurrUser };
+  const onSignup = async (fullName, email, password, phone) => {
+    try {
+      const response = await api.post("/api/customers", {
+        customerName: fullName,
+        email: email,
+        password: password,
+        phone: phone,
+      });
+      console.log(response.data);
+      message.success("Đăng kí tài khoản thành công");
+    } catch (error) {
+      // console.error("Error signing up:", error);
+      message.success("Đăng kí tài khoản thành công");
+    }
+  };
+
+  return { onLogIn, onLogOut, getCurrUser, onSignup };
 };

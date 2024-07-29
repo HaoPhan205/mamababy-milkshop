@@ -3,6 +3,8 @@ import {
   EyeTwoTone,
   LockOutlined,
   MailOutlined,
+  UserOutlined,
+  PhoneOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -46,6 +48,9 @@ const validationSchema = Yup.object().shape({
       "The two passwords that you entered do not match!"
     )
     .required("Please confirm your password!"),
+  phone: Yup.string()
+    .matches(/^[0-9]{10}$/, "Phone number must be 10 digits")
+    .required("Please input your phone number!"),
   agree: Yup.boolean().oneOf(
     [true],
     "You must accept the terms and conditions"
@@ -63,13 +68,20 @@ export default function SignUp() {
       email: "",
       password: "",
       confirmPassword: "",
+      phone: "",
       agree: false,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
-      await onSignup(values.fullName, values.email, values.password);
+      await onSignup(
+        values.fullName,
+        values.email,
+        values.password,
+        values.phone
+      );
       setLoading(false);
+      navigate("/sign-in");
     },
   });
 
@@ -83,6 +95,7 @@ export default function SignUp() {
             className="signup-form signUp__card__detail__input"
             initialValues={{ remember: true }}
             onFinish={formik.handleSubmit}
+            autoComplete="off"
           >
             <Form.Item
               name="fullName"
@@ -99,9 +112,43 @@ export default function SignUp() {
                 className="signUp__card__detail__input__detail"
                 placeholder="Tên của bạn"
                 name="fullName"
+                prefix={
+                  <UserOutlined
+                    style={{ marginRight: "1.5em" }}
+                    className="site-form-item-icon"
+                  />
+                }
                 value={formik.values.fullName}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                autoComplete="off"
+              />
+            </Form.Item>
+            <Form.Item
+              name="phone"
+              help={
+                formik.touched.phone && formik.errors.phone
+                  ? formik.errors.phone
+                  : ""
+              }
+              validateStatus={
+                formik.touched.phone && formik.errors.phone ? "error" : ""
+              }
+            >
+              <Input
+                className="signUp__card__detail__input__detail"
+                placeholder="Số điện thoại của bạn"
+                name="phone"
+                prefix={
+                  <PhoneOutlined
+                    style={{ marginRight: "1.5em" }}
+                    className="site-form-item-icon"
+                  />
+                }
+                value={formik.values.phone}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item
@@ -128,6 +175,7 @@ export default function SignUp() {
                 value={formik.values.email}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item
@@ -157,6 +205,7 @@ export default function SignUp() {
                 value={formik.values.password}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                autoComplete="off"
               />
             </Form.Item>
             <Form.Item
@@ -188,11 +237,12 @@ export default function SignUp() {
                 value={formik.values.confirmPassword}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                autoComplete="off"
               />
             </Form.Item>
+
             <Form.Item>
               <Checkbox
-                style={{ fontFamily: "Gantari" }}
                 name="agree"
                 checked={formik.values.agree}
                 onChange={formik.handleChange}
@@ -232,8 +282,16 @@ export default function SignUp() {
                       defaultActiveBg: "#ff469e",
                       defaultBg: "#ff469e",
                     }}
-                    loading={formik.isSubmitting}
-                    disabled={!formik.values.agree}
+                    loading={loading}
+                    disabled={
+                      !formik.values.fullName ||
+                      !formik.values.email ||
+                      !formik.values.password ||
+                      !formik.values.confirmPassword ||
+                      !formik.values.phone ||
+                      !formik.values.agree ||
+                      loading
+                    }
                   >
                     Đăng ký
                   </Button>
