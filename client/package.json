@@ -5,7 +5,7 @@
   "engines": {
     "node": "20.15.0"
   },
-  "proxy": "https://babymamamilkstore1.azurewebsites.net",
+  "proxy": "https://trangbansuamevabe.azurewebsites.net",
   "dependencies": {
     "14": "^1.0.1",
     "20": "^1.0.0",
