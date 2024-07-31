@@ -11,6 +11,7 @@ import {
   Divider,
   message,
   Modal,
+  Spin,
 } from "antd";
 import { EyeInvisibleOutlined, EyeTwoTone } from "@ant-design/icons";
 import Logo from "../../Components/logo/Logo";
@@ -100,141 +101,147 @@ const SignIn = () => {
   };
 
   return (
-    <Row className="signIn">
-      <Col md={12} className="signIn__card">
-        <div className="signIn__card__logo">
-          <Logo />
-        </div>
-        <Card style={{ width: 500 }} className="signIn__card__detail">
-          <Form
-            name="normal_login"
-            className="login-form signIn__card__detail__input"
-            initialValues={{
-              remember: true,
-            }}
-            onFinish={formik.handleSubmit}
-          >
-            <Form.Item
-              name="email"
-              validateStatus={formik.errors.email ? "error" : ""}
-              help={formik.errors.email}
+    <Spin spinning={loading}>
+      <Row className="signIn">
+        <Col md={12} className="signIn__card">
+          <div className="signIn__card__logo">
+            <Logo />
+          </div>
+          <Card style={{ width: 500 }} className="signIn__card__detail">
+            <Form
+              name="normal_login"
+              className="login-form signIn__card__detail__input"
+              initialValues={{
+                remember: true,
+              }}
+              onFinish={formik.handleSubmit}
             >
+              <Form.Item
+                name="email"
+                validateStatus={formik.errors.email ? "error" : ""}
+                help={formik.errors.email}
+              >
+                <Input
+                  className="signIn__card__detail__input__detail"
+                  prefix={<MailOutlined className="site-form-item-icon" />}
+                  placeholder="Email"
+                  {...formik.getFieldProps("email")}
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                validateStatus={formik.errors.password ? "error" : ""}
+                help={formik.errors.password}
+              >
+                <Input.Password
+                  className="signIn__card__detail__input__detail"
+                  placeholder="Mật khẩu"
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                  {...formik.getFieldProps("password")}
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Button
+                  className="signIn__card__detail__options__option"
+                  type="primary"
+                  htmlType="submit"
+                  style={{
+                    fontWeight: "500",
+                    fontSize: "1.2em",
+                    textTransform: "uppercase",
+                  }}
+                  loading={loading}
+                  disabled={formik.isSubmitting}
+                >
+                  Đăng nhập
+                </Button>
+              </Form.Item>
+            </Form>
+            <Divider />
+            <p>
+              Bạn chưa có tài khoản?&nbsp;
+              <Link to="/sign-up" style={{ color: "#ff469e" }}>
+                Đăng ký
+              </Link>
+            </p>
+            <Button
+              type="link"
+              onClick={handleShowLoginModal}
+              style={{
+                color: "#ff469e",
+                fontSize: "1em",
+                cursor: "pointer",
+                border: "none",
+                background: "none",
+                padding: 0,
+                textDecoration: "none",
+                display: "block",
+                margin: "0 auto",
+              }}
+            >
+              Tài khoản nhân viên
+            </Button>
+          </Card>
+        </Col>
+        <Col className="signIn__sidePic" md={12}></Col>
+
+        <Modal
+          title="Đăng nhập cho Tài khoản nhân viên"
+          open={showLoginModal}
+          onCancel={handleCloseLoginModal}
+          footer={[
+            <Button key="cancel" onClick={handleCloseLoginModal}>
+              Hủy
+            </Button>,
+            <Button
+              key="login"
+              type="primary"
+              onClick={() => modalForm.submit()}
+            >
+              Đăng nhập
+            </Button>,
+          ]}
+        >
+          <Form
+            form={modalForm} // Sử dụng form trong modal
+            name="staff_admin_login"
+            initialValues={{
+              email: "",
+              password: "",
+            }}
+            onFinish={loginAdmin}
+          >
+            <Form.Item name="email">
               <Input
-                className="signIn__card__detail__input__detail"
                 prefix={<MailOutlined className="site-form-item-icon" />}
                 placeholder="Email"
-                {...formik.getFieldProps("email")}
               />
             </Form.Item>
             <Form.Item
               name="password"
-              validateStatus={formik.errors.password ? "error" : ""}
-              help={formik.errors.password}
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng nhập mật khẩu",
+                },
+              ]}
             >
               <Input.Password
-                className="signIn__card__detail__input__detail"
                 placeholder="Mật khẩu"
                 prefix={<LockOutlined className="site-form-item-icon" />}
                 iconRender={(visible) =>
                   visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
                 }
-                {...formik.getFieldProps("password")}
               />
             </Form.Item>
-
-            <Form.Item>
-              <Button
-                className="signIn__card__detail__options__option"
-                type="primary"
-                htmlType="submit"
-                style={{
-                  fontWeight: "500",
-                  fontSize: "1.2em",
-                  textTransform: "uppercase",
-                }}
-                loading={loading}
-                disabled={formik.isSubmitting}
-              >
-                Đăng nhập
-              </Button>
-            </Form.Item>
           </Form>
-          <Divider />
-          <p>
-            Bạn chưa có tài khoản?&nbsp;
-            <Link to="/sign-up" style={{ color: "#ff469e" }}>
-              Đăng ký
-            </Link>
-          </p>
-          <Button
-            type="link"
-            onClick={handleShowLoginModal}
-            style={{
-              color: "#ff469e",
-              fontSize: "1em",
-              cursor: "pointer",
-              border: "none",
-              background: "none",
-              padding: 0,
-              textDecoration: "none",
-              display: "block",
-              margin: "0 auto", // Căn giữa
-            }}
-          >
-            Tài khoản nhân viên
-          </Button>
-        </Card>
-      </Col>
-      <Col className="signIn__sidePic" md={12}></Col>
-
-      <Modal
-        title="Đăng nhập cho Tài khoản nhân viên"
-        open={showLoginModal}
-        onCancel={handleCloseLoginModal}
-        footer={[
-          <Button key="cancel" onClick={handleCloseLoginModal}>
-            Hủy
-          </Button>,
-          <Button key="login" type="primary" onClick={() => modalForm.submit()}>
-            Đăng nhập
-          </Button>,
-        ]}
-      >
-        <Form
-          form={modalForm} // Sử dụng form trong modal
-          name="staff_admin_login"
-          initialValues={{
-            email: "",
-            password: "",
-          }}
-          onFinish={loginAdmin}
-        >
-          <Form.Item name="email">
-            <Input
-              prefix={<MailOutlined className="site-form-item-icon" />}
-              placeholder="Email"
-            />
-          </Form.Item>
-          <Form.Item
-            name="password"
-            rules={[
-              {
-                required: true,
-                message: "Vui lòng nhập mật khẩu",
-              },
-            ]}
-          >
-            <Input.Password
-              placeholder="Mật khẩu"
-              prefix={<LockOutlined className="site-form-item-icon" />}
-              iconRender={(visible) =>
-                visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-              }
-            />
-          </Form.Item>
-        </Form>
-      </Modal>
-    </Row>
+        </Modal>
+      </Row>
+    </Spin>
   );
 };
 

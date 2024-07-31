@@ -16,6 +16,7 @@ import {
   Form,
   Input,
   Row,
+  Spin,
   Typography,
 } from "antd";
 import { useFormik } from "formik";
@@ -86,230 +87,238 @@ export default function SignUp() {
   });
 
   return (
-    <Row className="signUp">
-      <Col md={12} className="signUp__card">
-        <Logo />
-        <Card style={{ width: 500 }} className="signUp__card__detail">
-          <Form
-            name="normal_signup"
-            className="signup-form signUp__card__detail__input"
-            initialValues={{ remember: true }}
-            onFinish={formik.handleSubmit}
-            autoComplete="off"
-          >
-            <Form.Item
-              name="fullName"
-              help={
-                formik.touched.fullName && formik.errors.fullName
-                  ? formik.errors.fullName
-                  : ""
-              }
-              validateStatus={
-                formik.touched.fullName && formik.errors.fullName ? "error" : ""
-              }
+    <Spin spinning={loading}>
+      <Row className="signUp">
+        <Col md={12} className="signUp__card">
+          <Logo />
+          <Card style={{ width: 500 }} className="signUp__card__detail">
+            <Form
+              name="normal_signup"
+              className="signup-form signUp__card__detail__input"
+              initialValues={{ remember: true }}
+              onFinish={formik.handleSubmit}
+              autoComplete="off"
             >
-              <Input
-                className="signUp__card__detail__input__detail"
-                placeholder="Tên của bạn"
+              <Form.Item
                 name="fullName"
-                prefix={
-                  <UserOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
+                help={
+                  formik.touched.fullName && formik.errors.fullName
+                    ? formik.errors.fullName
+                    : ""
                 }
-                value={formik.values.fullName}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoComplete="off"
-              />
-            </Form.Item>
-            <Form.Item
-              name="phone"
-              help={
-                formik.touched.phone && formik.errors.phone
-                  ? formik.errors.phone
-                  : ""
-              }
-              validateStatus={
-                formik.touched.phone && formik.errors.phone ? "error" : ""
-              }
-            >
-              <Input
-                className="signUp__card__detail__input__detail"
-                placeholder="Số điện thoại của bạn"
-                name="phone"
-                prefix={
-                  <PhoneOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
+                validateStatus={
+                  formik.touched.fullName && formik.errors.fullName
+                    ? "error"
+                    : ""
                 }
-                value={formik.values.phone}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoComplete="off"
-              />
-            </Form.Item>
-            <Form.Item
-              name="email"
-              help={
-                formik.touched.email && formik.errors.email
-                  ? formik.errors.email
-                  : ""
-              }
-              validateStatus={
-                formik.touched.email && formik.errors.email ? "error" : ""
-              }
-            >
-              <Input
-                className="signUp__card__detail__input__detail"
-                prefix={
-                  <MailOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
-                }
-                placeholder="Email"
-                name="email"
-                value={formik.values.email}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoComplete="off"
-              />
-            </Form.Item>
-            <Form.Item
-              name="password"
-              help={
-                formik.touched.password && formik.errors.password
-                  ? formik.errors.password
-                  : ""
-              }
-              validateStatus={
-                formik.touched.password && formik.errors.password ? "error" : ""
-              }
-            >
-              <Input.Password
-                className="signUp__card__detail__input__detail"
-                placeholder="Mật khẩu"
-                prefix={
-                  <LockOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
-                }
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-                name="password"
-                value={formik.values.password}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoComplete="off"
-              />
-            </Form.Item>
-            <Form.Item
-              name="confirmPassword"
-              help={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? formik.errors.confirmPassword
-                  : ""
-              }
-              validateStatus={
-                formik.touched.confirmPassword && formik.errors.confirmPassword
-                  ? "error"
-                  : ""
-              }
-            >
-              <Input.Password
-                className="signUp__card__detail__input__detail"
-                placeholder="Nhập lại mật khẩu"
-                prefix={
-                  <LockOutlined
-                    style={{ marginRight: "1.5em" }}
-                    className="site-form-item-icon"
-                  />
-                }
-                iconRender={(visible) =>
-                  visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
-                }
-                name="confirmPassword"
-                value={formik.values.confirmPassword}
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                autoComplete="off"
-              />
-            </Form.Item>
-
-            <Form.Item>
-              <Checkbox
-                name="agree"
-                checked={formik.values.agree}
-                onChange={formik.handleChange}
               >
-                Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật
-              </Checkbox>
-              {formik.touched.agree && formik.errors.agree ? (
-                <Text type="danger">{formik.errors.agree}</Text>
-              ) : null}
-            </Form.Item>
-            <Form.Item>
-              <div className="signUp__card__detail__options">
-                <ConfigProvider
-                  theme={{
-                    components: {
-                      Button: {
-                        borderRadius: "20px",
-                        defaultBg: "#ff469e",
-                        defaultColor: "white",
-                        defaultHoverBg: "#ff469e",
-                        defaultHoverBorderColor: "black",
-                        defaultHoverColor: "white",
-                        defaultActiveBg: "#ff469e",
-                        activeBorderColor: "#ff469e",
-                        defaultActiveColor: "white",
-                      },
-                    },
-                  }}
+                <Input
+                  className="signUp__card__detail__input__detail"
+                  placeholder="Tên của bạn"
+                  name="fullName"
+                  prefix={
+                    <UserOutlined
+                      style={{ marginRight: "1.5em" }}
+                      className="site-form-item-icon"
+                    />
+                  }
+                  value={formik.values.fullName}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoComplete="off"
+                />
+              </Form.Item>
+              <Form.Item
+                name="phone"
+                help={
+                  formik.touched.phone && formik.errors.phone
+                    ? formik.errors.phone
+                    : ""
+                }
+                validateStatus={
+                  formik.touched.phone && formik.errors.phone ? "error" : ""
+                }
+              >
+                <Input
+                  className="signUp__card__detail__input__detail"
+                  placeholder="Số điện thoại của bạn"
+                  name="phone"
+                  prefix={
+                    <PhoneOutlined
+                      style={{ marginRight: "1.5em" }}
+                      className="site-form-item-icon"
+                    />
+                  }
+                  value={formik.values.phone}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoComplete="off"
+                />
+              </Form.Item>
+              <Form.Item
+                name="email"
+                help={
+                  formik.touched.email && formik.errors.email
+                    ? formik.errors.email
+                    : ""
+                }
+                validateStatus={
+                  formik.touched.email && formik.errors.email ? "error" : ""
+                }
+              >
+                <Input
+                  className="signUp__card__detail__input__detail"
+                  prefix={
+                    <MailOutlined
+                      style={{ marginRight: "1.5em" }}
+                      className="site-form-item-icon"
+                    />
+                  }
+                  placeholder="Email"
+                  name="email"
+                  value={formik.values.email}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoComplete="off"
+                />
+              </Form.Item>
+              <Form.Item
+                name="password"
+                help={
+                  formik.touched.password && formik.errors.password
+                    ? formik.errors.password
+                    : ""
+                }
+                validateStatus={
+                  formik.touched.password && formik.errors.password
+                    ? "error"
+                    : ""
+                }
+              >
+                <Input.Password
+                  className="signUp__card__detail__input__detail"
+                  placeholder="Mật khẩu"
+                  prefix={
+                    <LockOutlined
+                      style={{ marginRight: "1.5em" }}
+                      className="site-form-item-icon"
+                    />
+                  }
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                  name="password"
+                  value={formik.values.password}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoComplete="off"
+                />
+              </Form.Item>
+              <Form.Item
+                name="confirmPassword"
+                help={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                    ? formik.errors.confirmPassword
+                    : ""
+                }
+                validateStatus={
+                  formik.touched.confirmPassword &&
+                  formik.errors.confirmPassword
+                    ? "error"
+                    : ""
+                }
+              >
+                <Input.Password
+                  className="signUp__card__detail__input__detail"
+                  placeholder="Nhập lại mật khẩu"
+                  prefix={
+                    <LockOutlined
+                      style={{ marginRight: "1.5em" }}
+                      className="site-form-item-icon"
+                    />
+                  }
+                  iconRender={(visible) =>
+                    visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />
+                  }
+                  name="confirmPassword"
+                  value={formik.values.confirmPassword}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  autoComplete="off"
+                />
+              </Form.Item>
+
+              <Form.Item>
+                <Checkbox
+                  name="agree"
+                  checked={formik.values.agree}
+                  onChange={formik.handleChange}
                 >
-                  <Button
-                    className="signUp__card__detail__options__option"
-                    htmlType="submit"
-                    style={{
-                      textTransform: "uppercase",
-                      fontWeight: "500",
-                      fontSize: "1.2em",
-                      defaultActiveBg: "#ff469e",
-                      defaultBg: "#ff469e",
+                  Tôi đồng ý với Điều khoản dịch vụ và Chính sách bảo mật
+                </Checkbox>
+                {formik.touched.agree && formik.errors.agree ? (
+                  <Text type="danger">{formik.errors.agree}</Text>
+                ) : null}
+              </Form.Item>
+              <Form.Item>
+                <div className="signUp__card__detail__options">
+                  <ConfigProvider
+                    theme={{
+                      components: {
+                        Button: {
+                          borderRadius: "20px",
+                          defaultBg: "#ff469e",
+                          defaultColor: "white",
+                          defaultHoverBg: "#ff469e",
+                          defaultHoverBorderColor: "black",
+                          defaultHoverColor: "white",
+                          defaultActiveBg: "#ff469e",
+                          activeBorderColor: "#ff469e",
+                          defaultActiveColor: "white",
+                        },
+                      },
                     }}
-                    loading={loading}
-                    disabled={
-                      !formik.values.fullName ||
-                      !formik.values.email ||
-                      !formik.values.password ||
-                      !formik.values.confirmPassword ||
-                      !formik.values.phone ||
-                      !formik.values.agree ||
-                      loading
-                    }
                   >
-                    Đăng ký
-                  </Button>
-                </ConfigProvider>
-              </div>
-            </Form.Item>
-          </Form>
-          <Divider />
-          <p>
-            Bạn đã có tài khoản? &nbsp;
-            <Link to="/sign-in" style={{ color: "#ff469e" }}>
-              {" "}
-              Đăng nhập
-            </Link>
-          </p>
-        </Card>
-      </Col>
-      <Col className="signUp__sidePic" md={12}></Col>
-    </Row>
+                    <Button
+                      className="signUp__card__detail__options__option"
+                      htmlType="submit"
+                      style={{
+                        textTransform: "uppercase",
+                        fontWeight: "500",
+                        fontSize: "1.2em",
+                        defaultActiveBg: "#ff469e",
+                        defaultBg: "#ff469e",
+                      }}
+                      loading={loading}
+                      disabled={
+                        !formik.values.fullName ||
+                        !formik.values.email ||
+                        !formik.values.password ||
+                        !formik.values.confirmPassword ||
+                        !formik.values.phone ||
+                        !formik.values.agree ||
+                        loading
+                      }
+                    >
+                      Đăng ký
+                    </Button>
+                  </ConfigProvider>
+                </div>
+              </Form.Item>
+            </Form>
+            <Divider />
+            <p>
+              Bạn đã có tài khoản? &nbsp;
+              <Link to="/sign-in" style={{ color: "#ff469e" }}>
+                {" "}
+                Đăng nhập
+              </Link>
+            </p>
+          </Card>
+        </Col>
+        <Col className="signUp__sidePic" md={12}></Col>
+      </Row>
+    </Spin>
   );
 }

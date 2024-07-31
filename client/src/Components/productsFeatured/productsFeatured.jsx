@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Carousel } from "antd";
+import { Carousel, Spin } from "antd";
 // import { LeftOutlined, RightOutlined } from "@ant-design/icons";
 import { useNavigate } from "react-router-dom";
 import "./productsFeatured.scss";
@@ -13,6 +13,7 @@ const Product = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [clickLoading, setClickLoading] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -30,6 +31,7 @@ const Product = () => {
   }, []);
 
   const handleItemClick = (productItemId) => {
+    setClickLoading(true);
     navigate(`/chi-tiet-san-pham/${productItemId}`);
   };
 
@@ -42,7 +44,11 @@ const Product = () => {
   // };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loading-container">
+        <Spin size="large" />
+      </div>
+    );
   }
 
   if (error) {
@@ -69,10 +75,12 @@ const Product = () => {
       >
         {products.map((product) => (
           <div key={product.productItemId} className="carousel-item">
-            <ProductCard
-              product={product}
-              onClick={() => handleItemClick(product.productItemId)}
-            />
+            <Spin spinning={clickLoading}>
+              <ProductCard
+                product={product}
+                onClick={() => handleItemClick(product.productItemId)}
+              />
+            </Spin>
           </div>
         ))}
       </Carousel>

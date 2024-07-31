@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Card, Spin } from "antd";
+import { Tabs, Card, Spin, Modal, Button } from "antd";
 import "./donhang.scss";
 import {
   Paper,
@@ -12,92 +12,145 @@ import {
 } from "@mui/material";
 import api from "../../config/axios";
 import Cookies from "js-cookie";
-
 const { TabPane } = Tabs;
 
-const Donhang = ({ customerId }) => {
+const Donhang = () => {
   const [ordersPending, setOrdersPending] = useState([]);
   const [ordersShipping, setOrdersShipping] = useState([]);
   const [ordersDelivered, setOrdersDelivered] = useState([]);
   const [ordersCancelled, setOrdersCancelled] = useState([]);
-  const [loadingPending, setLoadingPending] = useState(false);
-  const [loadingShipping, setLoadingShipping] = useState(false);
-  const [loadingDelivered, setLoadingDelivered] = useState(false);
-  const [loadingCancelled, setLoadingCancelled] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [cartDetails, setCartDetails] = useState([]);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const customerId = Cookies.get("customerId");
 
   useEffect(() => {
-    const fetchOrdersByStatus = async (status) => {
+    const fetchOrdersByCustomer = async () => {
+      setLoading(true);
       try {
-        const response = await api.get(`/api/orders/1`);
-        console.log("data", response);
-        switch (status) {
-          case "Chờ lấy hàng":
-            setOrdersPending(response.data || []);
-            setLoadingPending(false);
-            break;
-          case "Đang giao hàng":
-            setOrdersShipping(response.data || []);
-            setLoadingShipping(false);
-            break;
-          case "Đã giao hàng":
-            setOrdersDelivered(response.data || []);
-            setLoadingDelivered(false);
-            break;
-          case "Đã hủy":
-            setOrdersCancelled(response.data || []);
-            setLoadingCancelled(false);
-            break;
-          default:
-            break;
-        }
+        const response = await api.get(
+          `/api/orders/order-by-customer/${customerId}`
+        );
+        const orders = response.data || [];
+
+        setOrdersPending(
+          orders.filter((order) => order.status === "Chờ lấy hàng")
+        );
+        setOrdersShipping(
+          orders.filter((order) => order.status === "Đang giao hàng")
+        );
+        setOrdersDelivered(
+          orders.filter((order) => order.status === "Đã giao hàng")
+        );
+        setOrdersCancelled(orders.filter((order) => order.status === "Đã hủy"));
       } catch (error) {
-        console.error(`Error fetching orders with status ${status}:`, error);
+        console.error(
+          `Error fetching orders for customer ${customerId}:`,
+          error
+        );
+      } finally {
+        setLoading(false);
       }
     };
-    setLoadingPending(true);
-    setLoadingShipping(true);
-    setLoadingDelivered(true);
-    setLoadingCancelled(true);
 
-    fetchOrdersByStatus("Chờ lấy hàng");
-    fetchOrdersByStatus("Đang giao hàng");
-    fetchOrdersByStatus("Đã giao hàng");
-    fetchOrdersByStatus("Đã hủy");
-  }, []);
+    fetchOrdersByCustomer();
+  }, [customerId]);
 
-  const makeStyle = (status) => {
-    switch (status) {
-      case "Chờ lấy hàng":
-        return {
-          background: "#ffadad8f",
-          color: "red",
-        };
-      case "Đang giao hàng":
-        return {
-          background: "#ffd7008f",
-          color: "orange",
-        };
-      case "Đã giao hàng":
-        return {
-          background: "#59bfff",
-          color: "white",
-        };
-      case "Đã hủy":
-        return {
-          background: "#d3d3d3",
-          color: "gray",
-        };
-      default:
-        return {
-          background: "transparent",
-          color: "black",
-        };
+  const handleViewCartDetails = async (orderId) => {
+    try {
+      const response = await api.get(`/api/orderdetails/byorderid/${orderId}`);
+      setCartDetails(response.data || []);
+      setIsModalVisible(true);
+    } catch (error) {
+      console.error(
+        `Error fetching order details for order ${orderId}:`,
+        error
+      );
     }
   };
 
-  const renderTable = (orders, loadingState, title) => (
+  const renderTable = (orders, title) => (
     <Card title={title} style={{ marginBottom: 20 }}>
-      <Spin spinning={loadingState}>
+      <Spin spinning={loading}>
+        {orders.length === 0 ? (
+          <div>Bạn chưa có sản phẩm trong giỏ hàng.</div>
+        ) : (
+          <TableContainer
+            component={Paper}
+            sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
+          >
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Thời gian</TableCell>
+                  <TableCell align="left">Thông tin đơn hàng</TableCell>
+                  <TableCell align="left">Địa chỉ kho hàng</TableCell>
+                  <TableCell align="left">Thông tin Shipper</TableCell>
+                  <TableCell align="left">Tổng tiền</TableCell>
+                  <TableCell align="left">Phương thức thanh toán</TableCell>
+                  <TableCell align="left">Hành động</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {orders.map((order) => (
+                  <TableRow key={order.orderId}>
+                    <TableCell>
+                      {new Date(order.orderDate).toLocaleString()}
+                    </TableCell>
+                    <TableCell>{order.shippingAddress}</TableCell>
+                    <TableCell>{order.storageName}</TableCell>
+                    <TableCell>
+                      <div>{order.deliveryName}</div>
+                      <div>{order.deliveryPhone}</div>
+                    </TableCell>
+                    <TableCell>
+                      {order.totalAmount.toLocaleString()} VNĐ
+                    </TableCell>
+                    <TableCell>{order.paymentMethod}</TableCell>
+                    <TableCell>
+                      <Button
+                        onClick={() => handleViewCartDetails(order.orderId)}
+                      >
+                        Xem chi tiết
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
+      </Spin>
+    </Card>
+  );
+
+  return (
+    <div className="profile-update">
+      <Tabs defaultActiveKey="1" className="setting-tabs">
+        <TabPane tab="Chờ lấy hàng" key="1">
+          {renderTable(ordersPending, "Chờ lấy hàng")}
+        </TabPane>
+        <TabPane tab="Đang giao hàng" key="2">
+          {renderTable(ordersShipping, "Đang giao hàng")}
+        </TabPane>
+        <TabPane tab="Đã giao" key="3">
+          {renderTable(ordersDelivered, "Đã giao hàng")}
+        </TabPane>
+        <TabPane tab="Đã huỷ" key="4">
+          {renderTable(ordersCancelled, "Đã hủy")}
+        </TabPane>
+      </Tabs>
+
+      <Modal
+        title="Chi tiết giỏ hàng"
+        open={isModalVisible}
+        onCancel={() => setIsModalVisible(false)}
+        footer={[
+          <Button key="close" onClick={() => setIsModalVisible(false)}>
+            Đóng
+          </Button>,
+        ]}
+      >
         <TableContainer
           component={Paper}
           sx={{ boxShadow: "0px 13px 20px 0px #80808029" }}
@@ -105,55 +158,39 @@ const Donhang = ({ customerId }) => {
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
             <TableHead>
               <TableRow>
-                <TableCell>Thời gian</TableCell>
-                <TableCell align="left">Thông tin đơn hàng</TableCell>
-                <TableCell align="left">Địa chỉ kho hàng</TableCell>
-                <TableCell align="left">Thông tin Shipper</TableCell>
-                <TableCell align="left">Tổng tiền</TableCell>
-                <TableCell align="left">Phương thức thanh toán</TableCell>
+                <TableCell>Ảnh</TableCell>
+                <TableCell>Sản phẩm</TableCell>
+                <TableCell align="left">Số lượng</TableCell>
+                <TableCell align="left">Giá</TableCell>
+                <TableCell align="left">Giảm giá</TableCell>
+                <TableCell align="left">Tổng</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {orders.map((order) => (
-                <TableRow key={order.orderId}>
+              {cartDetails.map((item) => (
+                <TableRow key={item.productItemID}>
                   <TableCell>
-                    {new Date(order.orderDate).toLocaleString()}
+                    <img
+                      src={item.image}
+                      alt={item.itemName}
+                      style={{ width: 50, height: 50 }}
+                    />
                   </TableCell>
-                  <TableCell>{order.shippingAddress}</TableCell>
-                  <TableCell>{order.storageName}</TableCell>
-                  <TableCell>
-                    <div>{order.deliveryName}</div>
-                    <div>{order.deliveryPhone}</div>
+                  <TableCell>{item.itemName}</TableCell>
+                  <TableCell align="left">{item.quantity}</TableCell>
+                  <TableCell align="left">
+                    {item.price.toLocaleString()} VNĐ
                   </TableCell>
-                  <TableCell>
-                    {order.totalAmount.toLocaleString()} VNĐ
+                  <TableCell align="left">{item.discount}%</TableCell>
+                  <TableCell align="left">
+                    {item.total.toLocaleString()} VNĐ
                   </TableCell>
-                  <TableCell>{order.paymentMethod}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
-      </Spin>
-    </Card>
-  );
-
-  return (
-    <div className="profile-update">
-      <Tabs defaultActiveKey="1">
-        <TabPane tab="Chờ lấy hàng" key="1">
-          {renderTable(ordersPending, loadingPending, "Chờ lấy hàng")}
-        </TabPane>
-        <TabPane tab="Đang giao hàng" key="2">
-          {renderTable(ordersShipping, loadingShipping, "Đang giao hàng")}
-        </TabPane>
-        <TabPane tab="Đã giao" key="3">
-          {renderTable(ordersDelivered, loadingDelivered, "Đã giao hàng")}
-        </TabPane>
-        <TabPane tab="Đã huỷ" key="4">
-          {renderTable(ordersCancelled, loadingCancelled, "Đã hủy")}
-        </TabPane>
-      </Tabs>
+      </Modal>
     </div>
   );
 };
