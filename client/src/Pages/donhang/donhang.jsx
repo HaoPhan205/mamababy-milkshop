@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Tabs, Card, Spin, Modal, Button } from "antd";
+import { Tabs, Card, Spin, Modal, Button, message } from "antd";
 import "./donhang.scss";
 import {
   Paper,
@@ -22,6 +22,8 @@ const Donhang = () => {
   const [loading, setLoading] = useState(false);
   const [cartDetails, setCartDetails] = useState([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isConfirmModalVisible, setIsConfirmModalVisible] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
   const customerId = Cookies.get("customerId");
 
   useEffect(() => {
@@ -69,7 +71,39 @@ const Donhang = () => {
     }
   };
 
-  const renderTable = (orders, title) => (
+  const handleCancelOrder = async (orderId) => {
+    try {
+      await api.put(`/api/orders/cancel/${orderId}`);
+      message.success("Đơn hàng đã được hủy thành công.");
+
+      const response = await api.get(
+        `/api/orders/order-by-customer/${customerId}`
+      );
+      const orders = response.data || [];
+      setOrdersPending(
+        orders.filter((order) => order.status === "Chờ lấy hàng")
+      );
+      setOrdersShipping(
+        orders.filter((order) => order.status === "Đang giao hàng")
+      );
+      setOrdersDelivered(
+        orders.filter((order) => order.status === "Đã giao hàng")
+      );
+      setOrdersCancelled(orders.filter((order) => order.status === "Đã hủy"));
+    } catch (error) {
+      console.error(`Error canceling order ${orderId}:`, error);
+      message.error("Đã xảy ra lỗi khi hủy đơn hàng.");
+    } finally {
+      setIsConfirmModalVisible(false);
+    }
+  };
+
+  const showCancelConfirm = (orderId) => {
+    setSelectedOrderId(orderId);
+    setIsConfirmModalVisible(true);
+  };
+
+  const renderTable = (orders, title, isPending = false) => (
     <Card title={title} style={{ marginBottom: 20 }}>
       <Spin spinning={loading}>
         {orders.length === 0 ? (
@@ -86,9 +120,9 @@ const Donhang = () => {
                   <TableCell align="left">Thông tin đơn hàng</TableCell>
                   <TableCell align="left">Địa chỉ kho hàng</TableCell>
                   <TableCell align="left">Thông tin Shipper</TableCell>
-                  <TableCell align="left">Tổng tiền</TableCell>
-                  <TableCell align="left">Phương thức thanh toán</TableCell>
-                  <TableCell align="left">Hành động</TableCell>
+                  <TableCell align="center">Tổng tiền</TableCell>
+                  <TableCell align="center">Phương thức thanh toán</TableCell>
+                  <TableCell align="center">Hành động</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -97,22 +131,33 @@ const Donhang = () => {
                     <TableCell>
                       {new Date(order.orderDate).toLocaleString()}
                     </TableCell>
-                    <TableCell>{order.shippingAddress}</TableCell>
-                    <TableCell>{order.storageName}</TableCell>
                     <TableCell>
-                      <div>{order.deliveryName}</div>
-                      <div>{order.deliveryPhone}</div>
+                      {renderShippingAddress(order.shippingAddress)}
                     </TableCell>
+                    <TableCell align="center">{order.storageName}</TableCell>
                     <TableCell>
-                      {order.totalAmount.toLocaleString()} VNĐ
+                      <div>Tên: {order.deliveryName}</div>
+                      <div>Số điện thoại: {order.deliveryPhone}</div>
                     </TableCell>
-                    <TableCell>{order.paymentMethod}</TableCell>
-                    <TableCell>
+                    <TableCell align="center">
+                      {formatCurrency(order.totalAmount)}
+                    </TableCell>
+                    <TableCell align="center">{order.paymentMethod}</TableCell>
+                    <TableCell align="center">
                       <Button
                         onClick={() => handleViewCartDetails(order.orderId)}
                       >
                         Xem chi tiết
                       </Button>
+                      {isPending && (
+                        <Button
+                          onClick={() => showCancelConfirm(order.orderId)}
+                          danger
+                          style={{ marginLeft: "10px" }}
+                        >
+                          Hủy đơn hàng
+                        </Button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -124,16 +169,34 @@ const Donhang = () => {
     </Card>
   );
 
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("vi-VN", {
+      style: "currency",
+      currency: "VND",
+    }).format(amount);
+  };
+
+  const renderShippingAddress = (shippingAddress) => {
+    const [name, phone, address] = shippingAddress.split(" - ");
+    return (
+      <div>
+        <div>Tên: {name}</div>
+        <div>Số điện thoại: {phone}</div>
+        <div>Địa chỉ: {address}</div>
+      </div>
+    );
+  };
+
   return (
     <div className="profile-update">
       <Tabs defaultActiveKey="1" className="setting-tabs">
         <TabPane tab="Chờ lấy hàng" key="1">
-          {renderTable(ordersPending, "Chờ lấy hàng")}
+          {renderTable(ordersPending, "Chờ lấy hàng", true)}
         </TabPane>
         <TabPane tab="Đang giao hàng" key="2">
           {renderTable(ordersShipping, "Đang giao hàng")}
         </TabPane>
-        <TabPane tab="Đã giao" key="3">
+        <TabPane tab="Đã giao hàng" key="3">
           {renderTable(ordersDelivered, "Đã giao hàng")}
         </TabPane>
         <TabPane tab="Đã huỷ" key="4">
@@ -179,17 +242,37 @@ const Donhang = () => {
                   <TableCell>{item.itemName}</TableCell>
                   <TableCell align="left">{item.quantity}</TableCell>
                   <TableCell align="left">
-                    {item.price.toLocaleString()} VNĐ
+                    {formatCurrency(item.price)}
                   </TableCell>
                   <TableCell align="left">{item.discount}%</TableCell>
                   <TableCell align="left">
-                    {item.total.toLocaleString()} VNĐ
+                    {formatCurrency(item.total)}
                   </TableCell>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
         </TableContainer>
+      </Modal>
+
+      <Modal
+        title="Xác nhận hủy đơn hàng"
+        open={isConfirmModalVisible}
+        onCancel={() => setIsConfirmModalVisible(false)}
+        footer={[
+          <Button key="cancel" onClick={() => setIsConfirmModalVisible(false)}>
+            Hủy
+          </Button>,
+          <Button
+            key="confirm"
+            type="primary"
+            onClick={() => handleCancelOrder(selectedOrderId)}
+          >
+            Xác nhận
+          </Button>,
+        ]}
+      >
+        <p>Bạn có chắc chắn muốn hủy đơn hàng này không?</p>
       </Modal>
     </div>
   );
