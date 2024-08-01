@@ -290,13 +290,14 @@ const SearchResultPage = ({ user }) => {
               </Col>
             ))}
           </Row>
-          <Pagination
-            current={currentPage}
-            pageSize={itemsPerPage}
-            total={filteredProducts.length}
-            onChange={handlePageChange}
-            className="pagination"
-          />
+          <div className="pagination-container">
+            <Pagination
+              current={currentPage}
+              total={filteredProducts.length}
+              pageSize={itemsPerPage}
+              onChange={handlePageChange}
+            />
+          </div>
         </div>
       </div>
     </div>
