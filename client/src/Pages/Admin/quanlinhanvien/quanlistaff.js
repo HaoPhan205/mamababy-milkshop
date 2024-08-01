@@ -19,26 +19,6 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 
-const makeStyle = (role) => {
-  switch (role) {
-    case "Admin":
-      return {
-        background: "rgb(145 254 159 / 47%)",
-        color: "green",
-      };
-    case "Staff":
-      return {
-        background: "#ff469e",
-        color: "white",
-      };
-    default:
-      return {
-        background: "transparent",
-        color: "black",
-      };
-  }
-};
-
 const Staffs = () => {
   const [adminsAndStaffs, setAdminsAndStaffs] = useState([]);
   const [loadingState, setLoadingState] = useState(true);
@@ -48,155 +28,137 @@ const Staffs = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const fetchAdminsAndStaffs = () => {
+  const fetchAdminsAndStaffs = async () => {
     setLoadingState(true);
-    api
-      .get("/api/admins")
-      .then((res) => {
-        setAdminsAndStaffs(res.data);
-        setLoadingState(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        message.error("Failed to fetch staff members");
-        setLoadingState(false);
-      });
+    try {
+      const res = await api.get("/api/admins");
+      setAdminsAndStaffs(res.data);
+    } catch (err) {
+      console.error(err);
+      message.error("Failed to fetch staff members");
+    } finally {
+      setLoadingState(false);
+    }
   };
 
   useEffect(() => {
     fetchAdminsAndStaffs();
   }, []);
 
-  const handleAdd = (values) => {
-    const isDuplicateID = adminsAndStaffs.some(
-      (admin) => admin.adminID === values.adminID
-    );
-    const isDuplicateEmail = adminsAndStaffs.some(
-      (admin) => admin.username === values.username
-    );
+  const handleAdd = async (values) => {
+    try {
+      const isDuplicateID = adminsAndStaffs.some(
+        (admin) => admin.adminID === values.adminID
+      );
+      const isDuplicateEmail = adminsAndStaffs.some(
+        (admin) => admin.username === values.username
+      );
 
-    if (isDuplicateID) {
-      message.error("Mã nhân viên đã tồn tại");
-      return;
+      if (isDuplicateID) {
+        message.error("Mã nhân viên đã tồn tại");
+        return;
+      }
+
+      if (isDuplicateEmail) {
+        message.error("Tài khoản đã tồn tại");
+        return;
+      }
+
+      await api.post("/api/admins", { ...values, role: "Staff", status: "No" });
+      message.success("Thêm tài khoản nhân viên thành công");
+      fetchAdminsAndStaffs();
+    } catch (err) {
+      console.error("Request Error:", err);
+      message.error("Lưu thất bại");
+    } finally {
+      setModalVisible(false);
+      setCurrentAdmin(null);
     }
-
-    if (isDuplicateEmail) {
-      message.error("Tài khoản đã tồn tại");
-      return;
-    }
-
-    api
-      .post("/api/admins", { ...values, role: "Staff", status: "No" })
-      .then((response) => {
-        message.success("Thêm tài khoản nhân viên thành công");
-        fetchAdminsAndStaffs();
-        setModalVisible(false);
-        setCurrentAdmin(null);
-      })
-      .catch((err) => {
-        console.error("Request Error:", err);
-        message.error("Lưu thất bại");
-      });
   };
 
-  const handleEdit = (values) => {
-    const isDuplicateID = adminsAndStaffs.some(
-      (admin) =>
-        admin.adminID === values.adminID &&
-        admin.adminID !== (currentAdmin?.adminID || "")
-    );
-    const isDuplicateEmail = adminsAndStaffs.some(
-      (admin) =>
-        admin.username === values.username &&
-        admin.username !== (currentAdmin?.username || "")
-    );
+  const handleEdit = async (values) => {
+    try {
+      const isDuplicateID = adminsAndStaffs.some(
+        (admin) =>
+          admin.adminID === values.adminID &&
+          admin.adminID !== (currentAdmin?.adminID || "")
+      );
+      const isDuplicateEmail = adminsAndStaffs.some(
+        (admin) =>
+          admin.username === values.username &&
+          admin.username !== (currentAdmin?.username || "")
+      );
 
-    if (isDuplicateID) {
-      message.error("Mã nhân viên đã tồn tại");
-      return;
+      if (isDuplicateID) {
+        message.error("Mã nhân viên đã tồn tại");
+        return;
+      }
+
+      if (isDuplicateEmail) {
+        message.error("Tài khoản đã tồn tại");
+        return;
+      }
+
+      if (
+        currentAdmin &&
+        currentAdmin.adminID === values.adminID &&
+        currentAdmin.username === values.username &&
+        currentAdmin.password === values.password &&
+        currentAdmin.role === values.role &&
+        currentAdmin.status === values.status
+      ) {
+        message.warning("Không có thay đổi nào được thực hiện");
+        return;
+      }
+
+      await api.put(`/api/admins/${currentAdmin.adminID}`, values);
+      message.success("Cập nhật tài khoản nhân viên thành công");
+      fetchAdminsAndStaffs();
+    } catch (err) {
+      console.error("Request Error:", err);
+      message.error("Lưu thất bại");
+    } finally {
+      setModalVisible(false);
+      setCurrentAdmin(null);
     }
-
-    if (isDuplicateEmail) {
-      message.error("Tài khoản đã tồn tại");
-      return;
-    }
-
-    if (
-      currentAdmin &&
-      currentAdmin.adminID === values.adminID &&
-      currentAdmin.username === values.username &&
-      currentAdmin.password === values.password &&
-      currentAdmin.role === values.role &&
-      currentAdmin.status === values.status
-    ) {
-      message.warning("Không có thay đổi nào được thực hiện");
-      return;
-    }
-
-    api
-      .put(`/api/admins/${currentAdmin.adminID}`, {
-        adminID: values.adminID,
-        username: values.username,
-        password: values.password,
-        role: values.role,
-        status: values.status,
-      })
-      .then((response) => {
-        message.success("Cập nhật tài khoản nhân viên thành công");
-        fetchAdminsAndStaffs();
-        setModalVisible(false);
-        setCurrentAdmin(null);
-      })
-      .catch((err) => {
-        console.error("Request Error:", err);
-        message.error("Lưu thất bại");
-      });
   };
 
-  const handleDelete = (adminID) => {
-    api
-      .delete(`/api/admins/${adminID}`)
-      .then(() => {
-        message.success("Đã xoá tài khoản nhân viên");
-        fetchAdminsAndStaffs();
-      })
-      .catch((err) => {
-        console.error(err);
-        message.error("Xoá không thành công");
-      });
+  const handleDelete = async (adminID) => {
+    try {
+      await api.delete(`/api/admins/${adminID}`);
+      message.success("Đã xoá tài khoản nhân viên");
+      fetchAdminsAndStaffs();
+    } catch (err) {
+      console.error(err);
+      message.error("Xoá không thành công");
+    }
   };
 
-  const handleApprove = (admin) => {
-    api
-      .put(`/api/admins/${admin.admin}`, {
-        username: admin.username,
-        password: admin.password,
+  const handleApprove = async (admin) => {
+    try {
+      await api.put(`/api/admins/${admin.adminID}`, {
+        ...admin,
         status: "Yes",
-      })
-      .then(() => {
-        message.success("Đã phê duyệt tài khoản");
-        fetchAdminsAndStaffs();
-      })
-      .catch((err) => {
-        message.error("Phê duyệt không thành công");
       });
+      message.success("Đã phê duyệt tài khoản");
+      fetchAdminsAndStaffs();
+    } catch (err) {
+      message.error("Phê duyệt không thành công");
+    }
   };
 
-  const handleDeactivate = (admin) => {
-    api
-      .put(`/api/admins/${admin.admin}`, {
-        username: admin.username,
-        password: admin.password,
+  const handleDeactivate = async (admin) => {
+    try {
+      await api.put(`/api/admins/${admin.adminID}`, {
+        ...admin,
         status: "No",
-      })
-      .then(() => {
-        message.success("Đã vô hiệu hoá tài khoản nhân viên");
-        fetchAdminsAndStaffs();
-      })
-      .catch((err) => {
-        console.error(err);
-        message.error("Vô hiệu hoá không thành công");
       });
+      message.success("Đã vô hiệu hoá tài khoản nhân viên");
+      fetchAdminsAndStaffs();
+    } catch (err) {
+      console.error(err);
+      message.error("Vô hiệu hoá không thành công");
+    }
   };
 
   const filteredStaffs = searchText
@@ -269,76 +231,89 @@ const Staffs = () => {
                       <TableCell align="left">Tài khoản nhân viên</TableCell>
                       <TableCell align="left">Mật khẩu</TableCell>
                       <TableCell align="left">Vai trò</TableCell>
-                      <TableCell align="left">Actions</TableCell>
+                      <TableCell align="left">Trạng thái</TableCell>
+                      <TableCell align="left">Hành động</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedStaffs(activeStaffs).map((admin) => (
-                      <TableRow key={admin.adminID}>
-                        <TableCell>{admin.adminID}</TableCell>
-                        <TableCell>{admin.username}</TableCell>
-                        <TableCell>{admin.password}</TableCell>
-                        <TableCell>
+                    {paginatedStaffs(activeStaffs).map((row) => (
+                      <TableRow key={row.adminID}>
+                        <TableCell component="th" scope="row">
+                          {row.adminID}
+                        </TableCell>
+                        <TableCell align="left">{row.username}</TableCell>
+                        <TableCell align="left">{row.password}</TableCell>
+                        <TableCell align="left">
+                          <span className="role-label">{row.role}</span>
+                        </TableCell>
+                        <TableCell align="left">
                           <span
-                            className="status"
-                            style={makeStyle(admin.role)}
+                            style={{
+                              backgroundColor:
+                                row.status === "Yes" ? "#d4edda" : "#f8d7da",
+                              color: row.status === "Yes" ? "green" : "red",
+                              padding: "5px",
+                              borderRadius: "5px",
+                            }}
                           >
-                            {admin.role}
+                            {row.status === "Yes"
+                              ? "Đang hoạt động"
+                              : "Đã vô hiệu hóa"}
                           </span>
                         </TableCell>
-                        <TableCell>
-                          <div className="action-buttons">
+                        <TableCell align="left">
+                          <Button
+                            type="link"
+                            icon={<EditOutlined />}
+                            onClick={() => {
+                              setModalVisible(true);
+                              setCurrentAdmin(row);
+                            }}
+                          />
+                          <Popconfirm
+                            title="Xác nhận xoá tài khoản nhân viên"
+                            onConfirm={() => handleDelete(row.adminID)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
                             <Button
                               type="link"
-                              icon={<EditOutlined />}
-                              onClick={() => {
-                                setCurrentAdmin(admin);
-                                setModalVisible(true);
-                              }}
+                              icon={<DeleteOutlined />}
+                              danger
                             ></Button>
-                            <Popconfirm
-                              title="Xác nhận xoá tài khoản nhân viên"
-                              onConfirm={() => handleDelete(admin.adminID)}
-                              okText="Yes"
-                              cancelText="No"
-                            >
-                              <Button
-                                type="link"
-                                icon={<DeleteOutlined />}
-                                danger
-                              ></Button>
-                            </Popconfirm>
-                            <Popconfirm
-                              title="Xác nhận vô hiệu hoá tài khoản nhân viên"
-                              onConfirm={() => handleDeactivate(admin)}
-                              okText="Yes"
-                              cancelText="No"
-                            >
-                              <Button type="link">Vô hiệu hoá</Button>
-                            </Popconfirm>
-                          </div>
+                          </Popconfirm>
+                          <Popconfirm
+                            title="Xác nhận vô hiệu hoá tài khoản nhân viên"
+                            onConfirm={() => handleDeactivate(row)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button type="link">Vô hiệu hoá</Button>
+                          </Popconfirm>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={activeStaffs.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                className="pagination-container"
+                style={{ padding: "30" }}
+              />
             </Spin>
           </Card>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
-            component="div"
-            count={activeStaffs.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            labelRowsPerPage="Số hàng mỗi trang"
-          />
         </Tabs.TabPane>
-        <Tabs.TabPane tab="Đang không hoạt động" key="2">
+
+        <Tabs.TabPane tab="Chưa hoạt động" key="2">
           <Card
-            title="Danh sách nhân viên đang không hoạt động"
+            title="Danh sách tài khoản nhân viên chưa hoạt động"
             style={{ marginBottom: 20 }}
           >
             <Spin spinning={loadingState}>
@@ -354,79 +329,93 @@ const Staffs = () => {
                       <TableCell align="left">Tài khoản nhân viên</TableCell>
                       <TableCell align="left">Mật khẩu</TableCell>
                       <TableCell align="left">Vai trò</TableCell>
-                      <TableCell align="left">Actions</TableCell>
+                      <TableCell align="left">Trạng thái</TableCell>
+                      <TableCell align="left">Hành động</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedStaffs(inactiveStaffs).map((admin) => (
-                      <TableRow key={admin.adminID}>
-                        <TableCell>{admin.adminID}</TableCell>
-                        <TableCell>{admin.username}</TableCell>
-                        <TableCell>{admin.password}</TableCell>
-                        <TableCell>
+                    {paginatedStaffs(inactiveStaffs).map((row) => (
+                      <TableRow key={row.adminID}>
+                        <TableCell component="th" scope="row">
+                          {row.adminID}
+                        </TableCell>
+                        <TableCell align="left">{row.username}</TableCell>
+                        <TableCell align="left">{row.password}</TableCell>
+                        <TableCell align="left">
+                          <span className="role-label">{row.role}</span>
+                        </TableCell>
+                        <TableCell align="left">
                           <span
-                            className="status"
-                            style={makeStyle(admin.role)}
+                            style={{
+                              backgroundColor:
+                                row.status === "Yes" ? "#d4edda" : "#f8d7da",
+                              color: row.status === "Yes" ? "green" : "red",
+                              padding: "5px",
+                              borderRadius: "5px",
+                            }}
                           >
-                            {admin.role}
+                            {row.status === "Yes"
+                              ? "Đang hoạt động"
+                              : "Đã vô hiệu hóa"}
                           </span>
                         </TableCell>
-                        <TableCell>
-                          <div className="action-buttons">
+                        <TableCell align="left">
+                          <Button
+                            type="link"
+                            icon={<EditOutlined />}
+                            onClick={() => {
+                              setModalVisible(true);
+                              setCurrentAdmin(row);
+                            }}
+                          />
+                          <Popconfirm
+                            title="Xác nhận xoá tài khoản nhân viên"
+                            onConfirm={() => handleDelete(row.adminID)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
                             <Button
                               type="link"
-                              icon={<EditOutlined />}
-                              onClick={() => {
-                                setCurrentAdmin(admin);
-                                setModalVisible(true);
-                              }}
+                              icon={<DeleteOutlined />}
+                              danger
                             ></Button>
-                            <Popconfirm
-                              title="Xác nhận xoá tài khoản nhân viên"
-                              onConfirm={() => handleDelete(admin.adminID)}
-                              okText="Yes"
-                              cancelText="No"
-                            >
-                              <Button
-                                type="link"
-                                icon={<DeleteOutlined />}
-                                danger
-                              ></Button>
-                            </Popconfirm>
-                            <Popconfirm
-                              title="Xác nhận kích hoạt tài khoản nhân viên"
-                              onConfirm={() => handleApprove(admin)}
-                              okText="Yes"
-                              cancelText="No"
-                            >
-                              <Button type="link">Kích hoạt</Button>
-                            </Popconfirm>
-                          </div>
+                          </Popconfirm>
+                          <Popconfirm
+                            title="Xác nhận kích hoạt tài khoản nhân viên"
+                            onConfirm={() => handleApprove(row)}
+                            okText="Yes"
+                            cancelText="No"
+                          >
+                            <Button type="link">Kích hoạt</Button>
+                          </Popconfirm>
                         </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
                 </Table>
               </TableContainer>
+              <TablePagination
+                rowsPerPageOptions={[5, 10, 25]}
+                component="div"
+                count={inactiveStaffs.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+              />
             </Spin>
           </Card>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 15]}
-            component="div"
-            count={inactiveStaffs.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleRowsPerPageChange}
-            labelRowsPerPage="Số hàng mỗi trang"
-          />
         </Tabs.TabPane>
       </Tabs>
+
       <StaffFormModal
         visible={modalVisible}
-        onClose={() => setModalVisible(false)}
+        onClose={() => {
+          setModalVisible(false);
+          setCurrentAdmin(null);
+        }}
         onSubmit={currentAdmin ? handleEdit : handleAdd}
-        initialValues={currentAdmin}
+        initialValues={currentAdmin || {}}
       />
     </div>
   );

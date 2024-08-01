@@ -58,7 +58,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           label="Tài khoản"
           rules={[
             { required: true, message: "Bạn chưa nhập tài khoản nhân viên!" },
-            { type: "email" },
+
             {
               pattern: /^[a-zA-Z0-9._%+-]+@gmail\.com$/,
               message: "Chỉ chấp nhận tài khoản Gmail!",
