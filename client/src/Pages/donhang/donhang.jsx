@@ -12,6 +12,7 @@ import {
 } from "@mui/material";
 import api from "../../config/axios";
 import Cookies from "js-cookie";
+import { format } from "date-fns";
 const { TabPane } = Tabs;
 
 const Donhang = () => {
@@ -129,7 +130,7 @@ const Donhang = () => {
                 {orders.map((order) => (
                   <TableRow key={order.orderId}>
                     <TableCell>
-                      {new Date(order.orderDate).toLocaleString()}
+                      {format(new Date(order.orderDate), "dd/MM/yyyy HH:mm")}
                     </TableCell>
                     <TableCell>
                       {renderShippingAddress(order.shippingAddress)}
@@ -191,7 +192,7 @@ const Donhang = () => {
     <div className="profile-update">
       <Tabs defaultActiveKey="1" className="setting-tabs">
         <TabPane tab="Chờ lấy hàng" key="1">
-          {renderTable(ordersPending, "Chờ lấy hàng", true)}
+          {renderTable(ordersPending, "Chờ lấy hàng")}
         </TabPane>
         <TabPane tab="Đang giao hàng" key="2">
           {renderTable(ordersShipping, "Đang giao hàng")}

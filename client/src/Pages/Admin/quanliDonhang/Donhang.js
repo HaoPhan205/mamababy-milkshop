@@ -1,13 +1,13 @@
 import Sidebar from "../../../Components/admin/Sidebar";
 import "../admin.scss";
-import Quanlidonhang from "./Quanlidonhang";
+import OrderManagement from "./OrderManagement";
 
 function Quanlidonhangg() {
   return (
     <div className="Admin">
       <div className="AppGlass">
         <Sidebar />
-        <Quanlidonhang />
+        <OrderManagement />
       </div>
     </div>
   );

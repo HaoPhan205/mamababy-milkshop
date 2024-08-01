@@ -1,0 +1,74 @@
+.order-management {
+  padding: 10px;
+
+  margin-left: 10px;
+}
+
+.setting-tabs .ant-tabs-tab {
+  font-size: 14px;
+  font-weight: bold;
+  color: #ff469e;
+}
+
+:where(.css-dev-only-do-not-override-98ntnt).ant-tabs
+  .ant-tabs-tab.ant-tabs-tab-active
+  .ant-tabs-tab-btn {
+  color: #ff469e;
+}
+
+.ant-form-item {
+  margin-bottom: 20px;
+}
+
+.ant-input,
+.ant-input-textarea {
+  border-radius: 4px;
+}
+
+.ant-tabs-tab {
+  color: black;
+}
+
+.ant-tabs-tab-active {
+  color: #ff469e;
+}
+
+.custom-switch.ant-switch-checked {
+  background-color: red !important;
+}
+
+.custom-switch {
+  background-color: gray !important;
+}
+
+.custom-button {
+  background-color: red;
+  font-size: 12px;
+}
+
+.custom-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background-color: red;
+  border-color: red;
+}
+
+.custom-checkbox .ant-checkbox-checked::after {
+  border-color: red;
+}
+
+.table-smalll {
+  font-size: 10px;
+}
+
+.table-smalll .ant-table-cell {
+  font-size: 10px;
+}
+.pagi {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.table-smalll .MuiTableCell-root {
+  font-size: 12px !important;
+}

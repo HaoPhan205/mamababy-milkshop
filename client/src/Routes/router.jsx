@@ -23,7 +23,6 @@ import Payment from "../Pages/Payment/PaymentPage";
 import Revenue from "../Pages/Admin/doanhthu/RevenuePage";
 import BrandMilks from "../Pages/Admin/quanlithuonghieu/brandMilk";
 import CustomerInfo from "../Pages/CustomerInfo/CustomerInfo";
-import Quanlidonhang from "../Pages/Admin/quanliDonhang/Quanlidonhang";
 import Quanlidonhangg from "../Pages/Admin/quanliDonhang/Donhang";
 
 export const router = createBrowserRouter([
