@@ -1,13 +1,14 @@
 import "./admin.scss";
-import MainDash from "../../Components/admin/MainDash/MainDash";
+
 import Sidebar from "../../Components/admin/Sidebar";
+import MonthlyRevenueChart from "./DashboardAdmin/RevenueChart";
 
 function AdminPage() {
   return (
     <div className="Admin">
       <div className="AppGlass">
         <Sidebar />
-        <MainDash />
+        <MonthlyRevenueChart />
       </div>
     </div>
   );
