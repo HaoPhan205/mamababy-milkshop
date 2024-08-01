@@ -4,10 +4,13 @@ import { message } from "antd";
 import { Data } from "../../App";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
+import { resetCart } from "../../store/reduxReducer/cartSlice";
+import { useDispatch } from "react-redux";
 
 const loginEndpoint = "/api/auth/logincustomer";
 
 export const useUsers = () => {
+  const dispatch = useDispatch();
   const { user, setUser } = useContext(Data);
   const navigate = useNavigate();
   useEffect(() => {
@@ -48,6 +51,7 @@ export const useUsers = () => {
     Cookies.remove("customerId");
     setUser(null);
     localStorage.removeItem("user");
+    dispatch(resetCart());
     message.success("Đã đăng xuất khỏi tài khoản");
 
     navigate("/");
@@ -68,7 +72,6 @@ export const useUsers = () => {
       console.log(response.data);
       message.success("Đăng kí tài khoản thành công");
     } catch (error) {
-      // console.error("Error signing up:", error);
       message.success("Đăng kí tài khoản thành công");
     }
   };
