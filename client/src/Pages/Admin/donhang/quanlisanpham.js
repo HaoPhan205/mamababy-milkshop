@@ -307,13 +307,14 @@ const Staffs = () => {
         handleView
       )}
       <TablePagination
-        rowsPerPageOptions={[10, 20, 50]}
+        rowsPerPageOptions={[10, 20]}
         component="div"
         count={filteredProducts.length}
         rowsPerPage={rowsPerPage}
         page={page}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleRowsPerPageChange}
+        className="pagination"
       />
       <StaffFormModal
         visible={modalVisible}
@@ -322,7 +323,7 @@ const Staffs = () => {
         initialValues={currentProduct}
       />
       <Modal
-        visible={detailVisible}
+        open={detailVisible}
         onCancel={() => setDetailVisible(false)}
         title={selectedProduct?.itemName}
         footer={null}

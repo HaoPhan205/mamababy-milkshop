@@ -48,7 +48,6 @@
 }
 
 .parent-element {
-  // Loại bỏ overflow: hidden nếu có
   overflow: hidden;
 }
 
@@ -61,7 +60,7 @@
   padding: 15px;
 }
 
-.MuiTablePagination-root {
+.pagination {
   position: absolute;
   top: 40px;
   right: 110px;

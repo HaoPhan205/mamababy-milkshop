@@ -1,6 +1,5 @@
 import React, { useEffect } from "react";
 import { Form, Input, Modal, Button, Select } from "antd";
-import { UserSwitchOutlined } from "@ant-design/icons";
 
 const { Option } = Select;
 
@@ -21,6 +20,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
       .then((values) => {
         onSubmit(values);
         form.resetFields();
+        onClose();
       })
       .catch((info) => {
         console.log("Validate Failed:", info);
@@ -34,7 +34,7 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           ? "Chỉnh sửa tài khoản nhân viên"
           : "Tạo tài khoản nhân viên"
       }
-      visible={visible}
+      open={visible}
       onCancel={onClose}
       footer={[
         <Button key="back" onClick={onClose}>
@@ -83,8 +83,8 @@ const StaffFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
           rules={[{ required: true, message: "Bạn chưa chọn vai trò" }]}
         >
           <Select>
-            <Select.Option value="Admin">Admin</Select.Option>
-            <Select.Option value="Staff">Staff</Select.Option>
+            <Option value="Admin">Admin</Option>
+            <Option value="Staff">Staff</Option>
           </Select>
         </Form.Item>
       </Form>
