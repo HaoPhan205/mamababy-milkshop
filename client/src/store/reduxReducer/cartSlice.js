@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { toast } from "react-toastify";
+import Cookies from "js-cookie";
 
 const loadState = () => {
   try {
@@ -57,7 +58,7 @@ const cartSlice = createSlice({
         0
       );
       saveState(state);
-      toast.success("Product added to cart");
+      toast.success("Sản phẩm đã được thêm vào giỏ hàng.");
     },
 
     updateQuantity: (state, action) => {
@@ -173,7 +174,6 @@ const cartSlice = createSlice({
     setTotalInfo: (state, action) => {
       state.totalPrice = action.payload.total;
       state.totalDiscount = action.payload.discount;
-      // saveState(state);
     },
 
     setSelectedItems(state, action) {

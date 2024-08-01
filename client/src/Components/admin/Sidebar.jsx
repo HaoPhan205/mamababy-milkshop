@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import "./Sidebar.css";
 import Logo from "../../Assets/LOGO.png";
@@ -17,7 +17,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import Cookies from "js-cookie";
 
-export const Data = [
+const adminData = [
   {
     icon: UilEstate,
     heading: "Dashboard",
@@ -48,11 +48,6 @@ export const Data = [
     heading: "Quản lý thương hiệu sữa",
     path: "/adminPage/quan-li-thuong-hieu",
   },
-  // {
-  //   icon: UilUsersAlt,
-  //   heading: "Quản lý đối tượng sử dụng sữa",
-  //   path: "/adminPage/quan-li-doi-tuong",
-  // },
   {
     icon: UilPackage,
     heading: "Quản lý sản phẩm",
@@ -65,9 +60,44 @@ export const Data = [
   },
 ];
 
+const staffData = [
+  {
+    icon: UilEstate,
+    heading: "Dashboard",
+    path: "/staffPage/dashboard",
+  },
+  {
+    icon: UilClipboardAlt,
+    heading: "Quản lý đơn hàng",
+    path: "/staffPage/quan-li-don-hang",
+  },
+  {
+    icon: UilMapMarkerInfo,
+    heading: "Quản lý xuất xứ",
+    path: "/staffPage/quan-li-xuat-xu",
+  },
+  {
+    icon: UilBriefcaseAlt,
+    heading: "Quản lý công ty sữa",
+    path: "/staffPage/quan-li-cong-ty",
+  },
+  {
+    icon: UilWaterGlass,
+    heading: "Quản lý thương hiệu sữa",
+    path: "/staffPage/quan-li-thuong-hieu",
+  },
+  {
+    icon: UilPackage,
+    heading: "Quản lý sản phẩm",
+    path: "/staffPage/quan-li-san-pham",
+  },
+];
+
 const Sidebar = () => {
   const [selected, setSelected] = useState(0);
   const [expanded, setExpanded] = useState(true);
+  const [menuData, setMenuData] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   const sidebarVariants = {
@@ -78,6 +108,19 @@ const Sidebar = () => {
       left: "-60%",
     },
   };
+
+  useEffect(() => {
+    const role = Cookies.get("role");
+    if (role === "Admin") {
+      setMenuData(adminData);
+    } else if (role === "Staff") {
+      setMenuData(staffData);
+    } else {
+      navigate("/sign-in");
+      return;
+    }
+    setLoading(false);
+  }, [navigate]);
 
   const handleLogout = () => {
     Cookies.remove("token");
@@ -112,7 +155,7 @@ const Sidebar = () => {
             </div>
 
             <div className="menu">
-              {Data.map((item, index) => (
+              {menuData.map((item, index) => (
                 <NavLink
                   to={item.path}
                   className={({ isActive }) =>

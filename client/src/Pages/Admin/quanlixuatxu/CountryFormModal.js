@@ -10,7 +10,7 @@ const CountryFormModal = ({ visible, onClose, onSubmit, initialValues }) => {
 
   return (
     <Modal
-      visible={visible}
+      open={visible}
       title={initialValues ? "Chỉnh sửa xuất xứ" : "Thêm xuất xứ"}
       onCancel={onClose}
       onOk={() => form.submit()}

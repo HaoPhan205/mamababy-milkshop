@@ -159,6 +159,27 @@ export const router = createBrowserRouter([
     element: <StaffPage />,
   },
   {
+    path: "/staffPage/quan-li-don-hang",
+    element: <StaffPage />,
+  },
+  {
+    path: "/staffPage/quan-li-xuat-xu",
+    element: <Countries />,
+  },
+  {
+    path: "/staffPage/quan-li-cong-ty",
+    element: <Staff />,
+  },
+  {
+    path: "/staffPage/quan-li-thuong-hieu",
+    element: <BrandMilks />,
+  },
+  {
+    path: "/staffPage/quan-li-san-pham",
+    element: <Sanpham />,
+  },
+
+  {
     path: "/*",
     element: <PageError />,
   },
