@@ -7,6 +7,7 @@ function StaffPage() {
     <div className="Admin">
       <div className="AppGlass">
         <Sidebar />
+        <p>Hello Staff</p>
       </div>
     </div>
   );

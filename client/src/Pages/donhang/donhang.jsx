@@ -192,7 +192,7 @@ const Donhang = () => {
     <div className="profile-update">
       <Tabs defaultActiveKey="1" className="setting-tabs">
         <TabPane tab="Chờ lấy hàng" key="1">
-          {renderTable(ordersPending, "Chờ lấy hàng")}
+          {renderTable(ordersPending, "Chờ lấy hàng", true)}
         </TabPane>
         <TabPane tab="Đang giao hàng" key="2">
           {renderTable(ordersShipping, "Đang giao hàng")}

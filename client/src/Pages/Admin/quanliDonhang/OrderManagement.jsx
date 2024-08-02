@@ -209,12 +209,30 @@ const OrderManagement = () => {
     });
   };
 
-  const handleStorageChange = ({ key }) => {
+  const handleStorageChange = async ({ key }) => {
     setSelectedStorageId(key);
+    await updateOrder(selectedOrderId, { storageId: key });
   };
 
-  const handleDeliveryManChange = ({ key }) => {
+  const handleDeliveryManChange = async ({ key }) => {
     setSelectedDeliveryManId(key);
+    await updateOrder(selectedOrderId, { deliveryManId: key });
+  };
+
+  const updateOrder = async (orderId, updateData) => {
+    try {
+      const order =
+        ordersPending.find((order) => order.orderId === orderId) ||
+        ordersShipping.find((order) => order.orderId === orderId);
+      if (order) {
+        const updatedOrder = { ...order, ...updateData };
+        await api.put(`/api/orders/${orderId}`, updatedOrder);
+        message.success("Cập nhật đơn hàng thành công.");
+      }
+    } catch (error) {
+      console.error(`Error updating order ${orderId}:`, error);
+      message.error("Đã xảy ra lỗi khi cập nhật đơn hàng.");
+    }
   };
 
   const storageMenu = (
@@ -241,6 +259,17 @@ const OrderManagement = () => {
       (pagination.current - 1) * pagination.pageSize,
       pagination.current * pagination.pageSize
     );
+    const renderShippingAddress = (shippingAddress) => {
+      if (!shippingAddress) return null;
+      const [name, phone, address] = shippingAddress.split(" - ");
+      return (
+        <div>
+          <div>Tên: {name}</div>
+          <div>Số điện thoại: {phone}</div>
+          <div>Địa chỉ: {address}</div>
+        </div>
+      );
+    };
 
     return (
       <Card title={title} style={{ marginBottom: 20 }}>
@@ -360,16 +389,16 @@ const OrderManagement = () => {
     }).format(amount);
   };
 
-  const renderShippingAddress = (shippingAddress) => {
-    const [name, phone, address] = shippingAddress.split(" - ");
-    return (
-      <div>
-        <div>Tên: {name}</div>
-        <div>Số điện thoại: {phone}</div>
-        <div>Địa chỉ: {address}</div>
-      </div>
-    );
-  };
+  // const renderShippingAddress = (shippingAddress) => {
+  //   const [name, phone, address] = shippingAddress.split(" - ");
+  //   return (
+  //     <div>
+  //       <div>Tên: {name}</div>
+  //       <div>Số điện thoại: {phone}</div>
+  //       <div>Địa chỉ: {address}</div>
+  //     </div>
+  //   );
+  // };
 
   return (
     <div className="order-management">
