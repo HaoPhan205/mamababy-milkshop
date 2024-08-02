@@ -18,7 +18,10 @@ const Products = ({ user }) => {
     const fetchProducts = async () => {
       try {
         const response = await api.get("/api/productitems");
-        setProducts(response.data.slice(0, 16));
+        const filteredProducts = response.data.filter(
+          (product) => product.status === "Yes"
+        );
+        setProducts(filteredProducts.slice(0, 16));
       } catch (err) {
         setError(err);
       } finally {

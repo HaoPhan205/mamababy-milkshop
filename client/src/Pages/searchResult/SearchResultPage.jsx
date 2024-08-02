@@ -86,6 +86,7 @@ const SearchResultPage = ({ user }) => {
 
   useEffect(() => {
     const filtered = products
+      .filter((product) => product.status === "Yes")
       .filter((product) =>
         product.itemName.toLowerCase().includes(searchQuery.toLowerCase())
       )

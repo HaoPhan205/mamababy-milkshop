@@ -44,6 +44,10 @@ const OrderManagement = () => {
     current: 1,
     pageSize: 4,
   });
+  const [storages, setStorages] = useState([]);
+  const [deliveryMen, setDeliveryMen] = useState([]);
+  const [selectedStorageId, setSelectedStorageId] = useState(null);
+  const [selectedDeliveryManId, setSelectedDeliveryManId] = useState(null);
 
   useEffect(() => {
     const fetchOrdersByCustomer = async () => {
@@ -71,6 +75,39 @@ const OrderManagement = () => {
 
     fetchOrdersByCustomer();
   }, []);
+
+  useEffect(() => {
+    const fetchStorages = async () => {
+      try {
+        const response = await api.get("/api/storage");
+        setStorages(response.data || []);
+      } catch (error) {
+        console.error("Error fetching storages:", error);
+      }
+    };
+
+    fetchStorages();
+  }, []);
+
+  useEffect(() => {
+    if (selectedStorageId !== null) {
+      const fetchDeliveryMen = async () => {
+        try {
+          const response = await api.get(
+            `/api/deliverymans/bystorageid/${selectedStorageId}`
+          );
+          setDeliveryMen(response.data || []);
+        } catch (error) {
+          console.error(
+            `Error fetching delivery men for storage ${selectedStorageId}:`,
+            error
+          );
+        }
+      };
+
+      fetchDeliveryMen();
+    }
+  }, [selectedStorageId]);
 
   const handleViewCartDetails = async (orderId) => {
     try {
@@ -172,6 +209,32 @@ const OrderManagement = () => {
     });
   };
 
+  const handleStorageChange = ({ key }) => {
+    setSelectedStorageId(key);
+  };
+
+  const handleDeliveryManChange = ({ key }) => {
+    setSelectedDeliveryManId(key);
+  };
+
+  const storageMenu = (
+    <Menu onClick={handleStorageChange}>
+      {storages.map((storage) => (
+        <Menu.Item key={storage.storageID}>{storage.storageName}</Menu.Item>
+      ))}
+    </Menu>
+  );
+
+  const deliveryManMenu = (
+    <Menu onClick={handleDeliveryManChange}>
+      {deliveryMen.map((deliveryMan) => (
+        <Menu.Item key={deliveryMan.deliveryManId}>
+          {deliveryMan.deliveryName}
+        </Menu.Item>
+      ))}
+    </Menu>
+  );
+
   const renderTable = (orders, title, isPending = false) => {
     const filteredOrders = filterOrders(orders);
     const paginatedOrders = filteredOrders.slice(
@@ -217,16 +280,37 @@ const OrderManagement = () => {
                         </TableCell>
                         <TableCell>
                           {renderShippingAddress(order.shippingAddress)}
-                          Tổng tiền: {formatCurrency(order.totalAmount)}
-                          <br />
                           Phương thức thanh toán: {order.paymentMethod}
-                        </TableCell>
-                        <TableCell align="center">
-                          {order.storageName}
+                          <br />
+                          Tổng tiền: {formatCurrency(order.totalAmount)}
                         </TableCell>
                         <TableCell>
-                          <div>{order.deliveryName}</div>
-                          <div>{order.deliveryPhone}</div>
+                          <Dropdown overlay={storageMenu} trigger={["click"]}>
+                            <Button>
+                              {storages.find(
+                                (storage) =>
+                                  storage.storageID === order.storageID
+                              )?.storageName || "Chọn kho hàng"}
+                            </Button>
+                          </Dropdown>
+                        </TableCell>
+                        <TableCell>
+                          {isPending ? (
+                            <Dropdown
+                              overlay={deliveryManMenu}
+                              trigger={["click"]}
+                            >
+                              <Button>
+                                {deliveryMen.find(
+                                  (deliveryMan) =>
+                                    deliveryMan.deliveryManId ===
+                                    order.deliveryManId
+                                )?.deliveryName || "Chọn shipper"}
+                              </Button>
+                            </Dropdown>
+                          ) : (
+                            order.deliveryName
+                          )}
                         </TableCell>
 
                         <TableCell align="center">

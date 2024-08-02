@@ -9,12 +9,15 @@ import {
   Modal,
   Row,
   Col,
+  Tabs,
 } from "antd";
 import {
   EditOutlined,
   DeleteOutlined,
   EyeOutlined,
   PlusOutlined,
+  CheckOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import "./quanlisanpham.scss";
 import {
@@ -29,6 +32,7 @@ import {
 } from "@mui/material";
 import api from "../../../config/axios";
 import StaffFormModal from "./ProductsFormModal";
+import TabPane from "antd/es/tabs/TabPane";
 
 const makeStyle = (stockQuantity) => {
   if (stockQuantity === 0) {
@@ -65,7 +69,15 @@ const formatCurrency = (amount) => {
   }).format(amount);
 };
 
-const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
+const renderTable = (
+  products,
+  loadingState,
+  onEdit,
+  onDelete,
+  onView,
+  onEnable,
+  onDisable
+) => (
   <Card title="Danh sách sản phẩm" style={{ marginBottom: 20 }}>
     <Spin spinning={loadingState}>
       <TableContainer
@@ -139,6 +151,25 @@ const renderTable = (products, loadingState, onEdit, onDelete, onView) => (
                     >
                       <Button type="link" icon={<DeleteOutlined />} danger />
                     </Popconfirm>
+                    {product.status === "No" ? (
+                      <Popconfirm
+                        title="Are you sure to enable this product?"
+                        onConfirm={() => onEnable(product.productItemId)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Button type="link" icon={<CheckOutlined />} />
+                      </Popconfirm>
+                    ) : (
+                      <Popconfirm
+                        title="Are you sure to disable this product?"
+                        onConfirm={() => onDisable(product.productItemId)}
+                        okText="Yes"
+                        cancelText="No"
+                      >
+                        <Button type="link" icon={<CloseOutlined />} danger />
+                      </Popconfirm>
+                    )}
                   </div>
                 </TableCell>
               </TableRow>
@@ -166,7 +197,23 @@ const Staffs = () => {
     api
       .get("/api/productitems")
       .then((res) => {
-        setProducts(res.data);
+        const productsData = res.data.map((product) => {
+          if (product.stockQuantity === 0 && product.status !== "No") {
+            api
+              .put(`/api/productitems/${product.productItemId}/status`, {
+                status: "No",
+              })
+              .catch((err) => {
+                console.error(
+                  `Failed to update status for product ${product.productItemId}`,
+                  err
+                );
+              });
+            product.status = "No";
+          }
+          return product;
+        });
+        setProducts(productsData);
         setLoadingState(false);
       })
       .catch((err) => {
@@ -200,7 +247,7 @@ const Staffs = () => {
   const filteredProducts = searchText
     ? products.filter(
         (product) =>
-          product.productItemId.toLowerCase().includes(searchText) ||
+          product.productItemId.toString().toLowerCase().includes(searchText) ||
           product.itemName.toLowerCase().includes(searchText) ||
           product.price.toString().includes(searchText) ||
           product.stockQuantity.toString().includes(searchText)
@@ -278,6 +325,32 @@ const Staffs = () => {
     setCurrentProduct(null);
   };
 
+  const handleEnable = (productItemId) => {
+    api
+      .put(`/api/productitems/${productItemId}/status`, { status: "Yes" })
+      .then(() => {
+        fetchProducts();
+        message.success("Sản phẩm đã được kích hoạt");
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Không thể kích hoạt sản phẩm");
+      });
+  };
+
+  const handleDisable = (productItemId) => {
+    api
+      .put(`/api/productitems/${productItemId}/status`, { status: "No" })
+      .then(() => {
+        fetchProducts();
+        message.success("Sản phẩm đã bị vô hiệu hóa");
+      })
+      .catch((err) => {
+        console.error(err);
+        message.error("Không thể vô hiệu hóa sản phẩm");
+      });
+  };
+
   return (
     <div className="staffs">
       <Input.Search
@@ -296,16 +369,41 @@ const Staffs = () => {
       >
         Thêm sản phẩm
       </Button>
-      {renderTable(
-        paginatedProducts,
-        loadingState,
-        (product) => {
-          setCurrentProduct(product);
-          setModalVisible(true);
-        },
-        handleDelete,
-        handleView
-      )}
+      <Tabs defaultActiveKey="1">
+        <TabPane tab="Sản phẩm đang hoạt động" key="1">
+          {renderTable(
+            paginatedProducts.filter(
+              (product) => product.status !== "No" && product.stockQuantity > 0
+            ),
+            loadingState,
+            (product) => {
+              setCurrentProduct(product);
+              setModalVisible(true);
+            },
+            handleDelete,
+            handleView,
+            handleEnable,
+            handleDisable
+          )}
+        </TabPane>
+        <TabPane tab="Sản phẩm ngừng hoạt động" key="2">
+          {renderTable(
+            paginatedProducts.filter(
+              (product) =>
+                product.status === "No" || product.stockQuantity === 0
+            ),
+            loadingState,
+            (product) => {
+              setCurrentProduct(product);
+              setModalVisible(true);
+            },
+            handleDelete,
+            handleView,
+            handleEnable,
+            handleDisable
+          )}
+        </TabPane>
+      </Tabs>
       <TablePagination
         rowsPerPageOptions={[10, 20]}
         component="div"

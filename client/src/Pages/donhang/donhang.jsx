@@ -137,8 +137,8 @@ const Donhang = () => {
                     </TableCell>
                     <TableCell align="center">{order.storageName}</TableCell>
                     <TableCell>
-                      <div>Tên: {order.deliveryName}</div>
-                      <div>Số điện thoại: {order.deliveryPhone}</div>
+                      <div> {order.deliveryName}</div>
+                      <div>{order.deliveryPhone}</div>
                     </TableCell>
                     <TableCell align="center">
                       {formatCurrency(order.totalAmount)}
