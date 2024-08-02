@@ -1,3 +1,4 @@
+// CompanyManagement.js
 import React, { useState, useEffect } from "react";
 import {
   Table,
@@ -10,7 +11,8 @@ import {
   message,
 } from "antd";
 import api from "../../../config/axios";
-import "./CompanyManagement";
+import styles from "./CompanyManagement.scss";
+
 const { TabPane } = Tabs;
 
 const CompanyManagement = () => {
@@ -76,7 +78,7 @@ const CompanyManagement = () => {
     { title: "Country", dataIndex: "countryName", key: "countryName" },
     { title: "Phone", dataIndex: "phone", key: "phone" },
     { title: "Address", dataIndex: "address", key: "address" },
-    { title: "Hình ảnh", dataIndex: "image", key: "image" },
+
     {
       title: "Actions",
       key: "actions",
@@ -101,13 +103,14 @@ const CompanyManagement = () => {
   ];
 
   return (
-    <div>
-      <Tabs defaultActiveKey="1">
+    <div className={styles.container}>
+      <Tabs defaultActiveKey="1" className={styles.antTabs}>
         <TabPane tab="Hoạt động" key="1">
           <Table
             dataSource={companies.filter((company) => company.status === "Yes")}
             columns={columns}
             rowKey="companyID"
+            className={styles.antTable}
           />
         </TabPane>
         <TabPane tab="Không hoạt động" key="2">
@@ -115,6 +118,7 @@ const CompanyManagement = () => {
             dataSource={companies.filter((company) => company.status === "No")}
             columns={columns}
             rowKey="companyID"
+            className={styles.antTable}
           />
         </TabPane>
       </Tabs>
@@ -126,8 +130,13 @@ const CompanyManagement = () => {
         open={isModalVisible}
         onCancel={handleCancel}
         footer={null}
+        className={styles.antModal}
       >
-        <Form initialValues={editingCompany} onFinish={handleSave}>
+        <Form
+          initialValues={editingCompany}
+          onFinish={handleSave}
+          className={styles.antForm}
+        >
           <Form.Item
             name="companyName"
             label="Name"
@@ -164,21 +173,14 @@ const CompanyManagement = () => {
           </Form.Item>
           <Form.Item
             name="image"
-            label="image"
-            rules={[{ required: true, message: "Please input the Image!" }]}
-          >
-            <Input />
-          </Form.Item>
-          <Form.Item
-            name="status"
-            label="Status"
-            rules={[{ required: true, message: "Please select the status!" }]}
+            label="Hình ảnh"
+            rules={[{ required: true, message: "Please input the image URL!" }]}
           >
             <Input />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">
-              Save
+              {editingCompany ? "Save" : "Add"}
             </Button>
           </Form.Item>
         </Form>
