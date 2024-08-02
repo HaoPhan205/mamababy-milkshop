@@ -97,8 +97,8 @@ const MonthlyRevenueChart = () => {
       <Row justify="center" style={{ marginBottom: 20 }}>
         <Col>
           <InputNumber
-            min={2000}
-            max={2100}
+            min={2020}
+            max={2024}
             value={year}
             onChange={handleYearChange}
             style={{ width: 200, marginRight: 10 }}

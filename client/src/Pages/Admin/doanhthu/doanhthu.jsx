@@ -8,7 +8,7 @@ const RevenuePage = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState(null);
-  const [view, setView] = useState("monthly"); // 'monthly', 'weekly', or 'daily'
+  const [view, setView] = useState("monthly");
 
   const handleSubmit = async (values) => {
     setLoading(true);
@@ -39,7 +39,7 @@ const RevenuePage = () => {
 
   const handleViewChange = (viewType) => {
     setView(viewType);
-    setData(null); // Reset data on view change
+    setData(null);
   };
 
   const renderTable = () => {

@@ -8,7 +8,6 @@ import ShoppingCart from "../Pages/shoppingCart/ShoppingCart";
 import ProductDetailPage from "../Pages/productDetailPage/productDetailPage";
 import Shopping from "../Pages/searchResult/SearchResultPage";
 
-import StaffPage from "../Pages/Staff/staffPage";
 import AdminPage from "../Pages/Admin/admin";
 import Donhang from "../Pages/donhang/donhang";
 import PageError from "../Pages/PageError/PageError";
@@ -24,6 +23,8 @@ import Revenue from "../Pages/Admin/doanhthu/RevenuePage";
 import BrandMilks from "../Pages/Admin/quanlithuonghieu/brandMilk";
 import CustomerInfo from "../Pages/CustomerInfo/CustomerInfo";
 import Quanlidonhangg from "../Pages/Admin/quanliDonhang/Donhang";
+import StaffPage from "../Pages/Staff/staffPage";
+import Company from "../Pages/Admin/quanlicongty/congty";
 
 export const router = createBrowserRouter([
   {
@@ -136,7 +137,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/adminPage/quan-li-cong-ty",
-    element: <Staff />,
+    element: <Company />,
   },
   {
     path: "/adminPage/quan-li-thuong-hieu",
@@ -161,7 +162,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/staffPage/quan-li-don-hang",
-    element: <StaffPage />,
+    element: <Quanlidonhangg />,
   },
   {
     path: "/staffPage/quan-li-xuat-xu",
@@ -169,7 +170,7 @@ export const router = createBrowserRouter([
   },
   {
     path: "/staffPage/quan-li-cong-ty",
-    element: <Staff />,
+    element: <Company />,
   },
   {
     path: "/staffPage/quan-li-thuong-hieu",

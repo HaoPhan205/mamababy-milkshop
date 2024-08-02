@@ -1,7 +1,15 @@
-import React from "react";
+import "../Admin/admin.scss";
 
-function staffPage() {
-  return <div>staffPage</div>;
+import Sidebar from "../../Components/admin/Sidebar";
+
+function StaffPage() {
+  return (
+    <div className="Admin">
+      <div className="AppGlass">
+        <Sidebar />
+      </div>
+    </div>
+  );
 }
 
-export default staffPage;
+export default StaffPage;
