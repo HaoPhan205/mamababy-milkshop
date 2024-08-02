@@ -40,7 +40,6 @@ const Payment = () => {
       );
       const paymentUrl = response.data;
       window.location.href = paymentUrl;
-      dispatch(deleteSelectedItems(selectedItems));
     } catch (error) {
       console.error("Failed to process VNPay payment:", error);
       message.error("Failed to process VNPay payment. Please try again later.");
